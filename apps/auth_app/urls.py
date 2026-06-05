@@ -1,0 +1,14 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('csrf/', views.csrf_token_view),
+    path('login/', views.login_view),
+    path('logout/', views.logout_view),
+    path('me/', views.me_view),
+    path('users/<int:user_id>/lier-locataire/', views.lier_locataire),      # ✅ sans auth/
+    path('users/<int:user_id>/lier-proprietaire/', views.lier_proprietaire), # ✅ sans auth/
+    path('users/', views.UserListCreateView.as_view()),
+    path('users/<int:pk>/', views.UserDetailView.as_view()),
+    path('users/<int:user_id>/reset-password/', views.ResetUserPasswordView.as_view()),
+]

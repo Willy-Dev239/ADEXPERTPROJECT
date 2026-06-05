@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADEXPERT | Récupération des identifiants</title>
+<script>
+(function(){
+  var t=localStorage.getItem('authToken');
+  var r=localStorage.getItem('role');
+  if(!t){window.location.replace('/login/');throw 'NOT_AUTH';}
+  if(r!=='admin'&&r!=='gestionnaire'){window.location.replace('/');throw 'ACCESS_DENIED';}
+})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0f1a;--surface:#111827;--surface2:#1a2234;--surface3:#212d42;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --text:#f1f5f9;--text2:#94a3b8;--text3:#475569;
+  --green:#10b981;--green2:#059669;
+  --accent:#3b82f6;--red:#ef4444;--amber:#f59e0b;--purple:#8b5cf6;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--green),var(--green2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.logo-name{font-size:15px;font-weight:800}
+.logo-sub{font-size:10px;color:var(--text3)}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.btn{padding:7px 14px;border-radius:8px;font-size:12.5px;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s;font-family:inherit;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.btn-sm{padding:5px 10px;font-size:11.5px;border-radius:7px}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#2563eb);color:#fff;border-color:transparent}
+.btn-primary:hover{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
+.btn-success{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border-color:transparent}
+.btn-success:hover{opacity:.9}
+.btn-danger{background:rgba(239,68,68,.15);color:#fca5a5;border-color:rgba(239,68,68,.2)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-amber{background:rgba(245,158,11,.15);color:#fcd34d;border-color:rgba(245,158,11,.2)}
+.btn-amber:hover{background:rgba(245,158,11,.25)}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(59,130,246,.06));border-bottom:1px solid var(--border);padding:32px 28px 28px}
+.hero-title{font-size:22px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+.hero-sub{font-size:13px;color:var(--text2);max-width:600px;line-height:1.6}
+
+/* ── MAIN ── */
+.main{flex:1;padding:24px 28px;max-width:1200px;width:100%;margin:0 auto}
+
+/* ── STEP INDICATOR ── */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:28px}
+.step{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text3);position:relative}
+.step.active{color:var(--green)}
+.step.done{color:var(--text2)}
+.step-num{width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;transition:all .3s;background:var(--surface2)}
+.step.active .step-num{border-color:var(--green);background:rgba(16,185,129,.15);color:var(--green)}
+.step.done .step-num{border-color:var(--green);background:var(--green);color:#fff}
+.step-line{flex:1;height:1px;background:var(--border);margin:0 10px;min-width:30px}
+.step-line.done{background:var(--green)}
+
+/* ── IMMEUBLE SELECTOR ── */
+.imm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:6px}
+.imm-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:18px 16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.imm-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--green));opacity:0;transition:opacity .2s}
+.imm-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.imm-card.selected{border-color:var(--green);background:rgba(16,185,129,.06);box-shadow:0 0 0 3px rgba(16,185,129,.15)}
+.imm-card.selected::before{opacity:1}
+.imm-icon{font-size:28px;margin-bottom:8px}
+.imm-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.imm-addr{font-size:11px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.imm-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(59,130,246,.15);color:#93c5fd;margin-top:6px;display:inline-block}
+.imm-check{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;opacity:0;transition:opacity .2s}
+.imm-card.selected .imm-check{opacity:1}
+
+/* ── ACTEURS PANEL ── */
+.acteurs-panel{animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── FILTER TABS ── */
+.filter-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.ftab{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--surface2);color:var(--text2);transition:all .15s}
+.ftab:hover{color:var(--text)}
+.ftab.active{border-color:transparent;color:#fff}
+.ftab[data-role="all"].active{background:linear-gradient(135deg,#374151,#1f2937)}
+.ftab[data-role="proprietaire"].active{background:linear-gradient(135deg,var(--green),var(--green2))}
+.ftab[data-role="gestionnaire"].active{background:linear-gradient(135deg,var(--accent),#2563eb)}
+.ftab[data-role="locataire"].active{background:linear-gradient(135deg,var(--purple),#7c3aed)}
+.ftab[data-role="admin"].active{background:linear-gradient(135deg,var(--red),#b91c1c)}
+.ftab-count{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(255,255,255,.12);border-radius:50%;font-size:9px;margin-left:4px}
+
+/* ── SEARCH BAR ── */
+.search-bar{display:flex;gap:10px;margin-bottom:18px;align-items:center;flex-wrap:wrap}
+.search-input{flex:1;min-width:200px;padding:9px 14px;border:1px solid var(--border2);border-radius:9px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:inherit;transition:all .2s}
+.search-input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.1)}
+.result-count{font-size:11.5px;color:var(--text3);white-space:nowrap}
+
+/* ── ACTEUR CARDS ── */
+.acteurs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px}
+.acteur-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:box-shadow .2s}
+.acteur-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.ac-header{padding:14px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}
+.ac-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;color:#fff}
+.ac-info{flex:1;min-width:0}
+.ac-name{font-size:13.5px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ac-role-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;margin-top:3px}
+.ac-body{padding:14px 16px}
+.field-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)}
+.field-row:last-child{border-bottom:none}
+.field-label{font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;flex-shrink:0;width:90px}
+.field-val{font-size:12.5px;color:var(--text2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right}
+.field-val.mono{font-family:'Courier New',monospace;color:var(--text);background:var(--surface2);padding:2px 8px;border-radius:5px;font-size:12px;letter-spacing:.5px}
+.field-val.password{filter:blur(5px);transition:filter .2s;cursor:pointer;user-select:none}
+.field-val.password.revealed{filter:none}
+.copy-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:12px;padding:2px 5px;border-radius:4px;transition:all .15s;flex-shrink:0;margin-left:5px}
+.copy-btn:hover{color:var(--green);background:rgba(16,185,129,.1)}
+.copy-btn.copied{color:var(--green)}
+.ac-footer{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;background:var(--surface2)}
+.reveal-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:11px;padding:3px 8px;border-radius:5px;transition:all .15s;font-family:inherit;display:flex;align-items:center;gap:4px}
+.reveal-btn:hover{color:var(--amber);background:rgba(245,158,11,.1)}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}
+.modal-overlay.open{display:flex;animation:oIn .2s ease}
+@keyframes oIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:18px;width:480px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.6);animation:mIn .25s cubic-bezier(.34,1.56,.64,1)}
+@keyframes mIn{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{padding:20px 22px 14px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border);margin-bottom:18px}
+.modal-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.modal-title{font-size:16px;font-weight:800;color:var(--text)}
+.modal-subtitle{font-size:11.5px;color:var(--text3);margin-top:2px}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--text3);font-size:22px;padding:4px;border-radius:7px;transition:all .15s;margin-left:auto}
+.modal-close:hover{background:var(--surface2);color:var(--text)}
+.modal-body{padding:0 22px}
+.modal-footer{padding:14px 22px 18px;display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border);margin-top:18px}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fg label{font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.fg input,.fg select{padding:9px 12px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:inherit;transition:all .2s;width:100%}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.12)}
+.info-box{display:flex;align-items:flex-start;gap:8px;padding:10px 14px;border-radius:10px;font-size:12.5px;margin-bottom:12px;line-height:1.5}
+.info-ok{background:rgba(16,185,129,.1);color:#6ee7b7;border:1px solid rgba(16,185,129,.2)}
+.info-err{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+.info-warn{background:rgba(245,158,11,.1);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
+.info-blue{background:rgba(59,130,246,.1);color:#93c5fd;border:1px solid rgba(59,130,246,.2)}
+
+/* ── EMPTY / LOADER ── */
+.empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.empty .icon{font-size:44px;margin-bottom:12px;opacity:.4}
+.empty .title{font-size:15px;font-weight:600;color:var(--text2);margin-bottom:6px}
+.loader-anim{display:flex;align-items:center;justify-content:center;gap:6px;padding:40px}
+.dot-pulse{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.2s infinite}
+.dot-pulse:nth-child(2){animation-delay:.2s}
+.dot-pulse:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;padding:10px 16px;border-radius:10px;font-size:12.5px;font-weight:600;z-index:999;animation:toastIn .3s ease;pointer-events:none;display:flex;align-items:center;gap:7px}
+.toast-ok{background:rgba(16,185,129,.9);color:#fff}
+.toast-err{background:rgba(239,68,68,.9);color:#fff}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .main{padding:16px}
+  .acteurs-grid{grid-template-columns:1fr}
+  .imm-grid{grid-template-columns:1fr 1fr}
+  .hero{padding:20px 16px}
+  .topbar{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-icon">🏘️</div>
+    <div>
+      <div class="logo-name">ADEXPERT</div>
+      <div class="logo-sub">Admin &amp; Gestionnaire</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span id="role-pill" style="padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid"></span>
+    <button class="btn btn-sm" onclick="window.history.back()">← Retour</button>
+    <button class="btn btn-sm btn-primary" onclick="openModal('m-help')">❓ Aide</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">🔑 Récupération des identifiants</div>
+  <div class="hero-sub">Réservé aux <strong>Administrateurs</strong> et <strong>Gestionnaires</strong>. Sélectionnez un immeuble pour consulter et gérer les identifiants de tous ses acteurs. Vous pouvez copier les identifiants, révéler les mots de passe et réinitialiser les accès directement.</div>
+</div>
+
+<div class="main">
+
+  <!-- ÉTAPES -->
+  <div class="steps" id="steps-bar">
+    <div class="step active" id="step1">
+      <div class="step-num" id="sn1">1</div>
+      <span>Choisir un immeuble</span>
+    </div>
+    <div class="step-line" id="sl1"></div>
+    <div class="step" id="step2">
+      <div class="step-num" id="sn2">2</div>
+      <span>Voir les acteurs</span>
+    </div>
+    <div class="step-line" id="sl2"></div>
+    <div class="step" id="step3">
+      <div class="step-num" id="sn3">3</div>
+      <span>Gérer les identifiants</span>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 1 : SÉLECTION IMMEUBLE -->
+  <div id="panel-imm">
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+      🏢 Sélectionnez un immeuble
+      <span style="font-size:11px;color:var(--text3)" id="nb-imm">—</span>
+    </div>
+    <div class="imm-grid" id="imm-grid">
+      <div class="loader-anim"><div class="dot-pulse"></div><div class="dot-pulse"></div><div class="dot-pulse"></div></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 : ACTEURS -->
+  <div id="panel-acteurs" style="display:none" class="acteurs-panel">
+    <!-- Breadcrumb -->
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+      <button class="btn btn-sm" onclick="resetToImmeubles()">← Changer d'immeuble</button>
+      <span style="font-size:11.5px;color:var(--text3)">›</span>
+      <span style="font-size:13px;font-weight:700;color:var(--text)" id="selected-imm-name">—</span>
+      <span style="font-size:11px;color:var(--text3)" id="selected-imm-addr"></span>
+    </div>
+
+    <!-- Filtres par rôle -->
+    <div class="filter-tabs" id="filter-tabs">
+      <div class="ftab active" data-role="all" onclick="setFilter('all')">Tous <span class="ftab-count" id="cnt-all">0</span></div>
+      <div class="ftab" data-role="proprietaire" onclick="setFilter('proprietaire')">🏘️ Propriétaires <span class="ftab-count" id="cnt-prop">0</span></div>
+      <div class="ftab" data-role="gestionnaire" onclick="setFilter('gestionnaire')">👔 Gestionnaires <span class="ftab-count" id="cnt-gest">0</span></div>
+      <div class="ftab" data-role="locataire" onclick="setFilter('locataire')">👤 Locataires <span class="ftab-count" id="cnt-loc">0</span></div>
+      <div class="ftab" data-role="admin" onclick="setFilter('admin')">⚙️ Admins <span class="ftab-count" id="cnt-adm">0</span></div>
+    </div>
+
+    <!-- Recherche -->
+    <div class="search-bar">
+      <input class="search-input" id="search-acteur" placeholder="🔍 Rechercher par nom, username, email..." oninput="filterActeurs()">
+      <span class="result-count" id="result-count">— résultats</span>
+      <button class="btn btn-sm btn-success" onclick="exportCSV()">⬇️ Exporter CSV</button>
+      <button class="btn btn-sm btn-primary" onclick="printPage()">🖨️ Imprimer</button>
+    </div>
+
+    <!-- Grille acteurs -->
+    <div class="acteurs-grid" id="acteurs-grid"></div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- MODAL : RESET MOT DE PASSE -->
+<div class="modal-overlay" id="m-reset">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon" style="background:rgba(245,158,11,.15)">🔐</div>
+      <div style="flex:1">
+        <div class="modal-title">Réinitialiser le mot de passe</div>
+        <div class="modal-subtitle" id="reset-subtitle">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('m-reset')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box info-warn">⚠️ Le nouveau mot de passe sera transmis à l'utilisateur. Cette action est irréversible.</div>
+      <div id="reset-form">
+        <div class="fg">
+          <label>Nouveau mot de passe</label>
+          <input type="text" id="inp-new-pwd" placeholder="Saisir ou générer automatiquement..." autocomplete="off">
+        </div>
+        <button class="btn btn-sm" onclick="generatePwd()" style="margin-bottom:12px">🎲 Générer un mot de passe fort</button>
+        <div class="fg">
+          <label>Confirmer le mot de passe</label>
+          <input type="text" id="inp-confirm-pwd" placeholder="Ressaisir le mot de passe...">
+        </div>
+        <div class="fg">
+          <label>Raison (optionnel)</label>
+          <input type="text" id="inp-reset-reason" placeholder="Ex : Demande de l'utilisateur, perte d'accès...">
+        </div>
+      </div>
+      <div id="reset-result" style="display:none"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('m-reset')">Annuler</button>
+      <button class="btn btn-amber" id="btn-do-reset" onclick="doReset()">🔐 Réinitialiser</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL : AIDE -->
+<div class="modal-overlay" id="m-help">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon" style="background:rgba(59,130,246,.15)">❓</div>
+      <div style="flex:1"><div class="modal-title">Aide — Récupération des identifiants</div></div>
+      <button class="modal-close" onclick="closeModal('m-help')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box info-blue">
+        <div>
+          <strong>Comment utiliser cette page ?</strong><br><br>
+          1. <strong>Sélectionnez un immeuble</strong> pour voir les acteurs qui y sont liés.<br><br>
+          2. <strong>Filtrez par rôle</strong> (propriétaire, gestionnaire, locataire, admin) pour affiner.<br><br>
+          3. <strong>Cliquez sur l'icône 👁️</strong> pour révéler un mot de passe masqué.<br><br>
+          4. <strong>Cliquez sur 📋</strong> à côté d'un champ pour copier la valeur.<br><br>
+          5. <strong>Réinitialisez un mot de passe</strong> via le bouton 🔐 sur chaque carte.<br><br>
+          6. <strong>Exportez en CSV</strong> la liste complète des acteurs d'un immeuble.
+        </div>
+      </div>
+      <div class="info-box info-warn">
+        ⚠️ Les mots de passe sont sensibles. N'affichez cette page qu'en présence de l'utilisateur concerné.
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-primary" onclick="closeModal('m-help')">Compris !</button></div>
+  </div>
+</div>
+
+<!-- MODAL : DÉTAIL ACTEUR -->
+<div class="modal-overlay" id="m-detail">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-icon" id="detail-icon" style="background:rgba(16,185,129,.15)">👤</div>
+      <div style="flex:1">
+        <div class="modal-title" id="detail-title">Détail acteur</div>
+        <div class="modal-subtitle" id="detail-subtitle">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('m-detail')">×</button>
+    </div>
+    <div class="modal-body" id="detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('m-detail')">Fermer</button>
+      <button class="btn btn-amber" id="detail-reset-btn">🔐 Réinitialiser mot de passe</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  SESSION & API
+// ════════════════════════════════════════
+var S = {
+  token: localStorage.getItem('authToken') || '',
+};
+var BASE = '/api';
+
+async function api(url) {
+  var r = await fetch(BASE + url, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token ' + S.token
+    }
+  });
+  if (r.status === 401) { window.location.replace('/login/'); return null; }
+  if (r.status === 403) throw new Error('Accès refusé (403)');
+  if (!r.ok) throw new Error('Erreur HTTP ' + r.status);
+  if (r.status === 204) return null;
+  return r.json();
+}
+
+// ════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════
+var _immeubles = [];
+var _selectedImm = null;
+var _allActeurs = [];
+var _currentFilter = 'all';
+var _resetUserId = null;
+var _resetUserName = '';
+
+// ════════════════════════════════════════
+//  STEP INDICATOR
+// ════════════════════════════════════════
+function setStep(n) {
+  for (var i = 1; i <= 3; i++) {
+    var s = document.getElementById('step' + i);
+    var sn = document.getElementById('sn' + i);
+    var sl = document.getElementById('sl' + i);
+    if (i < n) { s.className = 'step done'; sn.textContent = '✓'; if(sl) sl.className = 'step-line done'; }
+    else if (i === n) { s.className = 'step active'; sn.textContent = i; if(sl) sl.className = 'step-line'; }
+    else { s.className = 'step'; sn.textContent = i; if(sl) sl.className = 'step-line'; }
+  }
+}
+
+// ════════════════════════════════════════
+//  CHARGEMENT DES IMMEUBLES
+// ════════════════════════════════════════
+
+
+
+async function loadImmeubles() {
+  setStep(1);
+  try {
+    var d = await api('/immeubles/?page_size=200');
+    if (!d) return;
+    _immeubles = d.results || d;
+    document.getElementById('nb-imm').textContent = _immeubles.length + ' immeuble(s)';
+
+    if (!_immeubles.length) {
+      document.getElementById('imm-grid').innerHTML =
+        '<div class="empty"><div class="icon">🏢</div><div class="title">Aucun immeuble trouvé</div></div>';
+      return;
+    }
+
+    document.getElementById('imm-grid').innerHTML = _immeubles.map(imm => `
+      <div class="imm-card" onclick="selectImmeuble(${imm.id},'${escHtml(imm.nom)}','${escHtml(imm.adresse || '')}')" id="imm-card-${imm.id}">
+        <div class="imm-check">✓</div>
+        <div class="imm-icon">🏢</div>
+        <div class="imm-name">${escHtml(imm.nom)}</div>
+        <div class="imm-addr">${escHtml(imm.adresse || '—')}</div>
+        <span class="imm-badge">${imm.nb_locaux || 0} locaux · ${imm.nb_locataires || 0} locataires</span>
+      </div>
+    `).join('');
+  } catch (e) {
+    document.getElementById('imm-grid').innerHTML =
+      `<div class="empty"><div class="icon">⚠️</div><div class="title">Erreur de chargement</div><div>${e.message}</div></div>`;
+  }
+
+
+// ════════════════════════════════════════
+//  SÉLECTION D'UN IMMEUBLE
+// ════════════════════════════════════════
+async function selectImmeuble(id, nom, addr) {
+  // Mark selected
+  document.querySelectorAll('.imm-card').forEach(c => c.classList.remove('selected'));
+  var card = document.getElementById('imm-card-' + id);
+  if (card) card.classList.add('selected');
+
+  _selectedImm = id;
+  setStep(2);
+
+  // Show acteurs panel
+  document.getElementById('panel-imm').style.display = 'none';
+  document.getElementById('panel-acteurs').style.display = 'block';
+  document.getElementById('selected-imm-name').textContent = nom;
+  document.getElementById('selected-imm-addr').textContent = addr ? '— ' + addr : '';
+
+  // Load acteurs
+  document.getElementById('acteurs-grid').innerHTML =
+    '<div class="loader-anim" style="grid-column:1/-1"><div class="dot-pulse"></div><div class="dot-pulse"></div><div class="dot-pulse"></div></div>';
+
+  try {
+    // Charger tous les acteurs liés à cet immeuble
+    var d = await api('/immeubles/' + id + '/acteurs/');
+    if (!d) return;
+    _allActeurs = d.acteurs || d;
+
+    // Compter par rôle
+    var counts = { all: _allActeurs.length, proprietaire: 0, gestionnaire: 0, locataire: 0, admin: 0 };
+    _allActeurs.forEach(a => {
+      var r = (a.role || '').toLowerCase();
+      if (counts[r] !== undefined) counts[r]++;
+    });
+    document.getElementById('cnt-all').textContent = counts.all;
+    document.getElementById('cnt-prop').textContent = counts.proprietaire;
+    document.getElementById('cnt-gest').textContent = counts.gestionnaire;
+    document.getElementById('cnt-loc').textContent = counts.locataire;
+    document.getElementById('cnt-adm').textContent = counts.admin;
+
+    _currentFilter = 'all';
+    setActiveTab('all');
+    renderActeurs(_allActeurs);
+    setStep(3);
+  } catch (e) {
+    document.getElementById('acteurs-grid').innerHTML =
+      `<div style="grid-column:1/-1" class="empty"><div class="icon">⚠️</div><div class="title">Erreur</div><div>${e.message}</div></div>`;
+  }
+}
+
+function resetToImmeubles() {
+  _selectedImm = null;
+  _allActeurs = [];
+  _currentFilter = 'all';
+  document.getElementById('panel-acteurs').style.display = 'none';
+  document.getElementById('panel-imm').style.display = 'block';
+  document.getElementById('search-acteur').value = '';
+  document.querySelectorAll('.imm-card').forEach(c => c.classList.remove('selected'));
+  setStep(1);
+}
+
+// ════════════════════════════════════════
+//  FILTRE ET RECHERCHE
+// ════════════════════════════════════════
+function setFilter(role) {
+  _currentFilter = role;
+  setActiveTab(role);
+  filterActeurs();
+}
+function setActiveTab(role) {
+  document.querySelectorAll('.ftab').forEach(t => {
+    t.classList.toggle('active', t.dataset.role === role);
+  });
+}
+function filterActeurs() {
+  var q = (document.getElementById('search-acteur').value || '').toLowerCase();
+  var filtered = _allActeurs.filter(a => {
+    var roleOk = _currentFilter === 'all' || (a.role || '').toLowerCase() === _currentFilter;
+    var searchOk = !q ||
+      (a.nom_prenom || '').toLowerCase().includes(q) ||
+      (a.username || '').toLowerCase().includes(q) ||
+      (a.email || '').toLowerCase().includes(q) ||
+      (a.telephone || '').toLowerCase().includes(q);
+    return roleOk && searchOk;
+  });
+  document.getElementById('result-count').textContent = filtered.length + ' résultat(s)';
+  renderActeurs(filtered);
+}
+
+// ════════════════════════════════════════
+//  RENDU DES CARTES ACTEURS
+// ════════════════════════════════════════
+var ROLE_COLORS = {
+  proprietaire: { bg: 'linear-gradient(135deg,var(--green),var(--green2))', badge: 'rgba(16,185,129,.15)', badgeColor: '#6ee7b7', label: '🏘️ Propriétaire' },
+  gestionnaire:  { bg: 'linear-gradient(135deg,var(--accent),#2563eb)',     badge: 'rgba(59,130,246,.15)',  badgeColor: '#93c5fd',  label: '👔 Gestionnaire' },
+  locataire:     { bg: 'linear-gradient(135deg,var(--purple),#7c3aed)',     badge: 'rgba(139,92,246,.15)',  badgeColor: '#c4b5fd',  label: '👤 Locataire' },
+  admin:         { bg: 'linear-gradient(135deg,var(--red),#b91c1c)',        badge: 'rgba(239,68,68,.15)',   badgeColor: '#fca5a5',  label: '⚙️ Admin' },
+};
+function roleStyle(role) {
+  return ROLE_COLORS[(role || '').toLowerCase()] || { bg: 'linear-gradient(135deg,#374151,#1f2937)', badge: 'rgba(100,116,139,.15)', badgeColor: 'var(--text2)', label: role || '—' };
+}
+
+function renderActeurs(list) {
+  var grid = document.getElementById('acteurs-grid');
+  if (!list.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1" class="empty">
+      <div class="icon">🔍</div>
+      <div class="title">Aucun acteur trouvé</div>
+      <div>Modifiez votre recherche ou votre filtre</div>
+    </div>`;
+    return;
+  }
+  grid.innerHTML = list.map((a, idx) => {
+    var rs = roleStyle(a.role);
+    var ini = ((a.nom_prenom || a.username || 'U').charAt(0)).toUpperCase();
+    var pwdId = 'pwd-' + (a.id || idx);
+    var statut = a.is_active !== false ? '<span style="color:var(--green);font-size:11px">● Actif</span>' : '<span style="color:var(--red);font-size:11px">● Inactif</span>';
+    return `<div class="acteur-card">
+      <div class="ac-header">
+        <div class="ac-avatar" style="background:${rs.bg}">${ini}</div>
+        <div class="ac-info">
+          <div class="ac-name">${escHtml(a.nom_prenom || a.username || '—')}</div>
+          <span class="ac-role-badge" style="background:${rs.badge};color:${rs.badgeColor}">${rs.label}</span>
+        </div>
+        <div style="margin-left:auto;text-align:right">${statut}</div>
+      </div>
+      <div class="ac-body">
+        <div class="field-row">
+          <span class="field-label">Nom complet</span>
+          <span class="field-val">${escHtml(a.nom_prenom || '—')}</span>
+          <button class="copy-btn" onclick="copyVal('${escAttr(a.nom_prenom || '')}',this)" title="Copier">📋</button>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Username</span>
+          <span class="field-val mono">${escHtml(a.username || '—')}</span>
+          <button class="copy-btn" onclick="copyVal('${escAttr(a.username || '')}',this)" title="Copier">📋</button>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Email</span>
+          <span class="field-val">${escHtml(a.email || '—')}</span>
+          <button class="copy-btn" onclick="copyVal('${escAttr(a.email || '')}',this)" title="Copier">📋</button>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Téléphone</span>
+          <span class="field-val">${escHtml(a.telephone || '—')}</span>
+          <button class="copy-btn" onclick="copyVal('${escAttr(a.telephone || '')}',this)" title="Copier">📋</button>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Mot de passe</span>
+          <span class="field-val mono password" id="${pwdId}" onclick="togglePwd('${pwdId}')">${escHtml(a.mot_de_passe_temp || a.password_display || '••••••••')}</span>
+          <button class="reveal-btn" onclick="togglePwd('${pwdId}')" title="Révéler">👁️</button>
+          <button class="copy-btn" onclick="copyVal('${escAttr(a.mot_de_passe_temp || a.password_display || '')}',this)" title="Copier">📋</button>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Dernière co.</span>
+          <span class="field-val">${a.last_login ? new Date(a.last_login).toLocaleDateString('fr-FR') : 'Jamais'}</span>
+        </div>
+      </div>
+      <div class="ac-footer">
+        <button class="btn btn-sm" onclick="showDetail(${JSON.stringify(a).replace(/"/g,'&quot;')})">👁 Détail</button>
+        <button class="btn btn-sm btn-amber" onclick="openReset(${a.id},'${escAttr(a.nom_prenom || a.username || '')}','${escAttr(a.username || '')}')">🔐 Reset mot de passe</button>
+        ${a.email ? `<button class="btn btn-sm btn-primary" onclick="sendByEmail('${escAttr(a.email)}','${escAttr(a.username || '')}')">📧 Envoyer</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════
+//  INTERACTIONS CARTES
+// ════════════════════════════════════════
+function togglePwd(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.toggle('revealed');
+}
+
+function copyVal(val, btn) {
+  if (!val) { showToast('Rien à copier', 'err'); return; }
+  navigator.clipboard.writeText(val).then(() => {
+    btn.textContent = '✅';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋'; btn.classList.remove('copied'); }, 1500);
+    showToast('Copié dans le presse-papier !', 'ok');
+  }).catch(() => showToast('Copie impossible', 'err'));
+}
+
+function showDetail(a) {
+  var rs = roleStyle(a.role);
+  document.getElementById('detail-icon').textContent = rs.label.charAt(0) === '🏘' ? '🏘️' : rs.label.split(' ')[0];
+  document.getElementById('detail-title').textContent = a.nom_prenom || a.username || '—';
+  document.getElementById('detail-subtitle').textContent = rs.label + (a.local_reference ? ' · ' + a.local_reference : '');
+  document.getElementById('detail-reset-btn').onclick = () => {
+    closeModal('m-detail');
+    openReset(a.id, a.nom_prenom || a.username, a.username);
+  };
+
+  var rows = [
+    ['ID système', a.id || '—'],
+    ['Nom complet', a.nom_prenom || '—'],
+    ['Username', a.username || '—'],
+    ['Email', a.email || '—'],
+    ['Téléphone', a.telephone || '—'],
+    ['Rôle', rs.label],
+    ['Statut', a.is_active !== false ? '✅ Actif' : '❌ Inactif'],
+    ['Date inscription', a.date_joined ? new Date(a.date_joined).toLocaleDateString('fr-FR') : '—'],
+    ['Dernière connexion', a.last_login ? new Date(a.last_login).toLocaleString('fr-FR') : 'Jamais'],
+    ['Local', a.local_reference || '—'],
+    ['Immeuble', a.immeuble_nom || '—'],
+  ];
+  document.getElementById('detail-body').innerHTML =
+    rows.map(([l, v]) => `<div class="field-row">
+      <span class="field-label">${l}</span>
+      <span class="field-val">${escHtml(String(v))}</span>
+    </div>`).join('');
+  openModal('m-detail');
+}
+
+// ════════════════════════════════════════
+//  RESET MOT DE PASSE
+// ════════════════════════════════════════
+function openReset(userId, nom, username) {
+  _resetUserId = userId;
+  _resetUserName = nom;
+  document.getElementById('reset-subtitle').textContent = (nom || username) + ' · @' + (username || '—');
+  document.getElementById('inp-new-pwd').value = '';
+  document.getElementById('inp-confirm-pwd').value = '';
+  document.getElementById('inp-reset-reason').value = '';
+  document.getElementById('reset-form').style.display = 'block';
+  document.getElementById('reset-result').style.display = 'none';
+  document.getElementById('reset-result').innerHTML = '';
+  document.getElementById('btn-do-reset').disabled = false;
+  openModal('m-reset');
+}
+
+function generatePwd() {
+  var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$!';
+  var pwd = '';
+  for (var i = 0; i < 12; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+  document.getElementById('inp-new-pwd').value = pwd;
+  document.getElementById('inp-confirm-pwd').value = pwd;
+  showToast('Mot de passe généré !', 'ok');
+}
+
+async function doReset() {
+  var pwd = document.getElementById('inp-new-pwd').value.trim();
+  var conf = document.getElementById('inp-confirm-pwd').value.trim();
+  var reason = document.getElementById('inp-reset-reason').value.trim();
+
+  if (!pwd) { showToast('Veuillez saisir un mot de passe', 'err'); return; }
+  if (pwd.length < 6) { showToast('Mot de passe trop court (min. 6 caractères)', 'err'); return; }
+  if (pwd !== conf) { showToast('Les mots de passe ne correspondent pas', 'err'); return; }
+
+  document.getElementById('btn-do-reset').disabled = true;
+
+  try {
+    await api('/auth/users/' + _resetUserId + '/reset-password/', {
+      method: 'POST',
+      body: JSON.stringify({ new_password: pwd, reason: reason })
+    });
+    document.getElementById('reset-form').style.display = 'none';
+    var resultEl = document.getElementById('reset-result');
+    resultEl.style.display = 'block';
+    resultEl.innerHTML = `
+      <div class="info-box info-ok">✅ Mot de passe réinitialisé avec succès pour <strong>${escHtml(_resetUserName)}</strong>.</div>
+      <div class="info-box info-warn">⚠️ Communiquez le nouveau mot de passe à l'utilisateur : <strong style="font-family:monospace;font-size:14px">${escHtml(pwd)}</strong>
+        <button class="copy-btn" onclick="copyVal('${escAttr(pwd)}',this)" style="margin-left:8px">📋</button>
+      </div>`;
+    showToast('Mot de passe réinitialisé !', 'ok');
+    // Recharger pour mettre à jour l'affichage
+    if (_selectedImm) {
+      var n = document.getElementById('selected-imm-name').textContent;
+      var a = document.getElementById('selected-imm-addr').textContent.replace('— ', '');
+      setTimeout(() => selectImmeuble(_selectedImm, n, a), 1500);
+    }
+  } catch (e) {
+    document.getElementById('btn-do-reset').disabled = false;
+    document.getElementById('reset-result').style.display = 'block';
+    document.getElementById('reset-result').innerHTML = `<div class="info-box info-err">❌ Erreur : ${e.message}</div>`;
+    showToast('Erreur lors du reset', 'err');
+  }
+}
+
+// ════════════════════════════════════════
+//  EMAIL (lien mailto)
+// ════════════════════════════════════════
+function sendByEmail(email, username) {
+  var subject = encodeURIComponent('[InfinityHome] Vos identifiants de connexion');
+  var body = encodeURIComponent(
+    'Bonjour,\n\nVoici vos identifiants pour accéder à la plateforme InfinityHome :\n\n' +
+    'Nom d\'utilisateur : ' + username + '\n' +
+    'Lien de connexion : ' + window.location.origin + '/login/\n\n' +
+    'Pour des raisons de sécurité, votre mot de passe vous sera communiqué séparément.\n\n' +
+    'Cordialement,\nL\'équipe InfinityHome'
+  );
+  window.open('mailto:' + email + '?subject=' + subject + '&body=' + body, '_blank');
+}
+
+// ════════════════════════════════════════
+//  EXPORT CSV
+// ════════════════════════════════════════
+function exportCSV() {
+  if (!_allActeurs.length) { showToast('Aucun acteur à exporter', 'err'); return; }
+  var q = (document.getElementById('search-acteur').value || '').toLowerCase();
+  var filtered = _allActeurs.filter(a => {
+    var roleOk = _currentFilter === 'all' || (a.role || '').toLowerCase() === _currentFilter;
+    var searchOk = !q || (a.nom_prenom || '').toLowerCase().includes(q) || (a.username || '').toLowerCase().includes(q) || (a.email || '').toLowerCase().includes(q);
+    return roleOk && searchOk;
+  });
+  var header = ['ID', 'Nom complet', 'Username', 'Email', 'Téléphone', 'Rôle', 'Statut', 'Local', 'Dernière connexion'];
+  var rows = filtered.map(a => [
+    a.id || '', a.nom_prenom || '', a.username || '', a.email || '',
+    a.telephone || '', a.role || '', a.is_active !== false ? 'Actif' : 'Inactif',
+    a.local_reference || '',
+    a.last_login ? new Date(a.last_login).toLocaleDateString('fr-FR') : 'Jamais'
+  ]);
+  var csv = [header, ...rows].map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')).join('\n');
+  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'acteurs_immeuble_' + (_selectedImm || 'export') + '.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('Export CSV téléchargé !', 'ok');
+}
+
+function printPage() { window.print(); }
+
+// ════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════
+function escHtml(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s) {
+  return String(s || '').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+}
+
+var _toastTimer = null;
+function showToast(msg, type) {
+  var existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  if (_toastTimer) clearTimeout(_toastTimer);
+  var t = document.createElement('div');
+  t.className = 'toast ' + (type === 'err' ? 'toast-err' : 'toast-ok');
+  t.textContent = (type === 'err' ? '⚠️ ' : '✅ ') + msg;
+  document.body.appendChild(t);
+  _toastTimer = setTimeout(() => { if (t.parentNode) t.remove(); }, 3000);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+});
+
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+
+async function init() {
+  // Vérifier le token
+  if (!S.token) {
+    window.location.replace('/login/');
+    return;
+  }
+
+  try {
+    var d = await api('/immeubles/?page_size=200');
+    _immeubles = d.results || d;
+
+    if (!_immeubles.length) {
+      document.getElementById('sel-imm').innerHTML =
+        '<option value="">⚠️ Aucun immeuble trouvé</option>';
+      return;
+    }
+
+    var sel = document.getElementById('sel-imm');
+    sel.innerHTML = '<option value="">— Sélectionner un immeuble —</option>' +
+      _immeubles.map(i =>
+        `<option value="${i.id}">${i.nom}${i.adresse_commune ? ' — ' + i.adresse_commune : ''}</option>`
+      ).join('');
+
+  } catch(e) {
+    console.error('Erreur:', e);
+    document.getElementById('sel-imm').innerHTML =
+      `<option value="">⚠️ Erreur: ${e.message}</option>`;
+  }
+}
+
+
+
+
+
+(function initAccess(){
+  var role = localStorage.getItem('role') || '';
+  var name = localStorage.getItem('fullname') || localStorage.getItem('username') || '';
+  var pill = document.getElementById('role-pill');
+  if(role === 'admin'){
+    pill.textContent = '⚙️ Admin';
+    pill.style.background = 'rgba(239,68,68,.15)';
+    pill.style.color = '#fca5a5';
+    pill.style.borderColor = 'rgba(239,68,68,.25)';
+  } else if(role === 'gestionnaire'){
+    pill.textContent = '👔 Gestionnaire';
+    pill.style.background = 'rgba(59,130,246,.15)';
+    pill.style.color = '#93c5fd';
+    pill.style.borderColor = 'rgba(59,130,246,.25)';
+  } else {
+    // Bloquer côté UI aussi (double sécurité)
+    document.body.innerHTML = `
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0b0f1a;font-family:'DM Sans',sans-serif">
+        <div style="background:#111827;border:1px solid rgba(239,68,68,.3);border-radius:18px;padding:40px 36px;max-width:420px;text-align:center">
+          <div style="font-size:48px;margin-bottom:16px">🚫</div>
+          <div style="font-size:20px;font-weight:800;color:#f1f5f9;margin-bottom:8px">Accès refusé</div>
+          <div style="font-size:13px;color:#94a3b8;margin-bottom:24px;line-height:1.6">
+            Cette page est réservée aux <strong style="color:#f1f5f9">Administrateurs</strong> et <strong style="color:#f1f5f9">Gestionnaires</strong>.<br>
+            Votre rôle actuel (<strong style="color:#fca5a5">${role || 'inconnu'}</strong>) ne vous autorise pas à accéder à cette fonctionnalité.
+          </div>
+          <button onclick="window.location.replace('/')" style="padding:10px 24px;border-radius:9px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">
+            ← Retour à l'accueil
+          </button>
+        </div>
+      </div>`;
+    return;
+  }
+  loadImmeubles();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADExpert | Connexion</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.card{background:#fff;border-radius:24px;width:420px;max-width:100%;padding:40px 36px;box-shadow:0 40px 120px rgba(0,0,0,.5);}
+.logo{text-align:center;margin-bottom:32px;}
+.logo-icon{width:64px;height:64px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 12px;box-shadow:0 8px 24px rgba(59,130,246,.4);}
+.logo h1{font-size:22px;font-weight:800;color:#0f172a;}
+.logo p{font-size:13px;color:#94a3b8;margin-top:2px;}
+.fg{margin-bottom:16px;}
+.fg label{display:block;font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.fg input{width:100%;padding:12px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;font-family:inherit;color:#1e293b;transition:all .2s;}
+.fg input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12);}
+.btn{width:100%;padding:13px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 16px rgba(59,130,246,.35);}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(59,130,246,.45);}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.alert{padding:12px 14px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none;}
+.alert-err{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
+.alert-ok{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0;}
+.divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:#94a3b8;font-size:12px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:#e2e8f0;}
+.roles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px;}
+.role-btn{padding:8px 4px;border:1.5px solid #e2e8f0;border-radius:8px;background:#f8fafc;font-size:11px;font-weight:600;cursor:pointer;text-align:center;color:#64748b;transition:all .15s;}
+.role-btn:hover{border-color:#3b82f6;color:#2563eb;background:#eff6ff;}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">&#127962;</div>
+    <h1>ADExpert</h1>
+    <p>Gestion Locative - Bujumbura</p>
+  </div>
+  <div id="alert" class="alert"></div>
+  <div class="fg">
+    <label>Nom d'utilisateur</label>
+    <input type="text" id="username" placeholder="Votre identifiant" autocomplete="username">
+  </div>
+  <div class="fg">
+    <label>Mot de passe</label>
+    <input type="password" id="password" placeholder="..." autocomplete="current-password">
+  </div>
+  <button class="btn" id="btn-login" onclick="doLogin()">Se connecter</button>
+  <div class="divider">Connexion rapide (demo)</div>
+  <div class="roles">
+    <div class="role-btn" onclick="fillDemo('admin','admin123')">Admin</div>
+    <div class="role-btn" onclick="fillDemo('gestionnaire1','gest123')">Gestionnaire</div>
+    <div class="role-btn" onclick="fillDemo('locataire1','loc123')">Locataire</div>
+    <div class="role-btn" onclick="fillDemo('proprietaire1','Donella123')">Proprietaire</div>
+  </div>
+</div>
+<script>
+var csrfToken='';
+async function fetchCsrf(){
+  try{var r=await fetch('/api/auth/csrf/');var d=await r.json();csrfToken=d.csrfToken||'';}
+  catch(e){console.warn('CSRF fetch failed',e);}
+}
+fetchCsrf();
+document.getElementById('password').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+function showAlert(msg,isErr){var el=document.getElementById('alert');el.textContent=msg;el.className='alert '+(isErr?'alert-err':'alert-ok');el.style.display='block';}
+function fillDemo(u,p){document.getElementById('username').value=u;document.getElementById('password').value=p;}
+async function doLogin(){
+  var btn=document.getElementById('btn-login');
+  var username=document.getElementById('username').value.trim();
+  var password=document.getElementById('password').value;
+  if(!username||!password){showAlert('Veuillez remplir tous les champs.',true);return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Connexion...';
+  try{
+    var r=await fetch('/api/auth/login/',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-CSRFToken':csrfToken},
+      credentials:'include',
+      body:JSON.stringify({username:username,password:password}),
+    });
+    var data=await r.json();
+    if(!r.ok){var msg=data.non_field_errors?data.non_field_errors[0]:'Identifiants incorrects.';showAlert(msg,true);return;}
+    localStorage.setItem('authToken',data.token);
+    localStorage.setItem('username',data.username);
+    localStorage.setItem('fullname',data.fullname||data.username);
+    localStorage.setItem('role',data.role);
+    localStorage.setItem('peutEcrire',String(data.peutEcrire));
+    localStorage.setItem('estAdmin',String(data.estAdmin));
+    localStorage.setItem('locataire_id',data.locataire_id||'');
+    localStorage.setItem('proprietaire_id',data.proprietaire_id||'');
+    showAlert('Connexion reussie ! Redirection...',false);
+    setTimeout(function(){
+      if(data.role==='locataire')window.location.href='/locataire/';
+      else if(data.role==='proprietaire')window.location.href='/proprietaire/';
+      else window.location.href='/';
+    },600);
+  }catch(e){showAlert('Erreur reseau. Verifiez votre connexion.',true);}
+  finally{btn.disabled=false;btn.innerHTML='Se connecter';}
+}
+</script>
+</body>
+</html>
