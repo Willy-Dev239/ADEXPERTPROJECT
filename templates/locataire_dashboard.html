@@ -794,7 +794,10 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
     <div id="contrat-detail"><div class="loader">Chargement...</div></div>
   </div>
 </div>
-
+<div class="nav-group">Mon Compte</div>
+<div class="nav-item" onclick="goSection('mon-compte',this)">
+  <span class="nav-icon"><i class="fas fa-lock"></i></span>Changer mot de passe
+</div>
 </div><!-- /content -->
 </div><!-- /main -->
 
@@ -881,6 +884,129 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
         <i class="fas fa-paper-plane"></i> Envoyer le bordereau
       </button>
     </div>
+  </div>
+</div>
+<!--==================MODIFY PASSWORD======================-->
+
+<!-- ════ MON COMPTE ════ -->
+<div class="section" id="s-mon-compte">
+  <div class="two-col">
+
+    <!-- Changer mot de passe -->
+    <div class="card">
+      <div class="card-title">
+        <span><i class="fas fa-lock" style="color:var(--accent);margin-right:6px"></i>Changer mon mot de passe</span>
+      </div>
+
+      <div id="al-pwd"></div>
+
+      <div class="fg">
+        <label>Mot de passe actuel <span class="req">*</span></label>
+        <div style="position:relative">
+          <input type="password" id="pwd-ancien" placeholder="Votre mot de passe actuel" style="padding-right:42px">
+          <button type="button" onclick="toggleVis('pwd-ancien',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Nouveau mot de passe <span class="req">*</span></label>
+        <div style="position:relative">
+          <input type="password" id="pwd-nouveau" placeholder="Minimum 6 caractères"
+            oninput="checkPwdStrength(this.value)" style="padding-right:42px">
+          <button type="button" onclick="toggleVis('pwd-nouveau',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <!-- Barre de force -->
+        <div style="margin-top:6px">
+          <div style="background:var(--surface2);border-radius:6px;height:5px;overflow:hidden">
+            <div id="pwd-strength-bar" style="height:100%;border-radius:6px;width:0%;transition:all .3s"></div>
+          </div>
+          <div id="pwd-strength-txt" style="font-size:10.5px;color:var(--text3);margin-top:3px"></div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Confirmer le nouveau mot de passe <span class="req">*</span></label>
+        <div style="position:relative">
+          <input type="password" id="pwd-confirm" placeholder="Répéter le nouveau mot de passe" style="padding-right:42px">
+          <button type="button" onclick="toggleVis('pwd-confirm',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-primary" onclick="savePwd()" id="btn-save-pwd" style="flex:1">
+          <i class="fas fa-key"></i> Mettre à jour le mot de passe
+        </button>
+        <button class="btn" onclick="resetPwdForm()">Annuler</button>
+      </div>
+    </div>
+
+    <!-- Infos du compte -->
+    <div class="card">
+      <div class="card-title">
+        <span><i class="fas fa-user-circle" style="color:var(--green);margin-right:6px"></i>Mes informations</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+        <div style="width:60px;height:60px;border-radius:50%;
+                    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+                    display:flex;align-items:center;justify-content:center;
+                    color:#fff;font-size:22px;font-weight:800;flex-shrink:0;
+                    font-family:var(--font-head)"
+             id="profil-avatar">L</div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--text)" id="profil-nom">—</div>
+          <div style="font-size:11.5px;color:var(--text3);margin-top:3px">🏠 Locataire</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+            <i class="fas fa-user" style="margin-right:6px"></i>USERNAME
+          </span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-username">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+            <i class="fas fa-envelope" style="margin-right:6px"></i>EMAIL
+          </span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-email">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+            <i class="fas fa-phone" style="margin-right:6px"></i>TÉLÉPHONE
+          </span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-tel">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+            <i class="fas fa-home" style="margin-right:6px"></i>LOCAL
+          </span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--accent)" id="profil-local">—</span>
+        </div>
+      </div>
+
+      <div class="info-box info-blue" style="margin-top:16px;margin-bottom:0">
+        <i class="fas fa-info-circle"></i>
+        Pour modifier vos informations personnelles, contactez votre gestionnaire.
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -993,11 +1119,11 @@ async function loadMe(){
 // ══════════════════════════════════════════════
 var TITLES={
   dashboard:'Mon Dashboard','mes-loyers':'Mes Loyers',historique:'Historique complet',
-  bordereaux:'Mes Bordereaux',chat:'Chat Immeuble',notifications:'Notifications','mon-contrat':'Mon Contrat',
+  bordereaux:'Mes Bordereaux',chat:'Chat Immeuble',notifications:'Notifications','mon-contrat':'Mon Contrat','mon-compte': 'Mon Compte',
 };
 var LOADERS={
   'mes-loyers':()=>loadMesLoyers('tous'),historique:loadHistorique,
-  bordereaux:loadBordereaux,chat:loadChat,notifications:loadNotifications,'mon-contrat':loadMonContrat,
+  bordereaux:loadBordereaux,chat:loadChat,notifications:loadNotifications,'mon-contrat':loadMonContrat,'mon-compte':loadMonCompte,
 };
 function goSection(id,el){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -1499,6 +1625,141 @@ uz.addEventListener('drop',e=>{
   if(file){document.getElementById('file-input').files=e.dataTransfer.files;handleFileBord({target:{files:e.dataTransfer.files}});}
 });
 
+
+// ════════════════════════════════════════
+//  MON COMPTE — CHANGER MOT DE PASSE
+// ════════════════════════════════════════
+async function loadMonCompte() {
+  var ini = (S.fullname || S.username || 'L').charAt(0).toUpperCase();
+  document.getElementById('profil-avatar').textContent   = ini;
+  document.getElementById('profil-nom').textContent      = S.fullname || S.username || '—';
+  document.getElementById('profil-username').textContent = S.username || '—';
+
+  try {
+    var d = await api('/auth/me/');
+    if (!d) return;
+    document.getElementById('profil-email').textContent = d.email     || '—';
+    document.getElementById('profil-tel').textContent   = d.telephone || '—';
+    // Local actuel
+    if (d.locataire_profile) {
+      var loc = await api('/locataires/' + d.locataire_profile + '/');
+      if (loc && loc.local_actuel) {
+        document.getElementById('profil-local').textContent = loc.local_actuel.reference || '—';
+      }
+    }
+  } catch(e) {}
+}
+
+function toggleVis(inputId, btn) {
+  var inp = document.getElementById(inputId);
+  var icon = btn.querySelector('i');
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    if (icon) icon.className = 'fas fa-eye-slash';
+  } else {
+    inp.type = 'password';
+    if (icon) icon.className = 'fas fa-eye';
+  }
+}
+
+function checkPwdStrength(pwd) {
+  var bar = document.getElementById('pwd-strength-bar');
+  var txt = document.getElementById('pwd-strength-txt');
+  if (!pwd) { bar.style.width = '0%'; txt.textContent = ''; return; }
+
+  var score = 0;
+  if (pwd.length >= 6)  score++;
+  if (pwd.length >= 10) score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
+  if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+  var levels = [
+    { w:'20%', color:'var(--red)',   label:'Très faible' },
+    { w:'40%', color:'var(--red)',   label:'Faible'      },
+    { w:'60%', color:'var(--amber)', label:'Moyen'       },
+    { w:'80%', color:'var(--green)', label:'Fort'        },
+    { w:'100%',color:'var(--green)', label:'Très fort'   },
+  ];
+  var lv = levels[Math.min(score - 1, 4)] || levels[0];
+  bar.style.width      = lv.w;
+  bar.style.background = lv.color;
+  txt.style.color      = lv.color;
+  txt.textContent      = lv.label;
+}
+
+function resetPwdForm() {
+  ['pwd-ancien','pwd-nouveau','pwd-confirm'].forEach(id => {
+    var el = document.getElementById(id);
+    el.value = '';
+    el.type  = 'password';
+    var btn = el.nextElementSibling;
+    if (btn) { var icon = btn.querySelector('i'); if (icon) icon.className = 'fas fa-eye'; }
+  });
+  document.getElementById('al-pwd').innerHTML = '';
+  document.getElementById('pwd-strength-bar').style.width = '0%';
+  document.getElementById('pwd-strength-txt').textContent = '';
+}
+
+async function savePwd() {
+  var alEl    = document.getElementById('al-pwd');
+  var ancien  = document.getElementById('pwd-ancien').value.trim();
+  var nouveau = document.getElementById('pwd-nouveau').value.trim();
+  var confirm = document.getElementById('pwd-confirm').value.trim();
+
+  alEl.innerHTML = '';
+
+  if (!ancien || !nouveau || !confirm) {
+    alEl.innerHTML = err('Tous les champs sont obligatoires.');
+    return;
+  }
+  if (nouveau.length < 6) {
+    alEl.innerHTML = err('Le nouveau mot de passe doit faire au moins 6 caractères.');
+    return;
+  }
+  if (nouveau !== confirm) {
+    alEl.innerHTML = err('Les deux mots de passe ne correspondent pas.');
+    document.getElementById('pwd-confirm').focus();
+    return;
+  }
+  if (ancien === nouveau) {
+    alEl.innerHTML = `<div class="info-box info-warn"><i class="fas fa-exclamation-triangle"></i> Le nouveau mot de passe doit être différent de l'ancien.</div>`;
+    return;
+  }
+
+  var btn = document.getElementById('btn-save-pwd');
+  btn.disabled    = true;
+  btn.innerHTML   = '<i class="fas fa-spinner fa-spin"></i> Mise à jour...';
+
+  try {
+    await api('/auth/change-password/', {
+      method: 'POST',
+      body: JSON.stringify({
+        old_password: ancien,
+        new_password: nouveau,
+      })
+    });
+
+    alEl.innerHTML = `<div class="info-box info-ok">
+      <i class="fas fa-check-circle"></i>
+      Mot de passe mis à jour ! Vous allez être déconnecté dans 3 secondes...
+    </div>`;
+
+    resetPwdForm();
+    setTimeout(() => doLogout(), 3000);
+
+  } catch(e) {
+    var msg = e.message;
+    try {
+      var parsed = JSON.parse(msg);
+      msg = Object.values(parsed).flat().join(' ');
+    } catch(_) {}
+    alEl.innerHTML = err(msg || 'Mot de passe actuel incorrect.');
+  } finally {
+    btn.disabled  = false;
+    btn.innerHTML = '<i class="fas fa-key"></i> Mettre à jour le mot de passe';
+  }
+}
 // ══════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════

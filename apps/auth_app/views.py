@@ -9,8 +9,37 @@ from .models import User
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserCreateSerializer, LoginSerializer
 
+
+
 # Import depuis immeubles/permissions.py
 from apps.immeubles.permissions import IsAdminOrGestionnaire
+
+# views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        old_pwd = request.data.get('old_password', '')
+        new_pwd = request.data.get('new_password', '')
+
+        if not request.user.check_password(old_pwd):
+            return Response(
+                {'old_password': 'Mot de passe actuel incorrect.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        if len(new_pwd) < 6:
+            return Response(
+                {'new_password': 'Minimum 6 caractères.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        request.user.set_password(new_pwd)
+        request.user.save()
+        return Response({'message': 'Mot de passe mis à jour.'})
 class ResetUserPasswordView(APIView):
     permission_classes = [IsAuthenticated, IsAdminOrGestionnaire]
 

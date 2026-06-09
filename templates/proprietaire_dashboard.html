@@ -607,6 +607,8 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
+<div class="nav-group">Mon Compte</div>
+<div class="nav-item" data-section="mon-compte"><span class="nav-icon">🔐</span>Changer mot de passe</div>
 </div><!-- /content -->
 </div><!-- /main -->
 
@@ -628,7 +630,105 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <div class="modal-footer"><button class="btn" onclick="closeModal('m-hist')">Fermer</button></div>
   </div>
 </div>
+<!-- ═══ MON COMPTE ═══ -->
+<div class="section" id="s-mon-compte">
+  <div class="two-col">
 
+    <!-- Changer mot de passe -->
+    <div class="card">
+      <div class="card-title">🔐 Changer mon mot de passe</div>
+
+      <div id="al-pwd"></div>
+
+      <div class="fg">
+        <label>Mot de passe actuel *</label>
+        <div style="position:relative">
+          <input type="password" id="pwd-ancien" placeholder="Votre mot de passe actuel"
+            style="padding-right:40px">
+          <button onclick="toggleVis('pwd-ancien',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">👁</button>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Nouveau mot de passe *</label>
+        <div style="position:relative">
+          <input type="password" id="pwd-nouveau" placeholder="Minimum 6 caractères"
+            oninput="checkPwdStrength(this.value)" style="padding-right:40px">
+          <button onclick="toggleVis('pwd-nouveau',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">👁</button>
+        </div>
+        <!-- Barre de force -->
+        <div style="margin-top:6px">
+          <div style="background:var(--surface2);border-radius:6px;height:5px;overflow:hidden">
+            <div id="pwd-strength-bar" style="height:100%;border-radius:6px;width:0%;transition:all .3s"></div>
+          </div>
+          <div id="pwd-strength-txt" style="font-size:10.5px;color:var(--text3);margin-top:3px"></div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Confirmer le nouveau mot de passe *</label>
+        <div style="position:relative">
+          <input type="password" id="pwd-confirm" placeholder="Répéter le nouveau mot de passe"
+            style="padding-right:40px">
+          <button onclick="toggleVis('pwd-confirm',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">👁</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-success" onclick="savePwd()" id="btn-save-pwd"
+          style="flex:1">
+          🔑 Mettre à jour le mot de passe
+        </button>
+        <button class="btn" onclick="resetPwdForm()">Annuler</button>
+      </div>
+    </div>
+
+    <!-- Infos du compte -->
+    <div class="card">
+      <div class="card-title">👤 Mes informations</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+        <div style="width:60px;height:60px;border-radius:50%;
+                    background:linear-gradient(135deg,var(--green),var(--green2));
+                    display:flex;align-items:center;justify-content:center;
+                    color:#fff;font-size:22px;font-weight:800;flex-shrink:0"
+             id="profil-avatar">P</div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--text)" id="profil-nom">—</div>
+          <div style="font-size:11.5px;color:var(--text3);margin-top:3px" id="profil-role">Propriétaire</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;
+                    background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11.5px;color:var(--text3);font-weight:700">👤 Username</span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text);
+                       font-family:'DM Mono',monospace" id="profil-username">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;
+                    background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11.5px;color:var(--text3);font-weight:700">📧 Email</span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-email">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:10px 14px;
+                    background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11.5px;color:var(--text3);font-weight:700">📱 Téléphone</span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-tel">—</span>
+        </div>
+      </div>
+
+      <div class="info-box info-blue" style="margin-top:16px;margin-bottom:0">
+        ℹ️ Pour modifier vos informations personnelles, contactez votre administrateur.
+      </div>
+    </div>
+
+  </div>
+</div>
 <!-- ═══ MODAL : QUITTANCE ═══ -->
 <div class="modal-overlay" id="m-quit">
   <div class="modal modal-lg">
@@ -758,6 +858,7 @@ var TITLES = {
   'mes-rapports': 'Mes Rapports',
   chat: 'Chat de mon immeuble',
   'mes-conventions': 'Mes Conventions',
+  'mon-compte': 'Mon Compte',
 };
 var LOADERS = {
   'mes-locaux': loadMesLocaux,
@@ -767,6 +868,7 @@ var LOADERS = {
   'mes-charges': loadMesCharges,
   chat: loadChatGroups,
   'mes-conventions': loadMesConventions,
+  'mon-compte': loadMonCompte,
 };
 
 function goSection(id) {
@@ -1382,6 +1484,136 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
   o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
 });
 
+
+// ════════════════════════════════════════
+//  MON COMPTE — CHANGER MOT DE PASSE
+// ════════════════════════════════════════
+async function loadMonCompte() {
+  // Remplir les infos du profil
+  var ini = (S.fullname || S.username || 'P').charAt(0).toUpperCase();
+  document.getElementById('profil-avatar').textContent   = ini;
+  document.getElementById('profil-nom').textContent      = S.fullname || S.username || '—';
+  document.getElementById('profil-username').textContent = S.username || '—';
+
+  try {
+    var d = await api('/auth/me/');
+    if (!d) return;
+    document.getElementById('profil-email').textContent = d.email      || '—';
+    document.getElementById('profil-tel').textContent   = d.telephone  || '—';
+    document.getElementById('profil-role').textContent  =
+      { proprietaire:'🏘️ Propriétaire', admin:'👑 Admin', gestionnaire:'⚙️ Gestionnaire' }[d.role] || d.role;
+  } catch(e) {}
+}
+
+function toggleVis(inputId, btn) {
+  var inp = document.getElementById(inputId);
+  if (inp.type === 'password') {
+    inp.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    inp.type = 'password';
+    btn.textContent = '👁';
+  }
+}
+
+function checkPwdStrength(pwd) {
+  var bar = document.getElementById('pwd-strength-bar');
+  var txt = document.getElementById('pwd-strength-txt');
+  if (!pwd) { bar.style.width = '0%'; txt.textContent = ''; return; }
+
+  var score = 0;
+  if (pwd.length >= 6)  score++;
+  if (pwd.length >= 10) score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
+  if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+  var levels = [
+    { w:'20%', color:'var(--red)',   label:'Très faible' },
+    { w:'40%', color:'var(--red)',   label:'Faible'      },
+    { w:'60%', color:'var(--amber)', label:'Moyen'       },
+    { w:'80%', color:'var(--green)', label:'Fort'        },
+    { w:'100%',color:'var(--green)', label:'Très fort'   },
+  ];
+  var lv = levels[Math.min(score - 1, 4)] || levels[0];
+  bar.style.width      = lv.w;
+  bar.style.background = lv.color;
+  txt.style.color      = lv.color;
+  txt.textContent      = lv.label;
+}
+
+function resetPwdForm() {
+  ['pwd-ancien','pwd-nouveau','pwd-confirm'].forEach(id => {
+    document.getElementById(id).value = '';
+    document.getElementById(id).type  = 'password';
+  });
+  document.getElementById('al-pwd').innerHTML = '';
+  document.getElementById('pwd-strength-bar').style.width = '0%';
+  document.getElementById('pwd-strength-txt').textContent = '';
+}
+
+async function savePwd() {
+  var alEl   = document.getElementById('al-pwd');
+  var ancien  = document.getElementById('pwd-ancien').value.trim();
+  var nouveau = document.getElementById('pwd-nouveau').value.trim();
+  var confirm = document.getElementById('pwd-confirm').value.trim();
+
+  alEl.innerHTML = '';
+
+  // Validations
+  if (!ancien || !nouveau || !confirm) {
+    alEl.innerHTML = `<div class="info-box info-err">⚠️ Tous les champs sont obligatoires.</div>`;
+    return;
+  }
+  if (nouveau.length < 6) {
+    alEl.innerHTML = `<div class="info-box info-err">⚠️ Le nouveau mot de passe doit faire au moins 6 caractères.</div>`;
+    return;
+  }
+  if (nouveau !== confirm) {
+    alEl.innerHTML = `<div class="info-box info-err">⚠️ Les deux mots de passe ne correspondent pas.</div>`;
+    document.getElementById('pwd-confirm').focus();
+    return;
+  }
+  if (ancien === nouveau) {
+    alEl.innerHTML = `<div class="info-box info-warn">⚠️ Le nouveau mot de passe doit être différent de l'ancien.</div>`;
+    return;
+  }
+
+  var btn = document.getElementById('btn-save-pwd');
+  btn.disabled     = true;
+  btn.textContent  = '⏳ Mise à jour...';
+
+  try {
+    await api('/auth/change-password/', {
+      method: 'POST',
+      body: JSON.stringify({
+        old_password: ancien,
+        new_password: nouveau,
+      })
+    });
+
+    alEl.innerHTML = `<div class="info-box info-ok">
+      ✅ Mot de passe mis à jour avec succès !
+      Vous allez être déconnecté dans 3 secondes...
+    </div>`;
+
+    resetPwdForm();
+
+    // Déconnecter après 3s pour forcer re-login avec nouveau mdp
+    setTimeout(() => doLogout(), 3000);
+
+  } catch(e) {
+    var msg = e.message;
+    try {
+      var parsed = JSON.parse(msg);
+      msg = Object.values(parsed).flat().join(' ');
+    } catch(_) {}
+    alEl.innerHTML = `<div class="info-box info-err">❌ ${msg || 'Mot de passe actuel incorrect.'}</div>`;
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '🔑 Mettre à jour le mot de passe';
+  }
+}
 // ════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════

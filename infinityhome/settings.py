@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'apps.charges',
     'apps.dashboard',
     'apps.chat',
+    'infinityhome',
     'apps.notifications',
 ]
 
@@ -71,8 +72,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'adexpert_recouvrement_db',
-        'USER': 'root',           # Modifier selon votre config MySQL
-        'PASSWORD': '1234',  # Modifier
+        'USER': 'adexpert',           # Modifier selon votre config MySQL
+        'PASSWORD': 'adexpert2121',  # Modifier
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
