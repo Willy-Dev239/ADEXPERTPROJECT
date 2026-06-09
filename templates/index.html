@@ -1206,7 +1206,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL CONTRAT SOCIÉTÉ -->
 <div class="modal-overlay" id="m-cs">
   <div class="modal modal-xl">
-    <div class="modal-header"><div class="mh-icon mh-blue">🤝</div><div><div class="modal-title" id="mt-cs">Nouveau contrat société</div><div class="modal-subtitle">Convention de gestion locative — InfinityHome</div></div><button class="modal-close" onclick="closeModal('m-cs')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-blue">🤝</div><div><div class="modal-title" id="mt-cs">Nouveau contrat société</div><div class="modal-subtitle">Convention de gestion locative — ADEXPER</div></div><button class="modal-close" onclick="closeModal('m-cs')">×</button></div>
     <div class="modal-body">
       <div id="al-cs"></div><input type="hidden" id="cs-id">
       <div class="form-grid">
@@ -1250,7 +1250,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL APERÇU CONTRAT IMPRIMABLE -->
 <div class="modal-overlay" id="m-cs-print">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="mh-icon mh-green">🖨️</div><div><div class="modal-title">Aperçu du contrat</div><div class="modal-subtitle">Contrat de gestion locative — InfinityHome</div></div><button class="modal-close" onclick="closeModal('m-cs-print')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-green">🖨️</div><div><div class="modal-title">Aperçu du contrat</div><div class="modal-subtitle">Contrat de gestion locative — ADEXPER</div></div><button class="modal-close" onclick="closeModal('m-cs-print')">×</button></div>
     <div class="modal-body"><div id="mc-cs-print"></div></div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-cs-print')">Fermer</button>
@@ -1802,7 +1802,8 @@ var CS_SERVICES=[
   {id:'service_judiciaire',label:'Services judiciaires',default:false},
   {id:'service_impots_locatifs',label:'Services impôts locatifs',default:false},
   {id:'service_clients',label:'Services clients',default:false},
-  {id:'service_touristique',label:'Services touristiques',default:false},
+  {id:'constat_lieu',label:'Constataction du lieu',default:false},
+  {id:'inventaire_immeuble',label:'Inventaire de l\'immeuble',default:false},
 ];
 
 function renderCSServices(){

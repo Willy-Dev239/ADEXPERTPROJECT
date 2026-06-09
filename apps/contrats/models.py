@@ -51,6 +51,8 @@ class ContratSociete(models.Model):
     service_impots_locatifs = models.BooleanField(default=False)
     service_clients = models.BooleanField(default=False)
     service_touristique = models.BooleanField(default=False)
+    constat_lieu = models.BooleanField(default=False)
+    inventaire_immeuble = models.BooleanField(default=False)
     clauses_particulieres = models.TextField(blank=True)
     notes_internes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
