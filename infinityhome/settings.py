@@ -1,63 +1,14 @@
 import os
 from pathlib import Path
 from datetime import timedelta
-
 import dj_database_url
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ─── SÉCURITÉ ────────────────────────────────────────────────────────────────
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-infinityhome-change-in-production-2026')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
-
-# ─── BASE DE DONNÉES (Render PostgreSQL) ─────────────────────────────────────
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-    }
-else:
-    # Local MySQL
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'adexpert_recouvrement_db',
-            'USER': 'adexpert',
-            'PASSWORD': 'adexpert2121',
-            'HOST': 'localhost',
-            'PORT': '3306',
-            'OPTIONS': {
-                'charset': 'utf8mb4',
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            },
-        }
-    }
-
-# ─── FICHIERS STATIQUES (Whitenoise) ─────────────────────────────────────────
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # ← ajouter ici
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    # ... reste identique
-]
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# ─── FICHIERS MEDIA (Cloudinary) ─────────────────────────────────────────────
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = 'django-insecure-infinityhome-change-in-production-2026'
-
-DEBUG = True
-
-# ALLOWED_HOSTS = ['*']
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -87,13 +38,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # ─── Session Timeout (5 min d'inactivité) ───────────────────────────────
     'infinityhome.middleware.SessionTimeoutMiddleware',
-    # ────────────────────────────────────────────────────────────────────────
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -119,35 +69,27 @@ TEMPLATES = [
 WSGI_APPLICATION = 'infinityhome.wsgi.application'
 ASGI_APPLICATION = 'infinityhome.asgi.application'
 
-# # ─── BASE DE DONNÉES MySQL ───────────────────────────────────────────────────
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'adexpert_recouvrement_db',
-#         'USER': 'adexpert',
-#         'PASSWORD': 'adexpert2121',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#         'OPTIONS': {
-#             'charset': 'utf8mb4',
-#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#         },
-#     }
-# }
-
-# ============DBPOSTGRESQL============
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'adexpert_recouvrement_db',
-#         'USER': 'adexpert',
-#         'PASSWORD': 'adexpert2121',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
+# ─── BASE DE DONNÉES ─────────────────────────────────────────────────────────
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'adexpert_recouvrement_db',
+            'USER': 'adexpert',
+            'PASSWORD': 'adexpert2121',
+            'HOST': 'localhost',
+            'PORT': '3306',
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
 
 AUTH_USER_MODEL = 'auth_app.User'
 
@@ -178,6 +120,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'https://adexpert-app.onrender.com',
 ]
 
 CHANNEL_LAYERS = {
@@ -187,27 +130,30 @@ CHANNEL_LAYERS = {
 }
 
 # ─── GESTION DES SESSIONS ────────────────────────────────────────────────────
-# Durée de session : 5 minutes (300 secondes)
 SESSION_COOKIE_AGE = 300
-
-# Réinitialiser le timer à chaque requête (inactivité)
 SESSION_SAVE_EVERY_REQUEST = True
-
-# Expirer quand le navigateur se ferme
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-# Stocker les sessions en base de données
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
-# ─────────────────────────────────────────────────────────────────────────────
 
 LANGUAGE_CODE = 'fr-fr'
 TIME_ZONE = 'Africa/Bujumbura'
 USE_I18N = True
 USE_TZ = True
 
+# ─── FICHIERS STATIQUES ──────────────────────────────────────────────────────
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# ─── FICHIERS MEDIA (Cloudinary) ─────────────────────────────────────────────
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
+}
+if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
