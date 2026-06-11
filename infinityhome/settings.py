@@ -42,6 +42,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # ─── Session Timeout (5 min d'inactivité) ───────────────────────────────
+    'infinityhome.middleware.SessionTimeoutMiddleware',
+    # ────────────────────────────────────────────────────────────────────────
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -72,8 +75,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'adexpert_recouvrement_db',
-        'USER': 'adexpert',           # Modifier selon votre config MySQL
-        'PASSWORD': 'adexpert2121',  # Modifier
+        'USER': 'adexpert',
+        'PASSWORD': 'adexpert2121',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
@@ -82,6 +85,19 @@ DATABASES = {
         },
     }
 }
+
+# ============DBPOSTGRESQL============
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'adexpert_recouvrement_db',
+#         'USER': 'adexpert',
+#         'PASSWORD': 'adexpert2121',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 
 AUTH_USER_MODEL = 'auth_app.User'
@@ -94,18 +110,19 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-        'DEFAULT_FILTER_BACKENDS': [
+    'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
         'rest_framework.filters.OrderingFilter',
     ],
-   'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
 }
+
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
@@ -119,6 +136,20 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
+
+# ─── GESTION DES SESSIONS ────────────────────────────────────────────────────
+# Durée de session : 5 minutes (300 secondes)
+SESSION_COOKIE_AGE = 300
+
+# Réinitialiser le timer à chaque requête (inactivité)
+SESSION_SAVE_EVERY_REQUEST = True
+
+# Expirer quand le navigateur se ferme
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Stocker les sessions en base de données
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+# ─────────────────────────────────────────────────────────────────────────────
 
 LANGUAGE_CODE = 'fr-fr'
 TIME_ZONE = 'Africa/Bujumbura'
