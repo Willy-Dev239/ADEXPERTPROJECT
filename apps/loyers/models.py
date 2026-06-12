@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-
+from pyuploadcare.dj.models import ImageField
 class Loyer(models.Model):
     STATUT = [('attente','En attente'),('partiel','Partiel'),('paye','Payé'),('retard','En retard')]
     contrat = models.ForeignKey('contrats.Contrat', on_delete=models.SET_NULL, null=True, blank=True, related_name='loyers')
@@ -55,7 +55,8 @@ class Bordereau(models.Model):
     STATUT = [('en_attente','En attente'),('valide','Validé'),('rejete','Rejeté')]
     locataire = models.ForeignKey('locataires.Locataire', on_delete=models.CASCADE, related_name='bordereaux')
     loyer = models.ForeignKey(Loyer, on_delete=models.SET_NULL, null=True, blank=True, related_name='bordereaux')
-    photo = models.ImageField(upload_to='bordereaux/%Y/%m/')
+    
+    photo = ImageField(blank=True, null=True)
     notes = models.TextField(blank=True)
     statut = models.CharField(max_length=20, choices=STATUT, default='en_attente')
     commentaire_admin = models.TextField(blank=True)
