@@ -158,6 +158,11 @@ if os.environ.get('CLOUDINARY_CLOUD_NAME'):
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# ─── UPLOADCARE (fichiers media) ─────────────────────────────────────────────
+UPLOADCARE = {
+    'pub_key': os.environ.get('UPLOADCARE_PUBLIC_KEY', '2bec84ffe9ef07b7a434'),
+    'secret': os.environ.get('UPLOADCARE_SECRET_KEY', '28016c5e8f63918a9e0b'),
+}
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
