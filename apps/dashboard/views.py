@@ -19,12 +19,27 @@ def dashboard_view(request):
     loyqs = Loyer.objects.all()
     chqs  = Charge.objects.all()
 
+    # ─── Filtre propriétaire ─────────────────────────────────────────────────
     is_proprio = (user.role == 'proprietaire' and user.proprietaire_profile is not None)
     if is_proprio:
         p = user.proprietaire_profile
         lqs   = lqs.filter(proprietaire=p)
         loyqs = loyqs.filter(local__proprietaire=p)
         chqs  = chqs.filter(local__proprietaire=p)
+    else:
+        # Admin/Gestionnaire : filtre optionnel via query param
+        prop_id = request.GET.get('proprietaire')
+        if prop_id:
+            lqs   = lqs.filter(proprietaire_id=prop_id)
+            loyqs = loyqs.filter(local__proprietaire_id=prop_id)
+            chqs  = chqs.filter(local__proprietaire_id=prop_id)
+
+    # ─── Filtre immeuble ──────────────────────────────────────────────────────
+    immeuble_id = request.GET.get('immeuble')
+    if immeuble_id:
+        lqs   = lqs.filter(immeuble_id=immeuble_id)
+        loyqs = loyqs.filter(local__immeuble_id=immeuble_id)
+        chqs  = chqs.filter(immeuble_id=immeuble_id)
 
     total  = lqs.count()
     occ    = sum(1 for l in lqs if l.est_occupe)
@@ -84,6 +99,8 @@ def dashboard_view(request):
             'proprietaire_profile': str(user.proprietaire_profile) if user.proprietaire_profile else None,
             'is_proprio': is_proprio,
             'nb_locaux_filtres': total,
+            'filtre_proprietaire': request.GET.get('proprietaire'),
+            'filtre_immeuble': request.GET.get('immeuble'),
         }
     })
 

@@ -403,6 +403,25 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 
 <!-- ═══════ DASHBOARD ═══════ -->
 <div class="section active" id="s-dashboard">
+
+  <!-- ─── BARRE DE FILTRES ─────────────────────────────────────────────── -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap">🔍 Filtrer par</span>
+
+    <select id="dash-prop-filter" onchange="onDashPropChange()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:180px">
+      <option value="">— Tous les propriétaires —</option>
+    </select>
+
+    <select id="dash-imm-filter" onchange="loadDash()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:180px">
+      <option value="">— Tous les immeubles —</option>
+    </select>
+
+    <button class="btn btn-ghost btn-sm" onclick="resetDashFilters()" title="Réinitialiser les filtres">✕ Réinitialiser</button>
+
+    <div id="dash-filter-label" style="margin-left:auto;font-size:11.5px;color:var(--accent);font-weight:600;display:none"></div>
+  </div>
+  <!-- ──────────────────────────────────────────────────────────────────── -->
+
   <div class="stats-grid">
     <div class="stat-card" style="--c:linear-gradient(90deg,var(--accent),#06b6d4)">
       <div class="stat-label">Locaux gérés</div>
@@ -460,7 +479,6 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
   </div>
 </div>
-
 <!-- ═══════ PROPRIÉTAIRES ═══════ -->
 <div class="section" id="s-proprietaires">
   <div class="card">
@@ -3042,7 +3060,121 @@ async function saveProp() {
   }
 }
 
+// ═══════════════════════════════════════════
+//  DASHBOARD FILTERS
+// ═══════════════════════════════════════════
 
+// Charger les propriétaires dans le filtre dashboard
+async function loadDashFilters() {
+  try {
+    var d = await api('/proprietaires/?page_size=300');
+    if (!d) return;
+    var l = d.results || d;
+    var sel = document.getElementById('dash-prop-filter');
+    sel.innerHTML = '<option value="">— Tous les propriétaires —</option>' +
+      l.map(p => `<option value="${p.id}">${p.nom}</option>`).join('');
+  } catch(e) {}
+}
+
+// Quand on change le propriétaire → charger ses immeubles
+async function onDashPropChange() {
+  var propId = document.getElementById('dash-prop-filter').value;
+  var immSel = document.getElementById('dash-imm-filter');
+  immSel.innerHTML = '<option value="">— Tous les immeubles —</option>';
+
+  if (propId) {
+    try {
+      var d = await api('/immeubles/?page_size=200&proprietaire=' + propId);
+      var l = (d && (d.results || d)) || [];
+      // Si l'API ne supporte pas le filtre proprio sur immeubles, charger tous
+      if (!l.length) {
+        var all = await api('/immeubles/?page_size=200');
+        l = (all && (all.results || all)) || [];
+      }
+      immSel.innerHTML = '<option value="">— Tous les immeubles —</option>' +
+        l.map(i => `<option value="${i.id}">${i.nom}</option>`).join('');
+    } catch(e) {}
+  }
+
+  loadDash();
+}
+
+// Réinitialiser les filtres
+function resetDashFilters() {
+  document.getElementById('dash-prop-filter').value = '';
+  document.getElementById('dash-imm-filter').innerHTML = '<option value="">— Tous les immeubles —</option>';
+  document.getElementById('dash-filter-label').style.display = 'none';
+  loadDash();
+}
+
+// ═══════════════════════════════════════════
+//  DASHBOARD (avec filtres)
+// ═══════════════════════════════════════════
+async function loadDash() {
+  var propId = document.getElementById('dash-prop-filter')?.value || '';
+  var immId  = document.getElementById('dash-imm-filter')?.value || '';
+
+  // Construire l'URL avec filtres
+  var url = '/dashboard/';
+  var params = [];
+  if (propId) params.push('proprietaire=' + propId);
+  if (immId)  params.push('immeuble=' + immId);
+  if (params.length) url += '?' + params.join('&');
+
+  // Afficher le label de filtre actif
+  var label = document.getElementById('dash-filter-label');
+  if (propId || immId) {
+    var propSel = document.getElementById('dash-prop-filter');
+    var immSel  = document.getElementById('dash-imm-filter');
+    var parts = [];
+    if (propId) parts.push(propSel.options[propSel.selectedIndex]?.text || '');
+    if (immId)  parts.push(immSel.options[immSel.selectedIndex]?.text || '');
+    label.textContent = '📍 ' + parts.join(' › ');
+    label.style.display = 'block';
+  } else {
+    label.style.display = 'none';
+  }
+
+  try {
+    var d = await api(url);
+    if (!d) return;
+
+    document.getElementById('d-locaux').textContent = f(d.locaux.total);
+    document.getElementById('d-locaux-sub').textContent = d.locaux.occupes + ' occupés · ' + d.locaux.libres + ' libres';
+    document.getElementById('d-revenus').textContent = f(d.finances.revenus_mois);
+    document.getElementById('d-charges').textContent = f(d.finances.charges_mois);
+    document.getElementById('d-benefice').textContent = f(d.finances.benefice_net);
+    document.getElementById('d-taux-occ').textContent = 'Taux occupation: ' + d.locaux.taux_occupation + '%';
+    document.getElementById('d-taux-pct').textContent = d.loyers_mois.taux_paiement + '%';
+    document.getElementById('d-taux-bar').style.width = d.loyers_mois.taux_paiement + '%';
+    document.getElementById('d-taux-det').innerHTML = `<span>${d.loyers_mois.payes} payés</span><span>${d.loyers_mois.retard} en retard</span>`;
+    document.getElementById('d-commission').textContent = f(d.finances.commission_cabinet) + ' BIF';
+    document.getElementById('d-commission-sub').textContent = 'Sur ' + f(d.finances.revenus_mois) + ' BIF bruts';
+    document.getElementById('nb-rappels').textContent = d.rappels.length;
+    document.getElementById('badge-retard').textContent = d.loyers_mois.retard;
+
+    var rhtml = d.rappels.length
+      ? d.rappels.map(r => `<div class="rappel-item"><div class="rdot ${r.type === 'retard' ? 'rdot-red' : 'rdot-amber'}"></div><div><div class="rtxt">${r.message}</div><div class="rsub">${r.detail}</div></div></div>`).join('')
+      : '<div style="text-align:center;padding:24px;color:var(--text3)">✅ Aucun rappel urgent</div>';
+    document.getElementById('rappels-list').innerHTML = rhtml;
+    document.getElementById('mr-content').innerHTML = rhtml;
+
+    var ev = d.evolution_12_mois;
+    var mx = Math.max(...ev.map(e => e.revenus || 1));
+    var bars = '', labs = '';
+    ev.forEach(e => {
+      var rh = Math.max(Math.round((e.revenus || 0) / mx * 100), 3);
+      var ch = Math.max(Math.round((e.charges || 0) / mx * 100), 2);
+      bars += `<div class="bar-group"><div class="bar bar-rev" style="height:${rh}%" title="${e.mois}: ${f(e.revenus)} BIF"></div><div class="bar bar-dep" style="height:${ch}%" title="${e.mois}: ${f(e.charges)} BIF"></div></div>`;
+      labs += `<div class="chart-label">${e.mois.split(' ')[0]}</div>`;
+    });
+    document.getElementById('chart-bars').innerHTML = bars;
+    document.getElementById('chart-labels').innerHTML = labs;
+
+  } catch(e) {
+    console.error('Dash:', e);
+  }
+}
 // ═══════════════════════════════════════════
 //  UTILS
 // ═══════════════════════════════════════════
@@ -3054,6 +3186,7 @@ function showAlert(elId,msg,isErr){if(elId)document.getElementById(elId).innerHT
 // ═══════════════════════════════════════════
 loadProvinces();
 loadMe();
+loadDashFilters();
 loadDash();
 </script>
 </body>
