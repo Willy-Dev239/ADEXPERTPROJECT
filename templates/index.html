@@ -3077,6 +3077,7 @@ async function loadDashFilters() {
 }
 
 // Quand on change le propriétaire → charger ses immeubles
+// Quand on change le propriétaire → charger ses immeubles
 async function onDashPropChange() {
   var propId = document.getElementById('dash-prop-filter').value;
   var immSel = document.getElementById('dash-imm-filter');
@@ -3084,15 +3085,23 @@ async function onDashPropChange() {
 
   if (propId) {
     try {
-      var d = await api('/immeubles/?page_size=200&proprietaire=' + propId);
-      var l = (d && (d.results || d)) || [];
-      // Si l'API ne supporte pas le filtre proprio sur immeubles, charger tous
-      if (!l.length) {
-        var all = await api('/immeubles/?page_size=200');
-        l = (all && (all.results || all)) || [];
-      }
-      immSel.innerHTML = '<option value="">— Tous les immeubles —</option>' +
-        l.map(i => `<option value="${i.id}">${i.nom}</option>`).join('');
+      // Filtrer les locaux de ce propriétaire pour en extraire les immeubles
+      var d = await api('/locaux/?page_size=300&proprietaire=' + propId);
+      var locaux = (d && (d.results || d)) || [];
+
+      // Extraire les immeubles uniques liés à ces locaux
+      var immsMap = {};
+      locaux.forEach(l => {
+        if (l.immeuble && l.immeuble_nom && !immsMap[l.immeuble]) {
+          immsMap[l.immeuble] = l.immeuble_nom;
+        }
+      });
+
+      var options = Object.entries(immsMap)
+        .map(([id, nom]) => `<option value="${id}">${nom}</option>`)
+        .join('');
+
+      immSel.innerHTML = '<option value="">— Tous les immeubles —</option>' + options;
     } catch(e) {}
   }
 
