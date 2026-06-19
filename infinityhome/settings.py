@@ -7,8 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ─── SÉCURITÉ ────────────────────────────────────────────────────────────────
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-infinityhome-change-in-production-2026')
-DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+ALLOWED_HOSTS = os.environ.get(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1,adexper.onrender.com,.onrender.com'
+).split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -79,11 +83,11 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'adexpert_recouvrement_db',
-            'USER': 'adexpert',
-            'PASSWORD': 'adexpert2121',
-            'HOST': 'localhost',
-            'PORT': '3306',
+            'NAME': os.environ.get('DB_NAME', 'adexpert_recouvrement_db'),
+            'USER': os.environ.get('DB_USER', 'adexpert'),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'adexpert2121'),
+            'HOST': os.environ.get('DB_HOST', 'localhost'),
+            'PORT': os.environ.get('DB_PORT', '3306'),
             'OPTIONS': {
                 'charset': 'utf8mb4',
                 'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -117,11 +121,10 @@ REST_FRAMEWORK = {
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
-    'https://adexpert-app.onrender.com',
-]
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'CSRF_TRUSTED_ORIGINS',
+    'http://localhost:8000,http://127.0.0.1:8000,https://adexper.onrender.com'
+).split(',')
 
 CHANNEL_LAYERS = {
     'default': {
