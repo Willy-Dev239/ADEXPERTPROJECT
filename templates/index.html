@@ -3085,29 +3085,19 @@ async function onDashPropChange() {
 
   if (propId) {
     try {
-      // Filtrer les locaux de ce propriétaire pour en extraire les immeubles
-      var d = await api('/locaux/?page_size=300&proprietaire=' + propId);
-      var locaux = (d && (d.results || d)) || [];
+      // ✅ Utilise le nouvel endpoint dédié
+      var d = await api('/immeubles/par-proprietaire/?proprietaire_id=' + propId);
+      var immeubles = d.immeubles || [];
 
-      // Extraire les immeubles uniques liés à ces locaux
-      var immsMap = {};
-      locaux.forEach(l => {
-        if (l.immeuble && l.immeuble_nom && !immsMap[l.immeuble]) {
-          immsMap[l.immeuble] = l.immeuble_nom;
-        }
-      });
-
-      var options = Object.entries(immsMap)
-        .map(([id, nom]) => `<option value="${id}">${nom}</option>`)
-        .join('');
-
-      immSel.innerHTML = '<option value="">— Tous les immeubles —</option>' + options;
-    } catch(e) {}
+      immSel.innerHTML = '<option value="">— Tous les immeubles —</option>' +
+        immeubles.map(i => `<option value="${i.id}">${i.nom}</option>`).join('');
+    } catch(e) {
+      console.error('Erreur chargement immeubles:', e);
+    }
   }
 
   loadDash();
 }
-
 // Réinitialiser les filtres
 function resetDashFilters() {
   document.getElementById('dash-prop-filter').value = '';

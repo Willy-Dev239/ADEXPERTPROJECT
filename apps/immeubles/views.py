@@ -40,7 +40,25 @@ class ImmeubleDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ImmeubleSerializer
     permission_classes = [IsAuthenticated]
 
-
+# views.py
+from django.http import JsonResponse
+from .models import Immeuble
+from apps.locaux.models import Local
+@permission_classes([IsAuthenticated])
+def get_immeubles_by_proprietaire(request):
+    proprietaire_id = request.GET.get('proprietaire_id')
+    if proprietaire_id:
+        # Relation indirecte : Immeuble → Local → Proprietaire
+        immeuble_ids = Local.objects.filter(
+            proprietaire_id=proprietaire_id
+        ).values_list('immeuble_id', flat=True).distinct()
+        
+        immeubles = Immeuble.objects.filter(id__in=immeuble_ids)
+    else:
+        immeubles = Immeuble.objects.all()
+    
+    data = [{'id': i.id, 'nom': i.nom} for i in immeubles]
+    return JsonResponse({'immeubles': data})
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def provinces_communes_view(request):

@@ -11,5 +11,6 @@ urlpatterns = [
     path('list/', views.ImmeubleListCreate.as_view()),
     path('list/<int:pk>/', views.ImmeubleDetail.as_view()),
     path('<int:immeuble_id>/acteurs/', ImmeubleActeursView.as_view()),
+    path('par-proprietaire/', views.get_immeubles_by_proprietaire),
     path('', include(router.urls)),
 ]
