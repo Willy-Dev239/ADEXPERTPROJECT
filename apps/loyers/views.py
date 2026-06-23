@@ -11,15 +11,27 @@ from .serializers import LoyerSerializer, PaiementSerializer, BordereauSerialize
 class LoyerListCreate(generics.ListCreateAPIView):
     serializer_class = LoyerSerializer
     permission_classes = [IsAuthenticated]
+    
     def get_queryset(self):
         user = self.request.user
-        qs = Loyer.objects.select_related('locataire','local','contrat')
+        qs = Loyer.objects.select_related('locataire', 'local', 'contrat')
+        
+        # Filtres rôle
         if user.role == 'locataire' and user.locataire_profile:
             qs = qs.filter(locataire=user.locataire_profile)
         elif user.role == 'proprietaire' and user.proprietaire_profile:
             qs = qs.filter(local__proprietaire=user.proprietaire_profile)
+        
+        # ✅ Filtres dashboard (admin/gestionnaire)
+        proprietaire_id = self.request.query_params.get('proprietaire')
+        immeuble_id = self.request.query_params.get('immeuble')
+        
+        if proprietaire_id:
+            qs = qs.filter(local__proprietaire_id=proprietaire_id)
+        if immeuble_id:
+            qs = qs.filter(local__immeuble_id=immeuble_id)
+        
         return qs
-
 class LoyerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Loyer.objects.all()
     serializer_class = LoyerSerializer
@@ -29,14 +41,31 @@ class LoyerDetail(generics.RetrieveUpdateDestroyAPIView):
 @permission_classes([IsAuthenticated])
 def loyers_en_retard(request):
     qs = Loyer.objects.filter(statut='retard')
+    
+    # ✅ Filtres
+    proprietaire_id = request.query_params.get('proprietaire')
+    immeuble_id = request.query_params.get('immeuble')
+    if proprietaire_id:
+        qs = qs.filter(local__proprietaire_id=proprietaire_id)
+    if immeuble_id:
+        qs = qs.filter(local__immeuble_id=immeuble_id)
+    
     return Response(LoyerSerializer(qs, many=True).data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def loyers_impayes(request):
-    qs = Loyer.objects.filter(statut__in=['attente','partiel'])
+    qs = Loyer.objects.filter(statut__in=['attente', 'partiel'])
+    
+    # ✅ Filtres
+    proprietaire_id = request.query_params.get('proprietaire')
+    immeuble_id = request.query_params.get('immeuble')
+    if proprietaire_id:
+        qs = qs.filter(local__proprietaire_id=proprietaire_id)
+    if immeuble_id:
+        qs = qs.filter(local__immeuble_id=immeuble_id)
+    
     return Response(LoyerSerializer(qs, many=True).data)
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def enregistrer_paiement(request, pk):
