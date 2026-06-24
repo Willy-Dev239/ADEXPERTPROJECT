@@ -1816,14 +1816,42 @@ async function openModalCont(id){
   openModal('m-cont');
 }
 async function saveCont(){
-  var id=document.getElementById('cont-id').value;
-  var data={numero:document.getElementById('cont-num').value,statut:document.getElementById('cont-stat').value,locataire:document.getElementById('cont-loca').value,local:document.getElementById('cont-loc').value,loyer_hors_charges:document.getElementById('cont-loyer').value,provisions_charges:document.getElementById('cont-ch').value||0,periodicite:document.getElementById('cont-per').value,depot_garantie:document.getElementById('cont-depot').value||0,date_entree:document.getElementById('cont-entree').value,date_sortie:document.getElementById('cont-sortie').value||null,informations_complementaires:document.getElementById('cont-info').value};
-  if(!data.numero||!data.locataire||!data.local||!data.loyer_hors_charges||!data.date_entree){document.getElementById('al-cont').innerHTML=err('Champs obligatoires manquants (*).');return;}
+  var id = document.getElementById('cont-id').value;
+  var data = {
+    numero: document.getElementById('cont-num').value,
+    statut: document.getElementById('cont-stat').value,
+    locataire: document.getElementById('cont-loca').value,
+    local: document.getElementById('cont-loc').value,
+    loyer_hors_charges: document.getElementById('cont-loyer').value,
+    provisions_charges: document.getElementById('cont-ch').value || 0,
+    periodicite: document.getElementById('cont-per').value,
+    depot_garantie: document.getElementById('cont-depot').value || 0,
+    date_entree: document.getElementById('cont-entree').value,
+    date_sortie: document.getElementById('cont-sortie').value || null,
+    informations_complementaires: document.getElementById('cont-info').value
+  };
+
+  // Validation champs obligatoires
+  if(!data.numero || !data.locataire || !data.local || !data.loyer_hors_charges || !data.date_entree){
+    document.getElementById('al-cont').innerHTML = err('Champs obligatoires manquants (*).');
+    return;
+  }
+
+  // Validation dates
+  if(data.date_sortie && data.date_entree){
+    if(new Date(data.date_sortie) <= new Date(data.date_entree)){
+      document.getElementById('al-cont').innerHTML = err("La date de sortie doit être postérieure à la date d'entrée.");
+      return;
+    }
+  }
+
   try{
-    if(id)await api('/contrats/'+id+'/',{method:'PUT',body:JSON.stringify(data)});
-    else await api('/contrats/',{method:'POST',body:JSON.stringify(data)});
-    closeModal('m-cont');loadCont();
-  }catch(e){document.getElementById('al-cont').innerHTML=err(e.message);}
+    if(id) await api('/contrats/'+id+'/', {method:'PUT', body:JSON.stringify(data)});
+    else await api('/contrats/', {method:'POST', body:JSON.stringify(data)});
+    closeModal('m-cont'); loadCont();
+  } catch(e){
+    document.getElementById('al-cont').innerHTML = err(e.message);
+  }
 }
 async function resilier(){
   if(!confirm('Résilier ce contrat ?'))return;var id=document.getElementById('cont-id').value;
@@ -1922,19 +1950,46 @@ async function openModalCS(id){
   openModal('m-cs');
 }
 async function saveCS(){
-  var num=document.getElementById('cs-num').value.trim();
-  var propEl=document.getElementById('cs-prop');var propId=propEl.value;
-  var sign=document.getElementById('cs-sign').value;var debut=document.getElementById('cs-debut').value;
-  var taux=document.getElementById('cs-taux').value;
-  if(!num||!propId||!sign||!debut||!taux){document.getElementById('al-cs').innerHTML=err('Champs obligatoires manquants (*).');return;}
-  var id=document.getElementById('cs-id').value;
-  var data={numero:num,proprietaire:propId,date_signature:sign,date_effet:debut,date_expiration:document.getElementById('cs-fin').value||null,statut:document.getElementById('cs-statut').value,taux_commission:taux,periodicite_reversement:document.getElementById('cs-period').value,frais_entree:document.getElementById('cs-entree').value||0,clauses_particulieres:document.getElementById('cs-clauses').value,notes_internes:document.getElementById('cs-notes').value};
-  CS_SERVICES.forEach(s=>{var el=document.getElementById('cs-'+s.id);if(el)data[s.id]=el.checked;});
+  var num = document.getElementById('cs-num').value.trim();
+  var propEl = document.getElementById('cs-prop'); var propId = propEl.value;
+  var sign = document.getElementById('cs-sign').value;
+  var debut = document.getElementById('cs-debut').value;
+  var taux = document.getElementById('cs-taux').value;
+
+  if(!num || !propId || !sign || !debut || !taux){
+    document.getElementById('al-cs').innerHTML = err('Champs obligatoires manquants (*).');
+    return;
+  }
+
+  // Validation dates
+  if(sign && debut && new Date(debut) < new Date(sign)){
+    document.getElementById('al-cs').innerHTML = err("La date d'effet ne peut pas être antérieure à la date de signature.");
+    return;
+  }
+  var fin = document.getElementById('cs-fin').value;
+  if(fin && debut && new Date(fin) <= new Date(debut)){
+    document.getElementById('al-cs').innerHTML = err("La date d'expiration doit être postérieure à la date d'effet.");
+    return;
+  }
+
+  var id = document.getElementById('cs-id').value;
+  var data = {
+    numero: num, proprietaire: propId, date_signature: sign, date_effet: debut,
+    date_expiration: fin || null, statut: document.getElementById('cs-statut').value,
+    taux_commission: taux, periodicite_reversement: document.getElementById('cs-period').value,
+    frais_entree: document.getElementById('cs-entree').value || 0,
+    clauses_particulieres: document.getElementById('cs-clauses').value,
+    notes_internes: document.getElementById('cs-notes').value
+  };
+  CS_SERVICES.forEach(s => { var el = document.getElementById('cs-'+s.id); if(el) data[s.id] = el.checked; });
+
   try{
-    if(id)await api('/contrats/societe/'+id+'/',{method:'PUT',body:JSON.stringify(data)});
-    else await api('/contrats/societe/',{method:'POST',body:JSON.stringify(data)});
-    closeModal('m-cs');loadCS();
-  }catch(e){document.getElementById('al-cs').innerHTML=err(e.message);}
+    if(id) await api('/contrats/societe/'+id+'/', {method:'PUT', body:JSON.stringify(data)});
+    else await api('/contrats/societe/', {method:'POST', body:JSON.stringify(data)});
+    closeModal('m-cs'); loadCS();
+  } catch(e){
+    document.getElementById('al-cs').innerHTML = err(e.message);
+  }
 }
 async function delCS(){
   if(!confirm('Supprimer ce contrat société ?'))return;var id=document.getElementById('cs-id').value;

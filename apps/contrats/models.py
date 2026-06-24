@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.exceptions import ValidationError
 class Contrat(models.Model):
     STATUT = [('actif','Actif'),('resilie','Résilié'),('expire','Expiré')]
     PERIOD = [('mensuel','Mensuel'),('bimensuel','Bi-mensuel'),('trimestriel','Trimestriel'),('semestriel','Semestriel'),('annuel','Annuel')]
@@ -22,6 +22,17 @@ class Contrat(models.Model):
     @property
     def statut_display(self): return dict(self.STATUT).get(self.statut, self.statut)
     @property
+    
+    def clean(self):
+        if self.date_sortie and self.date_entree:
+            if self.date_sortie <= self.date_entree:
+                raise ValidationError({
+                    'date_sortie': "La date de sortie doit être postérieure à la date d'entrée."
+                })
+        if self.date_entree and self.date_entree < timezone.now().date():
+            raise ValidationError({
+                'date_entree': "La date d'entrée ne peut pas être dans le passé."
+            })    
     def periodicite_display(self): return dict(self.PERIOD).get(self.periodicite, self.periodicite)
     class Meta:
         ordering = ['-created_at']
@@ -57,8 +68,21 @@ class ContratSociete(models.Model):
     notes_internes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     @property
-    def proprietaire_nom(self): return self.proprietaire.nom
+    def proprietaire_nom(self): return self
+    proprietaire.nom
     @property
+    
+    def clean(self):
+        if self.date_expiration and self.date_effet:
+            if self.date_expiration <= self.date_effet:
+                raise ValidationError({
+                    'date_expiration': "La date d'expiration doit être postérieure à la date d'effet."
+                })
+        if self.date_effet and self.date_signature:
+            if self.date_effet < self.date_signature:
+                raise ValidationError({
+                    'date_effet': "La date d'effet ne peut pas être antérieure à la date de signature."
+                })   
     def statut_display(self): return dict(self.STATUT).get(self.statut, self.statut)
     class Meta:
         ordering = ['-created_at']
