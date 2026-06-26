@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+
 class Contrat(models.Model):
     STATUT = [('actif','Actif'),('resilie','Résilié'),('expire','Expiré')]
     PERIOD = [('mensuel','Mensuel'),('bimensuel','Bi-mensuel'),('trimestriel','Trimestriel'),('semestriel','Semestriel'),('annuel','Annuel')]
@@ -15,27 +17,29 @@ class Contrat(models.Model):
     date_sortie = models.DateField(null=True, blank=True)
     informations_complementaires = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     @property
     def locataire_nom(self): return self.locataire.nom_prenom
+
     @property
     def local_reference(self): return self.local.reference
+
     @property
     def statut_display(self): return dict(self.STATUT).get(self.statut, self.statut)
+
     @property
-    
+    def periodicite_display(self): return dict(self.PERIOD).get(self.periodicite, self.periodicite)
+
     def clean(self):
         if self.date_sortie and self.date_entree:
             if self.date_sortie <= self.date_entree:
                 raise ValidationError({
                     'date_sortie': "La date de sortie doit être postérieure à la date d'entrée."
                 })
-        if self.date_entree and self.date_entree < timezone.now().date():
-            raise ValidationError({
-                'date_entree': "La date d'entrée ne peut pas être dans le passé."
-            })    
-    def periodicite_display(self): return dict(self.PERIOD).get(self.periodicite, self.periodicite)
+
     class Meta:
         ordering = ['-created_at']
+
 
 class ContratSociete(models.Model):
     STATUT = [('actif','Actif'),('expire','Expiré'),('resilie','Résilié')]
@@ -49,7 +53,6 @@ class ContratSociete(models.Model):
     taux_commission = models.DecimalField(max_digits=5, decimal_places=2, default=9)
     periodicite_reversement = models.CharField(max_length=20, choices=PERIOD, default='mensuel')
     frais_entree = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    # Feature 7: all services
     service_gestion_loyers = models.BooleanField(default=True)
     service_quittances = models.BooleanField(default=True)
     service_recherche_locataires = models.BooleanField(default=False)
@@ -67,11 +70,13 @@ class ContratSociete(models.Model):
     clauses_particulieres = models.TextField(blank=True)
     notes_internes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     @property
-    def proprietaire_nom(self): return self
-    proprietaire.nom
+    def proprietaire_nom(self): return self.proprietaire.nom
+
     @property
-    
+    def statut_display(self): return dict(self.STATUT).get(self.statut, self.statut)
+
     def clean(self):
         if self.date_expiration and self.date_effet:
             if self.date_expiration <= self.date_effet:
@@ -82,7 +87,7 @@ class ContratSociete(models.Model):
             if self.date_effet < self.date_signature:
                 raise ValidationError({
                     'date_effet': "La date d'effet ne peut pas être antérieure à la date de signature."
-                })   
-    def statut_display(self): return dict(self.STATUT).get(self.statut, self.statut)
+                })
+
     class Meta:
         ordering = ['-created_at']
