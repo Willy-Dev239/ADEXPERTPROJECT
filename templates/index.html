@@ -2990,7 +2990,7 @@ async function loadUsers(){
           <td>${u.email||'—'}</td>
           <td><span class="bs ${bl[u.role]||'bs-resilie'}">${rl[u.role]||u.role}</span></td>
           <td>${u.is_active!==false?'<span class="bs bs-paye">✅ Actif</span>':'<span class="bs bs-resilie">Inactif</span>'}</td>
-          <td>${fd(u.date_joined)}</td>
+          <td>${u.date_joined ? new Date(u.date_joined).toLocaleDateString('fr-FR') : '—'}</td>
           <td><button class="btn btn-sm" onclick="openModalUser(${u.id})">✏️ Modifier</button></td>
         </tr>`).join('')
       :'<tr><td colspan="7" class="loader">Aucun utilisateur</td></tr>';
