@@ -2479,11 +2479,19 @@ async function loadBordereaux(){
     }).join('');
   }catch(e){tb.innerHTML='<tr><td colspan="7" style="color:var(--red);text-align:center;padding:20px">Erreur</td></tr>';}
 }
-function openBordVal(id,imgUrl,loca,loyer){
-  document.getElementById('bord-id').value=id;
-  document.getElementById('bord-img').src=imgUrl;
-  document.getElementById('bord-info').innerHTML=`<strong>Locataire:</strong> ${loca} &nbsp;|&nbsp; <strong>Loyer:</strong> ${loyer}`;
-  document.getElementById('bord-comment').value='';
+function openBordVal(id, imgUrl, loca, loyer){
+  document.getElementById('bord-id').value = id;
+  document.getElementById('bord-info').innerHTML = `<strong>Locataire:</strong> ${loca} &nbsp;|&nbsp; <strong>Loyer:</strong> ${loyer}`;
+  document.getElementById('bord-comment').value = '';
+
+  // Recréer l'img au cas où elle a été remplacée par le onerror
+  var imgContainer = document.querySelector('#m-bord-val .modal-body div[style*="text-align:center"]');
+  imgContainer.innerHTML = imgUrl
+    ? `<img id="bord-img" src="${imgUrl}"
+        style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)"
+        onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center>📄 Image non disponible</div>'">`
+    : `<div style="padding:40px;color:var(--text3);text-align:center">📄 Aucune image</div>`;
+
   openModal('m-bord-val');
 }
 async function validerBordereau(statut){
