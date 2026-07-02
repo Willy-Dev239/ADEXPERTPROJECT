@@ -7,8 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ─── SÉCURITÉ ────────────────────────────────────────────────────────────────
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-infinityhome-change-in-production-2026')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-
+# DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = True
 ALLOWED_HOSTS = os.environ.get(
     'ALLOWED_HOSTS',
     'localhost,127.0.0.1,adexper.onrender.com,.onrender.com'
@@ -50,6 +50,7 @@ MIDDLEWARE = [
     'infinityhome.middleware.SessionTimeoutMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',
 ]
 
 ROOT_URLCONF = 'infinityhome.urls'
@@ -163,9 +164,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # ─── UPLOADCARE (fichiers media) ─────────────────────────────────────────────
 UPLOADCARE = {
-    'pub_key': os.environ.get('UPLOADCARE_PUBLIC_KEY', '2bec84ffe9ef07b7a434'),
-    'secret': os.environ.get('UPLOADCARE_SECRET_KEY', '28016c5e8f63918a9e0b'),
+    'pub_key': os.environ.get('UPLOADCARE_PUBLIC_KEY','3be5391c9201b1716150'),
+    'secret': os.environ.get('UPLOADCARE_SECRET_KEY','5f929b8692f0a588eae0'),
+    'cdn_base': 'https://ucarecdn.com',
 }
+
+# Content Security Policy
+CSP_DEFAULT_SRC = ("'self'", "'unsafe-inline'", "data:")
+CSP_IMG_SRC = ("'self'", "data:", "https://ucarecdn.com", "https://*.ucarecdn.com", "blob:")
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com")
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'

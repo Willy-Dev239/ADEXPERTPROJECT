@@ -9,6 +9,6 @@ urlpatterns = [
     path('impayes/', views.loyers_impayes),
     path('rapport-mensuel/', views.rapport_mensuel_loyers),
     path('paiements/rapport-journalier/', views.rapport_journalier),
-    path('bordereaux/', views.BordereauListView.as_view()),
+    path('bordereaux/', views.bordereau_list),
     path('bordereaux/<int:pk>/valider/', views.valider_bordereau),
 ]

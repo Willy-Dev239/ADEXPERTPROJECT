@@ -44,17 +44,48 @@ def locataire_historique(request, pk):
         'montant_total_paye':sum(d['montant_paye'] for d in data),
         'montant_total_restant':sum(d['solde_restant'] for d in data)})
 
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def upload_bordereau(request, pk):
+#     from apps.loyers.models import Bordereau
+#     photo_uuid = request.data.get('photo')
+#     if not photo_uuid:
+#         return Response({'error': 'Photo requise.'}, status=400)
+#     b = Bordereau.objects.create(
+#         locataire_id=pk,
+#         loyer_id=request.data.get('loyer_id'),
+#         photo=photo_uuid,
+#         notes=request.data.get('notes', ''),
+#         statut='en_attente'
+#     )
+#     return Response({'id': b.id, 'statut': b.statut}, status=201)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_bordereau(request, pk):
     from apps.loyers.models import Bordereau
-    photo = request.FILES.get('photo')
-    if not photo:
+    import re
+    photo_uuid = request.data.get('photo')
+    if not photo_uuid:
         return Response({'error': 'Photo requise.'}, status=400)
-    b = Bordereau.objects.create(locataire_id=pk, loyer_id=request.data.get('loyer_id'),
-        photo=photo, notes=request.data.get('notes',''), statut='en_attente')
-    return Response({'id':b.id,'statut':b.statut}, status=201)
-
+    
+    # Extraire uniquement l'UUID si une URL complète est envoyée
+    uuid_match = re.search(
+        r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
+        str(photo_uuid), re.IGNORECASE
+    )
+    if uuid_match:
+        photo_uuid = uuid_match.group(0)
+    
+    b = Bordereau.objects.create(
+        locataire_id=pk,
+        loyer_id=request.data.get('loyer_id'),
+        photo=photo_uuid,
+        notes=request.data.get('notes', ''),
+        statut='en_attente'
+    )
+    return Response({'id': b.id, 'statut': b.statut}, status=201)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_bordereaux(request, pk):

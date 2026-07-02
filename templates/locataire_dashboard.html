@@ -1425,35 +1425,78 @@ function resetBordForm(){
 }
 
 async function submitBordereau(){
-  if(!_selectedFile){document.getElementById('bord-modal-alert').innerHTML=err('Veuillez sélectionner un fichier.');return;}
-  if(!_selectedPay){document.getElementById('bord-modal-alert').innerHTML=err('Veuillez sélectionner un mode de paiement.');return;}
-  if(!S.locataireId){document.getElementById('bord-modal-alert').innerHTML=err('Profil locataire non trouvé.');return;}
-  var mode=_selectedPay==='autre'?document.getElementById('autre-input').value:_selectedPay;
-  if(_selectedPay==='autre'&&!mode.trim()){document.getElementById('bord-modal-alert').innerHTML=err('Veuillez préciser le mode de paiement.');return;}
-  var btn=document.getElementById('btn-submit-bord');
-  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Envoi...';
-  try{
-    var form=new FormData();
-    form.append('photo',_selectedFile);
-    form.append('mode_paiement',mode);
-    var loyerId=document.getElementById('bord-loyer-sel').value;
-    var notes=document.getElementById('bord-notes').value;
-    if(loyerId)form.append('loyer_id',loyerId);
-    if(notes)form.append('notes',notes);
-    var r=await fetch(BASE+'/locataires/'+S.locataireId+'/upload-bordereau/',{
-      method:'POST',headers:{'Authorization':'Token '+S.token},body:form,
+  const alertBox = document.getElementById('bord-modal-alert');
+  if(!_selectedFile){ alertBox.innerHTML=err('Veuillez sélectionner un fichier.'); return; }
+  if(!_selectedPay){  alertBox.innerHTML=err('Veuillez sélectionner un mode de paiement.'); return; }
+  if(!S.locataireId){ alertBox.innerHTML=err('Profil locataire non trouvé.'); return; }
+
+  var mode = _selectedPay === 'autre' ? document.getElementById('autre-input').value : _selectedPay;
+  if(_selectedPay === 'autre' && !mode.trim()){ alertBox.innerHTML=err('Veuillez préciser le mode de paiement.'); return; }
+
+  var btn = document.getElementById('btn-submit-bord');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Upload en cours...';
+
+  try {
+    // ── ÉTAPE 1 : Upload vers Uploadcare ──
+    const ucForm = new FormData();
+    ucForm.append('UPLOADCARE_PUB_KEY', '3be5391c9201b1716150');
+  
+    ucForm.append('UPLOADCARE_STORE', 'auto');
+    ucForm.append('file', _selectedFile);
+
+    const ucResp = await fetch('https://upload.uploadcare.com/base/', {
+      method: 'POST',
+      body: ucForm
     });
-    if(!r.ok){var e=await r.json().catch(()=>({}));throw new Error(JSON.stringify(e));}
+    if(!ucResp.ok) throw new Error('Échec upload Uploadcare.');
+    const ucData = await ucResp.json();
+    const uuid = ucData.file;
+    if(!uuid) throw new Error('UUID Uploadcare non reçu.');
+
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+
+    // ── ÉTAPE 2 : Envoyer l'UUID à ton API ──
+    const loyerId = document.getElementById('bord-loyer-sel').value;
+    const notes   = document.getElementById('bord-notes').value;
+
+    const payload = {
+      photo: uuid,
+      mode_paiement: mode,
+      notes: notes || '',
+    };
+    if(loyerId) payload.loyer_id = loyerId;
+
+    const r = await fetch(BASE + '/locataires/' + S.locataireId + '/upload-bordereau/', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Token ' + S.token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if(!r.ok){ const e = await r.json().catch(()=>({})); throw new Error(JSON.stringify(e)); }
+
     closeModal('m-bordereau');
+    _selectedFile = null;
+    _selectedPay  = null;
+    document.getElementById('file-badge').classList.add('hidden');
+    document.getElementById('bord-upload-zone').classList.remove('hidden');
+
     if(document.getElementById('s-bordereaux').classList.contains('active')){
-      document.getElementById('bord-alert').innerHTML='<div class="info-box info-ok"><i class="fas fa-check-circle"></i> Bordereau envoyé ! L\'administration le vérifiera bientôt.</div>';
+      document.getElementById('bord-alert').innerHTML =
+        '<div class="info-box info-ok"><i class="fas fa-check-circle"></i> Bordereau envoyé ! L\'administration le vérifiera bientôt.</div>';
       loadBordereaux();
     }
-  }catch(e){
-    document.getElementById('bord-modal-alert').innerHTML=err('Erreur envoi: '+e.message);
-  }finally{btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> Envoyer le bordereau';}
-}
 
+  } catch(e){
+    alertBox.innerHTML = err('Erreur envoi: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer le bordereau';
+  }
+}
 async function loadBordereaux(){
   if(!S.locataireId){document.getElementById('bord-grid').innerHTML='<div class="info-box info-warn">Profil locataire non lié.</div>';return;}
   document.getElementById('bord-grid').innerHTML='<div class="loader">Chargement...</div>';

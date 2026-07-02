@@ -298,10 +298,66 @@ def rapport_journalier(request):
         k = p.get_mode_paiement_display()
         rep[k] = rep.get(k, 0) + float(p.montant)
     return Response({'date':d,'nombre_paiements':paiements.count(),'total_encaisse':sum(float(p.montant) for p in paiements),'repartition_par_mode':rep})
-class BordereauListView(generics.ListAPIView):
-    serializer_class = BordereauSerializer
-    permission_classes = [IsAuthenticated]
-    def get_queryset(self): return Bordereau.objects.all().order_by('-created_at')
+# class BordereauListView(generics.ListAPIView):
+#     serializer_class = BordereauSerializer
+#     permission_classes = [IsAuthenticated]
+#     def get_queryset(self): return Bordereau.objects.all().order_by('-created_at')
+
+
+# APRÈS
+import re
+UUID_RE = re.compile(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', re.IGNORECASE)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def bordereau_list(request):
+    from django.db import connection
+    statut = request.query_params.get('statut')
+    
+    query = "SELECT id, locataire_id, loyer_id, photo, notes, statut, commentaire_admin, created_at FROM loyers_bordereau"
+    params = []
+    if statut:
+        query += " WHERE statut = %s"
+        params.append(statut)
+    query += " ORDER BY created_at DESC"
+    
+    with connection.cursor() as cursor:
+        cursor.execute(query, params)
+        columns = [col[0] for col in cursor.description]
+        rows = cursor.fetchall()
+    
+    results = []
+    for row in rows:
+        b = dict(zip(columns, row))
+        try:
+            from apps.locataires.models import Locataire
+            loc = Locataire.objects.get(pk=b['locataire_id'])
+            b['locataire_nom'] = loc.nom_prenom
+        except Exception:
+            b['locataire_nom'] = '—'
+        try:
+            from apps.loyers.models import Loyer
+            loyer = Loyer.objects.get(pk=b['loyer_id']) if b['loyer_id'] else None
+            b['loyer_libelle'] = loyer.libelle if loyer else '—'
+        except Exception:
+            b['loyer_libelle'] = '—'
+
+        # Construire photo_url correctement
+        raw = b.get('photo', '') or ''
+        if not raw:
+            b['photo_url'] = None
+        else:
+            match = UUID_RE.search(raw)
+            if match:
+                b['photo_url'] = f'https://2uw2o5rfke.ucarecd.net/{match.group(0)}/'
+            else:
+                b['photo_url'] = None
+
+        b['created_at'] = str(b['created_at'])
+        results.append(b)
+    
+    return Response(results)
+
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
@@ -310,7 +366,7 @@ def valider_bordereau(request, pk):
         b = Bordereau.objects.get(pk=pk)
     except Bordereau.DoesNotExist:
         return Response({'error': 'Introuvable.'}, status=404)
-    b.statut = request.data.get('statut','valide')
-    b.commentaire_admin = request.data.get('commentaire','')
+    b.statut = request.data.get('statut', 'valide')
+    b.commentaire_admin = request.data.get('commentaire', '')
     b.save()
     return Response(BordereauSerializer(b).data)

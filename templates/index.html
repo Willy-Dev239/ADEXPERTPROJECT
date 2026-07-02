@@ -1228,7 +1228,9 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     <div class="modal-body">
       <input type="hidden" id="bord-id">
       <div style="text-align:center;margin-bottom:14px">
-        <img id="bord-img" src="" style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)" onerror="this.style.display='none'">
+        <img id="bord-img" src="" 
+          style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)" 
+          onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center>📄 Image non disponible</div>'">
       </div>
       <div id="bord-info" style="margin-bottom:12px;font-size:12.5px;color:var(--text2)"></div>
       <div class="fg"><label>Commentaire (optionnel)</label><textarea id="bord-comment" rows="2" placeholder="Motif de rejet ou remarque…"></textarea></div>
@@ -2076,7 +2078,7 @@ body{font-family:Arial,sans-serif;font-size:12px;color:#111;background:#fff;padd
 
 <div class="article">
   <div class="article-title">Article 1 — Objet</div>
-  Le présent contrat confie à La Société la gestion locative des biens immobiliers du Propriétaire.
+  Le présent contrat est conclu entre les soussignés pour la gestion locative des biens immobiliers du Mandant, incluant la recherche de locataires, la perception des loyers, la gestion des charges et l'entretien des locaux.
 </div>
 
 <div class="article">
@@ -2457,7 +2459,24 @@ async function loadBordereaux(){
     if(!l.length){tb.innerHTML='<tr><td colspan="7" class="loader">Aucun bordereau</td></tr>';return;}
     var sc={'en_attente':'bs-attente','valide':'bs-paye','rejete':'bs-retard'};
     var sl={'en_attente':'⏳ En attente','valide':'✅ Validé','rejete':'❌ Rejeté'};
-    tb.innerHTML=l.map(b=>`<tr><td>${b.locataire_nom||'—'}</td><td>${b.loyer_libelle||'—'}</td><td><a href="${b.photo_url||b.photo}" target="_blank" style="color:var(--accent)">📸 Voir photo</a></td><td>${b.notes||'—'}</td><td>${fd(b.created_at)}</td><td><span class="bs ${sc[b.statut]||'bs-attente'}">${sl[b.statut]||b.statut}</span></td><td>${S.write&&b.statut==='en_attente'?`<button class="btn btn-sm" onclick="openBordVal(${b.id},'${esc(b.photo_url||b.photo||'')}','${esc(b.locataire_nom||'')}','${esc(b.loyer_libelle||'')}')">✅ Valider</button>`:'—'}</td></tr>`).join('');
+    tb.innerHTML=l.map(b=>{
+      var photoUrl = b.photo_url || (b.photo ? `https://ucarecdn.com/${b.photo}/` : null);
+      var photoHtml=photoUrl
+        ?`<a href="${photoUrl}" target="_blank" style="color:var(--accent)">📸 Voir photo</a>`
+        :`<span style="color:var(--text3)">—</span>`;
+      var dateHtml=b.created_at
+        ?new Date(b.created_at).toLocaleDateString('fr-FR')
+        :'—';
+      return `<tr>
+        <td>${b.locataire_nom||'—'}</td>
+        <td>${b.loyer_libelle||'—'}</td>
+        <td>${photoHtml}</td>
+        <td>${b.notes||'—'}</td>
+        <td>${dateHtml}</td>
+        <td><span class="bs ${sc[b.statut]||'bs-attente'}">${sl[b.statut]||b.statut}</span></td>
+        <td>${S.write&&b.statut==='en_attente'?`<button class="btn btn-sm" onclick="openBordVal(${b.id},'${esc(photoUrl||'')}','${esc(b.locataire_nom||'')}','${esc(b.loyer_libelle||'')}')">✅ Valider</button>`:'—'}</td>
+      </tr>`;
+    }).join('');
   }catch(e){tb.innerHTML='<tr><td colspan="7" style="color:var(--red);text-align:center;padding:20px">Erreur</td></tr>';}
 }
 function openBordVal(id,imgUrl,loca,loyer){

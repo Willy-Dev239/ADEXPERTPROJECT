@@ -51,6 +51,16 @@ class Paiement(models.Model):
     class Meta:
         ordering = ['-date_paiement']
 
+
+
+from pyuploadcare.dj.models import ImageField
+import re
+
+UUID_RE = re.compile(
+    r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+    re.IGNORECASE
+)
+
 class Bordereau(models.Model):
     STATUT = [('en_attente','En attente'),('valide','Validé'),('rejete','Rejeté')]
     locataire = models.ForeignKey('locataires.Locataire', on_delete=models.CASCADE, related_name='bordereaux')
@@ -61,5 +71,30 @@ class Bordereau(models.Model):
     statut = models.CharField(max_length=20, choices=STATUT, default='en_attente')
     commentaire_admin = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     class Meta:
         ordering = ['-created_at']
+
+    @classmethod
+    def from_db(cls, db, field_names, values):
+        # Nettoyer la valeur de 'photo' avant que pyuploadcare la parse
+        if 'photo' in field_names:
+            idx = list(field_names).index('photo')
+            val = values[idx]
+            if val and not UUID_RE.match(str(val).strip()):
+                values = list(values)
+                values[idx] = None  # valeur invalide → on met None
+                values = tuple(values)
+        return super().from_db(db, field_names, values)
+# class Bordereau(models.Model):
+#     STATUT = [('en_attente','En attente'),('valide','Validé'),('rejete','Rejeté')]
+#     locataire = models.ForeignKey('locataires.Locataire', on_delete=models.CASCADE, related_name='bordereaux')
+#     loyer = models.ForeignKey(Loyer, on_delete=models.SET_NULL, null=True, blank=True, related_name='bordereaux')
+    
+#     photo = ImageField(blank=True, null=True)
+#     notes = models.TextField(blank=True)
+#     statut = models.CharField(max_length=20, choices=STATUT, default='en_attente')
+#     commentaire_admin = models.TextField(blank=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     class Meta:
+#         ordering = ['-created_at']
