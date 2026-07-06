@@ -41,30 +41,45 @@ class LoyerDetail(generics.RetrieveUpdateDestroyAPIView):
 @permission_classes([IsAuthenticated])
 def loyers_en_retard(request):
     qs = Loyer.objects.filter(statut='retard')
-    
-    # ✅ Filtres
+    user = request.user
+
+    # ✅ Filtre automatique si l'utilisateur est un propriétaire
+    if user.role == 'proprietaire' and user.proprietaire_profile:
+        qs = qs.filter(local__proprietaire=user.proprietaire_profile)
+    elif user.role == 'locataire' and user.locataire_profile:
+        qs = qs.filter(locataire=user.locataire_profile)
+
+    # Filtres dashboard (admin/gestionnaire)
     proprietaire_id = request.query_params.get('proprietaire')
     immeuble_id = request.query_params.get('immeuble')
     if proprietaire_id:
         qs = qs.filter(local__proprietaire_id=proprietaire_id)
     if immeuble_id:
         qs = qs.filter(local__immeuble_id=immeuble_id)
-    
+
     return Response(LoyerSerializer(qs, many=True).data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def loyers_impayes(request):
     qs = Loyer.objects.filter(statut__in=['attente', 'partiel'])
-    
-    # ✅ Filtres
+    user = request.user
+
+    # Filtre automatique si l'utilisateur est un propriétaire
+    if user.role == 'proprietaire' and user.proprietaire_profile:
+        qs = qs.filter(local__proprietaire=user.proprietaire_profile)
+    elif user.role == 'locataire' and user.locataire_profile:
+        qs = qs.filter(locataire=user.locataire_profile)
+
+    # Filtres dashboard (admin/gestionnaire)
     proprietaire_id = request.query_params.get('proprietaire')
     immeuble_id = request.query_params.get('immeuble')
     if proprietaire_id:
         qs = qs.filter(local__proprietaire_id=proprietaire_id)
     if immeuble_id:
         qs = qs.filter(local__immeuble_id=immeuble_id)
-    
+
     return Response(LoyerSerializer(qs, many=True).data)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

@@ -355,6 +355,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   <div class="topbar-left">
     <div class="topbar-title" id="page-title">Tableau de bord</div>
   </div>
+  
   <div class="topbar-right">
        <!-- Theme toggle -->
 <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Changer le thème">
@@ -373,6 +374,15 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- ═══ DASHBOARD ═══ -->
 <div class="section active" id="s-dashboard">
+
+  <!-- ═══ FILTRE IMMEUBLE (visible si +1 immeuble) ═══ -->
+<div id="dash-imm-filter-bar" class="hidden" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+  <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap">🏢 Filtrer par immeuble</span>
+  <select id="dash-imm-select" onchange="loadDash()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:200px">
+    <option value="">— Tous mes immeubles —</option>
+  </select>
+  <button class="btn btn-sm" onclick="resetDashImmFilter()">✕ Réinitialiser</button>
+</div>
   <!-- Welcome bar -->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px">
     <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0" id="welcome-avatar">P</div>
@@ -380,6 +390,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <div style="font-size:15px;font-weight:700;color:var(--text)" id="welcome-name">Bonjour, Propriétaire</div>
       <div style="font-size:12px;color:var(--text3)" id="welcome-sub">Voici un résumé de votre portefeuille immobilier</div>
     </div>
+
     <div style="margin-left:auto;text-align:right">
       <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Dernière connexion</div>
       <div style="font-size:12px;color:var(--text2)" id="welcome-date">—</div>
@@ -406,45 +417,62 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <div class="stat-icon">📉</div>
     </div>
     <div class="stat-card" style="--c:linear-gradient(90deg,#8b5cf6,#7c3aed)">
-      <div class="stat-label">Bénéfice net</div>
+      <div class="stat-label">Revenus net</div>
       <div class="stat-value" id="d-benefice">—</div>
       <div class="stat-sub" id="d-taux-occ">—</div>
       <div class="stat-icon">📊</div>
     </div>
   </div>
-
-  <div class="two-col">
-    <div class="card">
-      <div class="card-title">
-        📈 Évolution 12 mois
-        <div style="display:flex;gap:10px;font-size:11px;color:var(--text3)">
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--accent);border-radius:2px;display:inline-block"></span>Revenus</span>
-          <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--red);border-radius:2px;display:inline-block"></span>Charges</span>
-        </div>
+<div class="two-col">
+  <div class="card">
+    <div class="card-title">
+      📈 Évolution 12 mois
+      <div style="display:flex;gap:10px;font-size:11px;color:var(--text3)">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--accent);border-radius:2px;display:inline-block"></span>Revenus</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--red);border-radius:2px;display:inline-block"></span>Charges</span>
       </div>
-      <div class="chart-bars" id="chart-bars"></div>
-      <div class="chart-labels" id="chart-labels"></div>
     </div>
-    <div class="card">
-      <div class="card-title">🔔 Loyers en retard</div>
-      <div id="retard-list"><div class="loader">Chargement...</div></div>
+    <div class="chart-bars" id="chart-bars"></div>
+    <div class="chart-labels" id="chart-labels"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔔 Loyers en retard</div>
+    <div id="retard-list"><div class="loader">Chargement...</div></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">🏠 Répartition de mes locaux</div>
+  <div style="display:flex;align-items:center;gap:24px">
+    <div id="donut-locaux" style="width:140px;height:140px;border-radius:50%;flex-shrink:0"></div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:12px;height:12px;border-radius:3px;background:var(--green);display:inline-block"></span>
+        <span style="font-size:12.5px;color:var(--text2)">Occupés</span>
+        <strong id="donut-occ-val" style="color:var(--text)">—</strong>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="width:12px;height:12px;border-radius:3px;background:var(--amber);display:inline-block"></span>
+        <span style="font-size:12.5px;color:var(--text2)">Libres</span>
+        <strong id="donut-lib-val" style="color:var(--text)">—</strong>
+      </div>
     </div>
   </div>
+</div>
 
-  <div class="two-col">
-    <div class="card">
-      <div class="card-title">📊 Taux de paiement du mois</div>
-      <div style="font-size:30px;font-weight:800;color:var(--text)" id="d-taux-pct">—%</div>
-      <div class="prog-wrap"><div class="prog-fill" id="d-taux-bar" style="width:0%"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text3);margin-top:4px" id="d-taux-det"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">💼 Commission ADEXPERT (9%)</div>
-      <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Prélevée sur vos revenus bruts encaissés</div>
-      <div class="kpi-row" style="margin-bottom:0">
-        <div class="kpi"><div class="kpi-label">Commission</div><div class="kpi-val" style="color:#c4b5fd;font-size:17px" id="d-commission">—</div></div>
-        <div class="kpi"><div class="kpi-label">Net reversé</div><div class="kpi-val" style="color:var(--green);font-size:17px" id="d-net-verse">—</div></div>
-      </div>
+<div class="two-col">
+  <div class="card">
+    <div class="card-title">📊 Taux de paiement du mois</div>
+    <div style="font-size:30px;font-weight:800;color:var(--text)" id="d-taux-pct">—%</div>
+    <div class="prog-wrap"><div class="prog-fill" id="d-taux-bar" style="width:0%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text3);margin-top:4px" id="d-taux-det"></div>
+  </div>
+  <div class="card">
+    <div class="card-title" id="d-comm-title">💼 Commission ADEXPERT (9%)</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Prélevée sur vos revenus bruts encaissés</div>
+    <div class="kpi-row" style="margin-bottom:0">
+      <div class="kpi"><div class="kpi-label">Commission</div><div class="kpi-val" style="color:#c4b5fd;font-size:17px" id="d-commission">—</div></div>
+      <div class="kpi"><div class="kpi-label">Net reversé</div><div class="kpi-val" style="color:var(--green);font-size:17px" id="d-net-verse">—</div></div>
     </div>
   </div>
 </div>
@@ -892,11 +920,14 @@ document.querySelectorAll('.nav-item[data-section]').forEach(el => {
 // ════════════════════════════════════════
 async function loadDash() {
   try {
-    var url = '/dashboard/';
+    var immId = document.getElementById('dash-imm-select')?.value || '';
+    var url = '/dashboard/' + (immId ? '?immeuble=' + immId : '');
     var d = await api(url);
     if (!d) return;
     document.getElementById('d-locaux').textContent = f(d.locaux.total);
     document.getElementById('d-locaux-sub').textContent = d.locaux.occupes + ' occupés · ' + d.locaux.libres + ' libres';
+    document.getElementById('d-locaux-sub').textContent = d.locaux.occupes + ' occupés · ' + d.locaux.libres + ' libres';
+renderDonutLocaux(d.locaux.occupes, d.locaux.libres); // ✅ ajouté 
     document.getElementById('d-revenus').textContent = f(d.finances.revenus_mois);
     document.getElementById('d-charges').textContent = f(d.finances.charges_mois);
     document.getElementById('d-benefice').textContent = f(d.finances.benefice_net);
@@ -907,17 +938,32 @@ async function loadDash() {
       '<span>' + d.loyers_mois.payes + ' payés</span><span style="color:var(--red)">' + d.loyers_mois.retard + ' en retard</span>';
 
     var rev = d.finances.revenus_mois;
-    var comm = Math.round(rev * 0.09);
-    var net = Math.round(rev * 0.91);
+    var taux = 9; // valeur par défaut si aucun contrat trouvé
+    try {
+      var cs = await api('/contrats/societe/?statut=actif');
+      var csList = cs.results || cs;
+      console.log('taux_commission brut:', csList[0].taux_commission, typeof csList[0].taux_commission); // ← debug
+      if (csList.length) {
+        csList.sort((a, b) => new Date(b.date_signature) - new Date(a.date_signature));
+        taux = parseFloat(csList[0].taux_commission);
+      }
+    } catch (e) {
+      console.error('Erreur récupération contrat société:', e);
+    }
+    var comm = Math.round(rev * (taux / 100));
+    var net = Math.round(rev * (1 - taux / 100));
     document.getElementById('d-commission').textContent = f(comm) + ' BIF';
     document.getElementById('d-net-verse').textContent = f(net) + ' BIF';
+
+    var commTitle = document.getElementById('d-comm-title');
+    if (commTitle) commTitle.textContent = '💼 Commission ADEXPERT (' + taux + '%)';
+
     document.getElementById('badge-retard').textContent = d.loyers_mois.retard;
     document.getElementById('nb-retard-top').textContent = d.loyers_mois.retard;
     if (d.loyers_mois.retard > 0) {
       document.getElementById('badge-chat').classList.remove('hidden');
     }
 
-    // Retards list
     var rhtml = d.rappels && d.rappels.length
       ? d.rappels.map(r => `
         <div style="display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--border)">
@@ -931,7 +977,6 @@ async function loadDash() {
       : '<div style="text-align:center;padding:30px;color:var(--text3)">✅ Aucun retard ce mois</div>';
     document.getElementById('retard-list').innerHTML = rhtml;
 
-    // Chart
     var ev = d.evolution_12_mois || [];
     var mx = Math.max(...ev.map(e => e.revenus || 0), 1);
     var bars = '', labs = '';
@@ -951,8 +996,49 @@ async function loadDash() {
     console.error('Dashboard error:', e);
   }
 }
+async function loadDashImmFilter() {
+  try {
+    var d = await api('/immeubles/?page_size=200');
+    if (!d) return;
+    var l = d.results || d;
+    var bar = document.getElementById('dash-imm-filter-bar');
+    var sel = document.getElementById('dash-imm-select');
+
+    // ✅ N'affiche le filtre que si le propriétaire a plus d'un immeuble
+    if (l.length > 1) {
+      sel.innerHTML = '<option value="">— Tous mes immeubles —</option>' +
+        l.map(i => `<option value="${i.id}">${i.nom}</option>`).join('');
+      bar.classList.remove('hidden');
+    } else {
+      bar.classList.add('hidden');
+    }
+  } catch (e) {}
+}
 
 
+function renderDonutLocaux(occupes, libres) {
+  var total = occupes + libres;
+  var el = document.getElementById('donut-locaux');
+  if (!el) return;
+  if (total === 0) {
+    el.style.background = 'var(--surface2)';
+    document.getElementById('donut-occ-val').textContent = '0';
+    document.getElementById('donut-lib-val').textContent = '0';
+    return;
+  }
+  var pctOcc = (occupes / total) * 100;
+  el.style.background =
+    `conic-gradient(var(--green) 0% ${pctOcc}%, var(--amber) ${pctOcc}% 100%)`;
+  el.style.mask = 'radial-gradient(farthest-side, transparent calc(100% - 22px), #000 calc(100% - 21px))';
+  el.style.webkitMask = el.style.mask;
+  document.getElementById('donut-occ-val').textContent = occupes;
+  document.getElementById('donut-lib-val').textContent = libres;
+}
+
+function resetDashImmFilter() {
+  document.getElementById('dash-imm-select').value = '';
+  loadDash();
+}
 // ══════════════════════════════════════════════
 //  THEME
 // ══════════════════════════════════════════════
@@ -1618,6 +1704,7 @@ async function savePwd() {
 //  INIT
 // ════════════════════════════════════════
 loadMe();
+loadDashImmFilter();
 loadDash();
 </script>
 </body>

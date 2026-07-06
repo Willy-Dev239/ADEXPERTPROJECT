@@ -11,11 +11,19 @@ from .permissions import IsAdminOrGestionnaire
 
 
 class ImmeubleViewSet(viewsets.ModelViewSet):
-    queryset = Immeuble.objects.all()
     serializer_class = ImmeubleSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['proprietaire']  # active ?proprietaire=<id>
+    filterset_fields = ['proprietaire']
+    permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+        qs = Immeuble.objects.all()
+
+        if user.role == 'proprietaire' and user.proprietaire_profile:
+            qs = qs.filter(locaux__proprietaire=user.proprietaire_profile).distinct()
+
+        return qs
 
 class ImmeubleActeursView(APIView):
     permission_classes = [IsAuthenticated, IsAdminOrGestionnaire]
