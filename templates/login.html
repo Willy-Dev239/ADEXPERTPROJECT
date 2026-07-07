@@ -64,13 +64,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
     <input type="password" id="password" placeholder="..." autocomplete="current-password">
   </div>
   <button class="btn" id="btn-login" onclick="doLogin()">Se connecter</button>
-  <div class="divider">Connexion rapide (demo)</div>
+  {% comment %} <div class="divider">Connexion rapide (demo)</div>
   <div class="roles">
     <div class="role-btn" onclick="fillDemo('admin','admin123')">Admin</div>
     <div class="role-btn" onclick="fillDemo('gestionnaire1','gest123')">Gestionnaire</div>
     <div class="role-btn" onclick="fillDemo('locataire1','loc123')">Locataire</div>
     <div class="role-btn" onclick="fillDemo('proprietaire1','Donella123')">Proprietaires</div>
-  </div>
+  </div> {% endcomment %}
 </div>
 
 <!-- Footer -->
