@@ -65,7 +65,6 @@ class Bordereau(models.Model):
     STATUT = [('en_attente','En attente'),('valide','Validé'),('rejete','Rejeté')]
     locataire = models.ForeignKey('locataires.Locataire', on_delete=models.CASCADE, related_name='bordereaux')
     loyer = models.ForeignKey(Loyer, on_delete=models.SET_NULL, null=True, blank=True, related_name='bordereaux')
-    
     photo = ImageField(blank=True, null=True)
     notes = models.TextField(blank=True)
     statut = models.CharField(max_length=20, choices=STATUT, default='en_attente')

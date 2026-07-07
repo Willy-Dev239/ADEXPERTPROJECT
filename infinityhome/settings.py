@@ -176,6 +176,6 @@ CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com")
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com")
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+CSP_CONNECT_SRC = ("'self'", "https://upload.uploadcare.com", "https://ucarecdn.com", "https://*.ucarecdn.com")
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'

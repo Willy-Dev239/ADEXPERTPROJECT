@@ -324,6 +324,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <div class="nav-item" data-section="mes-locataires"><span class="nav-icon">👤</span>Mes Locataires</div>
     <div class="nav-item" data-section="mes-contrats"><span class="nav-icon">📄</span>Mes Contrats</div>
     <div class="nav-group">Finances</div>
+    <div class="nav-item" data-section="mes-virements"><span class="nav-icon">🏦</span>Mes Virements</div>
     <div class="nav-item" data-section="mes-loyers">
       <span class="nav-icon">💰</span>Loyers & Paiements
       <span class="nav-badge" id="badge-retard">0</span>
@@ -472,11 +473,13 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Prélevée sur vos revenus bruts encaissés</div>
     <div class="kpi-row" style="margin-bottom:0">
       <div class="kpi"><div class="kpi-label">Commission</div><div class="kpi-val" style="color:#c4b5fd;font-size:17px" id="d-commission">—</div></div>
-      <div class="kpi"><div class="kpi-label">Net reversé</div><div class="kpi-val" style="color:var(--green);font-size:17px" id="d-net-verse">—</div></div>
+    <div class="kpi"><div class="kpi-label">Net reversé</div><div class="kpi-val" style="color:var(--green);font-size:17px" id="d-net-verse">—</div></div>
     </div>
   </div>
 </div>
+</div>
 
+<!-- ═══ MES LOCAUX ═══ -->
 <!-- ═══ MES LOCAUX ═══ -->
 <div class="section" id="s-mes-locaux">
   <div class="kpi-row" id="kpi-locaux"></div>
@@ -626,7 +629,47 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     </div>
   </div>
 </div>
+<div class="section" id="s-mes-virements">
+  <div class="card">
+    <div class="card-title">🏦 Envoyer un bordereau de virement</div>
+    <div id="al-virement"></div>
+    <div class="form-grid">
+      <div class="fg">
+        <label>Convention (ContratSociete) *</label>
+        <select id="vir-contrat"></select>
+      </div>
+      <div class="fg">
+        <label>Montant reçu (net) *</label>
+        <input type="number" id="vir-montant" placeholder="Ex: 450000">
+      </div>
+      <div class="fg">
+        <label>Date du virement *</label>
+        <input type="date" id="vir-date">
+      </div>
+      <div class="fg">
+        <label>Référence virement</label>
+        <input type="text" id="vir-ref" placeholder="Optionnel">
+      </div>
+      <div class="fg">
+        <label>Banque</label>
+        <input type="text" id="vir-banque" placeholder="Optionnel">
+      </div>
+      <div class="fg">
+        <label>Pièce jointe (bordereau) *</label>
+        <input type="file" id="vir-fichier" accept="image/*,.pdf">
+      </div>
+    </div>
+    <button class="btn btn-success" onclick="envoyerVirement()">📤 Envoyer le bordereau</button>
+  </div>
 
+  <div class="card">
+    <div class="card-title">📋 Historique de mes bordereaux</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Date</th><th>Convention</th><th>Montant</th><th>Référence</th><th>Statut</th><th>Fichier</th></tr></thead>
+      <tbody id="tb-virements"><tr><td colspan="6" class="loader">Chargement...</td></tr></tbody>
+    </table></div>
+  </div>
+</div>
 <!-- ═══ MES CONVENTIONS ═══ -->
 <div class="section" id="s-mes-conventions">
   <div class="card">
@@ -885,6 +928,7 @@ var TITLES = {
   'mes-charges': 'Mes Charges',
   'mes-rapports': 'Mes Rapports',
   chat: 'Chat de mon immeuble',
+  'mes-virements': 'Mes Virements',
   'mes-conventions': 'Mes Conventions',
   'mon-compte': 'Mon Compte',
 };
@@ -895,6 +939,7 @@ var LOADERS = {
   'mes-loyers': () => loadMesLoyers('tous'),
   'mes-charges': loadMesCharges,
   chat: loadChatGroups,
+  'mes-virements': () => { loadContratsSelect(); loadMesVirements(); },
   'mes-conventions': loadMesConventions,
   'mon-compte': loadMonCompte,
 };
@@ -1510,6 +1555,81 @@ async function sendMsg() {
 function escapeHtml(str) {
   return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\n/g, '<br>');
 }
+
+
+
+async function loadContratsSelect() {
+  var d = await api('/contrats/societe/?statut=actif');
+  if (!d) return;
+  var l = d.results || d;
+  document.getElementById('vir-contrat').innerHTML = l.map(c =>
+    `<option value="${c.id}">Convention n° ${c.numero} (${c.taux_commission}%)</option>`
+  ).join('');
+}
+
+async function envoyerVirement() {
+  var alEl = document.getElementById('al-virement');
+  alEl.innerHTML = '';
+  var contrat = document.getElementById('vir-contrat').value;
+  var montant = document.getElementById('vir-montant').value;
+  var date = document.getElementById('vir-date').value;
+  var ref = document.getElementById('vir-ref').value;
+  var banque = document.getElementById('vir-banque').value;
+  var fichierInput = document.getElementById('vir-fichier');
+
+  if (!contrat || !montant || !date || !fichierInput.files.length) {
+    alEl.innerHTML = `<div class="info-box info-err">⚠️ Convention, montant, date et fichier sont obligatoires.</div>`;
+    return;
+  }
+
+  try {
+    // Étape 1 : upload direct vers Uploadcare
+    var fd = new FormData();
+    fd.append('UPLOADCARE_PUB_KEY', '3be5391c9201b1716150'); // même clé que pour Bordereau.photo
+    fd.append('UPLOADCARE_STORE', '1');
+    fd.append('file', fichierInput.files[0]);
+    var upRes = await fetch('https://upload.uploadcare.com/base/', { method: 'POST', body: fd });
+    var upData = await upRes.json();
+    var uuid = upData.file;
+
+    // Étape 2 : envoi à Django avec le UUID
+    await api('/contrats/bordereaux-virement/', {
+      method: 'POST',
+      body: JSON.stringify({
+        contrat_societe: contrat,
+        montant: montant,
+        date_virement: date,
+        reference_virement: ref,
+        banque: banque,
+        fichier: uuid,
+      })
+    });
+
+    alEl.innerHTML = `<div class="info-box info-ok">✅ Bordereau envoyé, en attente de validation.</div>`;
+    document.getElementById('vir-montant').value = '';
+    document.getElementById('vir-ref').value = '';
+    document.getElementById('vir-banque').value = '';
+    fichierInput.value = '';
+    loadMesVirements();
+  } catch (e) {
+    alEl.innerHTML = `<div class="info-box info-err">❌ Erreur : ${e.message}</div>`;
+  }
+}
+async function loadMesVirements() {
+  var d = await api('/contrats/bordereaux-virement/?page_size=100');
+  if (!d) return;
+  var l = d.results || d;
+  var bm = { en_attente: 'bs-attente', valide: 'bs-paye', rejete: 'bs-retard' };
+  document.getElementById('tb-virements').innerHTML = l.length ? l.map(v => `<tr>
+    <td>${fd_(v.date_virement)}</td>
+    <td>${v.contrat_numero}</td>
+    <td><strong>${f(v.montant)} BIF</strong></td>
+    <td>${v.reference_virement || '—'}</td>
+    <td><span class="bs ${bm[v.statut]}">${v.statut_display}</span></td>
+    <td><a href="${v.fichier_url}" target="_blank" class="btn btn-sm">📎 Voir</a></td>
+  </tr>`).join('') : '<tr><td colspan="6" class="loader">Aucun bordereau envoyé</td></tr>';
+}
+
 
 // ════════════════════════════════════════
 //  MES CONVENTIONS

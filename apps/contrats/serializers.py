@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Contrat, ContratSociete
+from .models import  BordereauVirement
+
 
 class ContratSerializer(serializers.ModelSerializer):
     locataire_nom = serializers.ReadOnlyField()
@@ -42,3 +44,31 @@ class ContratSocieteSerializer(serializers.ModelSerializer):
                 'date_expiration': "La date d'expiration doit être postérieure à la date d'effet."
             })
         return data
+    
+    
+    
+class BordereauVirementSerializer(serializers.ModelSerializer):
+    proprietaire_nom = serializers.CharField(source='proprietaire.nom', read_only=True)
+    contrat_numero = serializers.CharField(source='contrat_societe.numero', read_only=True)
+    statut_display = serializers.CharField(source='get_statut_display', read_only=True)
+    fichier_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = BordereauVirement
+        fields = [
+            'id', 'proprietaire', 'proprietaire_nom', 'contrat_societe', 'contrat_numero',
+            'montant', 'date_virement', 'reference_virement', 'banque', 'fichier', 'fichier_url',
+            'statut', 'statut_display', 'commentaire_admin', 'traite_par',
+            'date_traitement', 'date_creation',
+        ]
+        read_only_fields = ['proprietaire', 'statut', 'commentaire_admin', 'traite_par', 'date_traitement']
+
+    def get_fichier_url(self, obj):
+        if obj.fichier:
+            return f"https://2uw2o5rfke.ucarecd.net/{obj.fichier}/"
+        return None
+
+    def create(self, validated_data):
+        request = self.context['request']
+        validated_data['proprietaire'] = request.user.proprietaire_profile
+        return super().create(validated_data)

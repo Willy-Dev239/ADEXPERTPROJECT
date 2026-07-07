@@ -345,11 +345,17 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <span class="nav-icon">💰</span>Loyers & Paiements
       <span class="nav-badge" id="badge-retard">0</span>
     </div>
-    <div class="nav-item" onclick="goSection('charges',this)"><span class="nav-icon">🧾</span>Charges & Frais</div>
-    <div class="nav-item" onclick="goSection('bordereaux',this)">
+   <div class="nav-item" onclick="goSection('bordereaux',this)">
       <span class="nav-icon">📸</span>Bordereaux
       <span class="nav-badge" id="badge-bord">0</span>
     </div>
+    <div class="nav-item" onclick="goSection('virements',this)">
+      <span class="nav-icon">🏦</span>Virements Propriétaires
+      <span class="nav-badge" id="badge-vir">0</span>
+    </div>
+
+    <div class="nav-group">Analyse</div>
+
 
     <div class="nav-group">Analyse</div>
     <div class="nav-item" onclick="goSection('rapports',this)"><span class="nav-icon">📈</span>Rapports</div>
@@ -660,12 +666,34 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
         </select>
       </div>
     </div>
-    <div class="table-wrap"><table>
+<div class="table-wrap"><table>
       <thead><tr><th>Locataire</th><th>Loyer</th><th>Photo</th><th>Notes</th><th>Date</th><th>Statut</th><th>Actions</th></tr></thead>
       <tbody id="tb-bord"><tr><td colspan="7" class="loader"></td></tr></tbody>
     </table></div>
   </div>
 </div>
+
+<!-- ═══════ VIREMENTS PROPRIÉTAIRES ═══════ -->
+<div class="section" id="s-virements">
+  <div class="kpi-row" id="kpi-vir"></div>
+  <div class="card">
+    <div class="card-title">🏦 Bordereaux de virement propriétaires
+      <div class="card-actions">
+        <select class="filter-select" id="f-vir-statut" onchange="loadVirements()">
+          <option value="">Tous</option>
+          <option value="en_attente">En attente</option>
+          <option value="valide">Validés</option>
+          <option value="rejete">Rejetés</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Propriétaire</th><th>Convention</th><th>Montant</th><th>Référence</th><th>Banque</th><th>Date virement</th><th>Justificatif</th><th>Statut</th><th>Actions</th></tr></thead>
+      <tbody id="tb-vir"><tr><td colspan="9" class="loader"></td></tr></tbody>
+    </table></div>
+  </div>
+</div>
+
 
 <!-- ═══════ RAPPORTS ═══════ -->
 <div class="section" id="s-rapports">
@@ -1235,12 +1263,35 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div id="bord-info" style="margin-bottom:12px;font-size:12.5px;color:var(--text2)"></div>
       <div class="fg"><label>Commentaire (optionnel)</label><textarea id="bord-comment" rows="2" placeholder="Motif de rejet ou remarque…"></textarea></div>
     </div>
-    <div class="modal-footer">
+   <div class="modal-footer">
       <button class="btn btn-danger btn-sm" onclick="validerBordereau('rejete')">❌ Rejeter</button>
       <button class="btn btn-success" onclick="validerBordereau('valide')">✅ Valider</button>
     </div>
   </div>
 </div>
+
+<!-- MODAL VIREMENT VALIDATION -->
+<div class="modal-overlay" id="m-vir-val">
+  <div class="modal">
+    <div class="modal-header"><div class="mh-icon mh-blue">🏦</div><div><div class="modal-title">Valider le virement</div><div class="modal-subtitle">Vérification du justificatif bancaire</div></div><button class="modal-close" onclick="closeModal('m-vir-val')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="vir-val-id">
+      <div style="text-align:center;margin-bottom:14px">
+        <img id="vir-val-img" src=""
+          style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)"
+          onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center>📄 Fichier non disponible</div>'">
+      </div>
+      <div id="vir-val-info" style="margin-bottom:12px;font-size:12.5px;color:var(--text2)"></div>
+      <div class="fg"><label>Commentaire (optionnel)</label><textarea id="vir-val-comment" rows="2" placeholder="Motif de rejet ou remarque…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger btn-sm" onclick="validerVirement('rejeter')">❌ Rejeter</button>
+      <button class="btn btn-success" onclick="validerVirement('valider')">✅ Valider</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONTRAT SOCIÉTÉ -->
 
 <!-- MODAL CONTRAT SOCIÉTÉ -->
 <div class="modal-overlay" id="m-cs">
@@ -1417,7 +1468,7 @@ async function doLogout(){
 // ═══════════════════════════════════════════
 //  NAVIGATION
 // ═══════════════════════════════════════════
-var TITLES={dashboard:'Tableau de bord',proprietaires:'Propriétaires',immeubles:'Immeubles',locaux:'Locaux',locataires:'Locataires',contrats:'Contrats Location',contrats_societe:'Contrats Société',loyers:'Loyers & Paiements',charges:'Charges & Frais',bordereaux:'Bordereaux',rapports:'Rapports',portefeuille:'Portefeuille cabinet',chat:'Chat Immeubles',notifications:'Notifications',utilisateurs:'Utilisateurs'};
+var TITLES={dashboard:'Tableau de bord',proprietaires:'Propriétaires',immeubles:'Immeubles',locaux:'Locaux',locataires:'Locataires',contrats:'Contrats Location',contrats_societe:'Contrats Société',loyers:'Loyers & Paiements',charges:'Charges & Frais',bordereaux:'Bordereaux',virements:'Virements Propriétaires',rapports:'Rapports',portefeuille:'Portefeuille cabinet',chat:'Chat Immeubles',notifications:'Notifications',utilisateurs:'Utilisateurs'};
 var LOADERS={
   proprietaires:loadProp,
   immeubles:loadImm,
@@ -1428,6 +1479,23 @@ var LOADERS={
   loyers:()=>{ loadLoyerFilters(); loadLoyers('tous'); }, // ✅ un seul
   charges:loadCh,
   bordereaux:loadBordereaux,
+  virements:loadVirements,
+  portefeuille:loadPortf,
+  chat:loadChatInit,
+  notifications:loadNotifications,
+  utilisateurs:loadUsers
+};var TITLES={dashboard:'Tableau de bord',proprietaires:'Propriétaires',immeubles:'Immeubles',locaux:'Locaux',locataires:'Locataires',contrats:'Contrats Location',contrats_societe:'Contrats Société',loyers:'Loyers & Paiements',charges:'Charges & Frais',bordereaux:'Bordereaux',virements:'Virements Propriétaires',rapports:'Rapports',portefeuille:'Portefeuille cabinet',chat:'Chat Immeubles',notifications:'Notifications',utilisateurs:'Utilisateurs'};
+var LOADERS={
+  proprietaires:loadProp,
+  immeubles:loadImm,
+  locaux:loadLocaux,
+  locataires:loadLocas,
+  contrats:loadCont,
+  contrats_societe:loadCS,
+  loyers:()=>{ loadLoyerFilters(); loadLoyers('tous'); }, // ✅ un seul
+  charges:loadCh,
+  bordereaux:loadBordereaux,
+  virements:loadVirements,
   portefeuille:loadPortf,
   chat:loadChatInit,
   notifications:loadNotifications,
@@ -2531,8 +2599,74 @@ async function validerBordereau(statut){
 }
 
 // ═══════════════════════════════════════════
+//  VIREMENTS PROPRIÉTAIRES
+// ═══════════════════════════════════════════
+async function loadVirements(){
+  var tb=document.getElementById('tb-vir');tb.innerHTML='<tr><td colspan="9" class="loader"></td></tr>';
+  var st=document.getElementById('f-vir-statut').value;
+  try{
+    var d=await api('/contrats/bordereaux-virement/'+(st?'?statut='+st:''));if(!d)return;
+    var l=d.results||d;
+    var pending=l.filter(v=>v.statut==='en_attente').length;
+    document.getElementById('badge-vir').textContent=pending||'';
+    document.getElementById('badge-vir').style.display=pending?'':'none';
+    var valides=l.filter(v=>v.statut==='valide').length;
+    var totalMontant=l.filter(v=>v.statut==='valide').reduce((a,v)=>a+parseFloat(v.montant||0),0);
+    document.getElementById('kpi-vir').innerHTML=`<div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${l.length}</div></div><div class="kpi"><div class="kpi-label">En attente</div><div class="kpi-val" style="color:var(--amber)">${pending}</div></div><div class="kpi"><div class="kpi-label">Validés</div><div class="kpi-val" style="color:var(--green)">${valides}</div></div><div class="kpi"><div class="kpi-label">Montant validé</div><div class="kpi-val">${f(totalMontant)} BIF</div></div>`;
+    if(!l.length){tb.innerHTML='<tr><td colspan="9" class="loader">Aucun bordereau de virement</td></tr>';return;}
+    var sc={'en_attente':'bs-attente','valide':'bs-paye','rejete':'bs-retard'};
+    tb.innerHTML=l.map(v=>{
+      var fichierHtml=v.fichier_url
+        ?`<a href="${v.fichier_url}" target="_blank" style="color:var(--accent)">📎 Voir</a>`
+        :`<span style="color:var(--text3)">—</span>`;
+      var acts='';
+      if(v.fichier_url) acts+=`<a href="${v.fichier_url}" target="_blank" class="btn btn-sm">📎</a> `;
+      if(v.statut==='en_attente') acts+=`<button class="btn btn-sm" onclick="openVirementVal(${v.id},'${esc(v.fichier_url||'')}','${esc(v.proprietaire_nom||'')}','${esc(v.contrat_numero||'')}',${v.montant})">✅ Traiter</button>`;
+      if(!acts) acts='—';
+      return `<tr>
+        <td>${v.proprietaire_nom||'—'}</td>
+        <td>${v.contrat_numero||'—'}</td>
+        <td><strong>${f(v.montant)} BIF</strong></td>
+        <td>${v.reference_virement||'—'}</td>
+        <td>${v.banque||'—'}</td>
+        <td>${fd(v.date_virement)}</td>
+        <td>${fichierHtml}</td>
+        <td><span class="bs ${sc[v.statut]||'bs-attente'}">${v.statut_display}</span></td>
+        <td style="white-space:nowrap">${acts}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){tb.innerHTML='<tr><td colspan="9" style="color:var(--red);text-align:center;padding:20px">Erreur</td></tr>';}
+}
+
+function openVirementVal(id, fileUrl, propNom, contratNum, montant){
+  document.getElementById('vir-val-id').value=id;
+  document.getElementById('vir-val-info').innerHTML=`<strong>Propriétaire:</strong> ${propNom} &nbsp;|&nbsp; <strong>Convention:</strong> ${contratNum} &nbsp;|&nbsp; <strong>Montant:</strong> ${f(montant)} BIF`;
+  document.getElementById('vir-val-comment').value='';
+
+  var imgContainer=document.querySelector('#m-vir-val .modal-body div[style*="text-align:center"]');
+  imgContainer.innerHTML=fileUrl
+    ?`<img id="vir-val-img" src="${fileUrl}"
+        style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)"
+        onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center>📄 Fichier non disponible (peut-être un PDF)</div>'">`
+    :`<div style="padding:40px;color:var(--text3);text-align:center">📄 Aucun fichier</div>`;
+
+  openModal('m-vir-val');
+}
+
+async function validerVirement(action){
+  var id=document.getElementById('vir-val-id').value;
+  var commentaire=document.getElementById('vir-val-comment').value;
+  try{
+    await api('/contrats/bordereaux-virement/'+id+'/'+action+'/',{method:'POST',body:JSON.stringify({commentaire})});
+    closeModal('m-vir-val');
+    loadVirements();
+  }catch(e){alert('Erreur: '+e.message);}
+}
+
+// ═══════════════════════════════════════════
 //  RAPPORTS
 // ═══════════════════════════════════════════
+
 async function rapLoyer(){
   var d=new Date();
   try{

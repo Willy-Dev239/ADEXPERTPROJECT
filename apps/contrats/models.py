@@ -91,3 +91,40 @@ class ContratSociete(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        
+        
+        
+        
+
+
+
+class BordereauVirement(models.Model):
+    STATUT_CHOICES = [
+        ('en_attente', 'En attente de validation'),
+        ('valide', 'Validé'),
+        ('rejete', 'Rejeté'),
+    ]
+    proprietaire = models.ForeignKey(
+        'proprietaires.Proprietaire', on_delete=models.CASCADE, related_name='bordereaux_virement'
+    )
+    contrat_societe = models.ForeignKey(
+        'ContratSociete', on_delete=models.CASCADE, related_name='bordereaux_virement'
+    )
+    montant = models.DecimalField(max_digits=12, decimal_places=2)
+    date_virement = models.DateField()
+    reference_virement = models.CharField(max_length=100, blank=True, null=True)
+    banque = models.CharField(max_length=100, blank=True, null=True)
+    fichier = models.CharField(max_length=500)
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
+    commentaire_admin = models.TextField(blank=True, null=True)
+    traite_par = models.ForeignKey(
+        'auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='virements_traites'
+    )
+    date_traitement = models.DateTimeField(null=True, blank=True)
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date_creation']
+
+    def __str__(self):
+        return f"Virement {self.montant} BIF - {self.proprietaire} - {self.statut}"     

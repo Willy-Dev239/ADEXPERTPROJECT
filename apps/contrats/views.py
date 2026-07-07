@@ -1,12 +1,13 @@
 from rest_framework import generics
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.exceptions import PermissionDenied
+from rest_framework import viewsets
 from django.utils import timezone
 from datetime import timedelta
-from .models import Contrat, ContratSociete
-from .serializers import ContratSerializer, ContratSocieteSerializer
-
+from .models import Contrat, ContratSociete, BordereauVirement
+from .serializers import ContratSerializer, ContratSocieteSerializer, BordereauVirementSerializer
 class ContratListCreate(generics.ListCreateAPIView):
     serializer_class = ContratSerializer
     permission_classes = [IsAuthenticated]
@@ -81,3 +82,49 @@ class ContratSocieteDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ContratSociete.objects.all()
     serializer_class = ContratSocieteSerializer
     permission_classes = [IsAuthenticated]
+    
+    
+    
+class BordereauVirementViewSet(viewsets.ModelViewSet):
+    serializer_class = BordereauVirementSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = BordereauVirement.objects.select_related('proprietaire', 'contrat_societe')
+        if user.role == 'proprietaire':
+            return qs.filter(proprietaire=user.proprietaire_profile)
+        elif user.role in ('admin', 'gestionnaire'):
+            statut = self.request.query_params.get('statut')
+            if statut:
+                qs = qs.filter(statut=statut)
+            return qs
+        return qs.none()
+
+    def perform_create(self, serializer):
+        if self.request.user.role != 'proprietaire':
+            raise PermissionDenied("Seul un propriétaire peut envoyer un bordereau de virement.")
+        serializer.save()
+
+    @action(detail=True, methods=['post'], url_path='valider')
+    def valider(self, request, pk=None):
+        if request.user.role not in ('admin', 'gestionnaire'):
+            raise PermissionDenied("Action réservée à l'administration.")
+        obj = self.get_object()
+        obj.statut = 'valide'
+        obj.traite_par = request.user
+        obj.date_traitement = timezone.now()
+        obj.save()
+        return Response(self.get_serializer(obj).data)
+
+    @action(detail=True, methods=['post'], url_path='rejeter')
+    def rejeter(self, request, pk=None):
+        if request.user.role not in ('admin', 'gestionnaire'):
+            raise PermissionDenied("Action réservée à l'administration.")
+        obj = self.get_object()
+        obj.statut = 'rejete'
+        obj.commentaire_admin = request.data.get('commentaire', '')
+        obj.traite_par = request.user
+        obj.date_traitement = timezone.now()
+        obj.save()
+        return Response(self.get_serializer(obj).data)
