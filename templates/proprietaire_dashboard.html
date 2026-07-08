@@ -1220,8 +1220,7 @@ async function showHistorique(id, nom) {
     document.getElementById('hist-kpi').innerHTML =
       `<div class="kpi"><div class="kpi-label">Total loyers</div><div class="kpi-val">${d.total_loyers}</div></div>` +
       `<div class="kpi"><div class="kpi-label">Payés</div><div class="kpi-val" style="color:var(--green)">${d.loyers_payes}</div></div>` +
-      `<div class="kpi"><div class="kpi-label">Restants</div><div class="kpi-val" style="color:var(--red)">${d.loyers_restants}</div></div>` +
-      `<div class="kpi"><div class="kpi-label">Total dû</div><div class="kpi-val">${f(d.montant_total_du)}</div></div>` +
+      `<div class="kpi"><div class="kpi-label">Restants</div><div class="kpi-val" style="color:var(--red)">${(d.total_loyers || 0) - (d.loyers_payes || 0)}</div></div>` +`<div class="kpi"><div class="kpi-label">Total dû</div><div class="kpi-val">${f(d.montant_total_du)}</div></div>` +
       `<div class="kpi"><div class="kpi-label">Total payé</div><div class="kpi-val" style="color:var(--green)">${f(d.montant_total_paye)}</div></div>` +
       `<div class="kpi"><div class="kpi-label">Solde</div><div class="kpi-val" style="color:var(--red)">${f(d.montant_total_restant)}</div></div>`;
     if (!d.historique || !d.historique.length) {
