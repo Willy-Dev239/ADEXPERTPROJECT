@@ -1621,7 +1621,7 @@ async function loadMesVirements() {
   var l = d.results || d;
   var bm = { en_attente: 'bs-attente', valide: 'bs-paye', rejete: 'bs-retard' };
   document.getElementById('tb-virements').innerHTML = l.length ? l.map(v => `<tr>
-    <td>${fd_(v.date_virement)}</td>
+   <td>${fd(v.date_virement)}</td>
     <td>${v.contrat_numero}</td>
     <td><strong>${f(v.montant)} BIF</strong></td>
     <td>${v.reference_virement || '—'}</td>
