@@ -5,6 +5,7 @@ urlpatterns = [
     path('<int:pk>/', views.LoyerDetail.as_view()),
     path('<int:pk>/enregistrer-paiement/', views.enregistrer_paiement),
     path('<int:pk>/quittance/', views.quittance_html),
+    path('loyers/<int:pk>/envoyer-quittance/', views.envoyer_quittance),
     path('en-retard/', views.loyers_en_retard),
     path('impayes/', views.loyers_impayes),
     path('rapport-mensuel/', views.rapport_mensuel_loyers),

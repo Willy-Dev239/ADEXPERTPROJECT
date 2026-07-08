@@ -287,6 +287,7 @@ td.r {{ text-align: right; }}
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def rapport_mensuel_loyers(request):
+    
     mois = int(request.query_params.get('mois', timezone.now().month))
     annee = int(request.query_params.get('annee', timezone.now().year))
     qs = Loyer.objects.filter(echeance__month=mois, echeance__year=annee)
@@ -372,7 +373,29 @@ def bordereau_list(request):
         results.append(b)
     
     return Response(results)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def envoyer_quittance(request, pk):
+    try:
+        loyer = Loyer.objects.get(pk=pk)
+    except Loyer.DoesNotExist:
+        return Response({'error': 'Introuvable.'}, status=404)
 
+    if float(loyer.montant_paye) <= 0:
+        return Response({'error': 'Aucun paiement enregistré pour ce loyer.'}, status=400)
+
+    try:
+        from apps.notifications.models import Notification
+        Notification.objects.create(
+            destinataire_locataire=loyer.locataire,
+            titre='🧾 Quittance disponible',
+            message=f'La quittance de votre loyer «{loyer.libelle}» ({loyer.local_reference}) a été générée par l\'administration. Consultez-la dans votre espace, rubrique Loyers & Paiements.',
+            type_notif='paiement'
+        )
+    except Exception as e:
+        return Response({'error': f'Erreur lors de la notification : {e}'}, status=500)
+
+    return Response({'detail': 'Quittance envoyée au locataire.'})
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
