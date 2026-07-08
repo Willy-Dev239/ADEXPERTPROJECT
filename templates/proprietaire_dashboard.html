@@ -527,6 +527,13 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- ═══ MES LOYERS ═══ -->
 <div class="section" id="s-mes-loyers">
+  <div id="loyers-imm-filter-bar" class="hidden" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap">🏢 Filtrer par immeuble</span>
+    <select id="loyers-imm-select" onchange="loadMesLoyers(_loyersFiltreActuel)" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:200px">
+      <option value="">— Tous mes immeubles —</option>
+    </select>
+    <button class="btn btn-sm" onclick="resetLoyersImmFilter()">✕ Réinitialiser</button>
+  </div>
   <div class="kpi-row" id="kpi-loyers"></div>
   <div class="card">
     <div class="card-title">💰 Loyers & Paiements
@@ -1041,25 +1048,37 @@ renderDonutLocaux(d.locaux.occupes, d.locaux.libres); // ✅ ajouté
     console.error('Dashboard error:', e);
   }
 }
+var _immeublesListe = [];
 async function loadDashImmFilter() {
   try {
     var d = await api('/immeubles/?page_size=200');
     if (!d) return;
-    var l = d.results || d;
-    var bar = document.getElementById('dash-imm-filter-bar');
-    var sel = document.getElementById('dash-imm-select');
-
-    // ✅ N'affiche le filtre que si le propriétaire a plus d'un immeuble
-    if (l.length > 1) {
-      sel.innerHTML = '<option value="">— Tous mes immeubles —</option>' +
-        l.map(i => `<option value="${i.id}">${i.nom}</option>`).join('');
-      bar.classList.remove('hidden');
-    } else {
-      bar.classList.add('hidden');
-    }
+    _immeublesListe = d.results || d;
+    populateImmeubleSelects();
   } catch (e) {}
 }
 
+function populateImmeubleSelects() {
+  var l = _immeublesListe;
+  var optionsHtml = '<option value="">— Tous mes immeubles —</option>' +
+    l.map(i => `<option value="${i.id}">${i.nom}</option>`).join('');
+
+  var dashBar = document.getElementById('dash-imm-filter-bar');
+  var dashSel = document.getElementById('dash-imm-select');
+  var loyersBar = document.getElementById('loyers-imm-filter-bar');
+  var loyersSel = document.getElementById('loyers-imm-select');
+
+  // ✅ N'affiche les filtres que si le propriétaire a plus d'un immeuble
+  if (l.length > 1) {
+    if (dashSel) dashSel.innerHTML = optionsHtml;
+    if (dashBar) dashBar.classList.remove('hidden');
+    if (loyersSel) loyersSel.innerHTML = optionsHtml;
+    if (loyersBar) loyersBar.classList.remove('hidden');
+  } else {
+    if (dashBar) dashBar.classList.add('hidden');
+    if (loyersBar) loyersBar.classList.add('hidden');
+  }
+}
 
 function renderDonutLocaux(occupes, libres) {
   var total = occupes + libres;
@@ -1264,12 +1283,21 @@ async function loadMesContrats() {
 // ════════════════════════════════════════
 //  MES LOYERS
 // ════════════════════════════════════════
+
+function resetLoyersImmFilter() {
+  document.getElementById('loyers-imm-select').value = '';
+  loadMesLoyers(_loyersFiltreActuel);
+}
+var _loyersFiltreActuel = 'tous';
 async function loadMesLoyers(filtre) {
   filtre = filtre || 'tous';
+  _loyersFiltreActuel = filtre;
   document.getElementById('tb-loyers').innerHTML = '<tr><td colspan="9" class="loader">Chargement...</td></tr>';
-  var url = '/loyers/?page_size=300';
-  if (filtre === 'retard') url = '/loyers/en-retard/';
-  else if (filtre === 'attente') url = '/loyers/impayes/';
+  var immId = document.getElementById('loyers-imm-select')?.value || '';
+  var url;
+  if (filtre === 'retard') url = '/loyers/en-retard/' + (immId ? '?immeuble=' + immId : '');
+  else if (filtre === 'attente') url = '/loyers/impayes/' + (immId ? '?immeuble=' + immId : '');
+  else url = '/loyers/?page_size=300' + (immId ? '&immeuble=' + immId : '');
   try {
     var d = await api(url);
     if (!d) return;
