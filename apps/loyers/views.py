@@ -127,7 +127,7 @@ def quittance_html(request, pk):
     solde_color = '#10b981' if solde <= 0 else '#ef4444'
     badge_bg    = '#d1fae5' if solde <= 0 else '#fef3c7'
     badge_color = '#065f46' if solde <= 0 else '#78350f'
-    badge_label = '✅ SOLDÉ' if solde <= 0 else '⚠️ PARTIEL'
+    badge_label = '✅ CONFIRMÉ' if solde <= 0 else '⚠️ PARTIEL'
 
     # ── QR code : nom locataire, montant payé, référence bancaire ──
     dernier_paiement = loyer.paiements.order_by('-date_paiement').first()
