@@ -299,6 +299,23 @@ new QRCode(document.getElementById("qrcode"), {{
 
 </body></html>"""
     return HttpResponse(html, content_type='text/html; charset=utf-8')
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def rapport_mensuel_loyers(request):
+    mois = int(request.query_params.get('mois', timezone.now().month))
+    annee = int(request.query_params.get('annee', timezone.now().year))
+    qs = Loyer.objects.filter(echeance__month=mois, echeance__year=annee)
+    # ✅ Filtre propriétaire
+    user = request.user
+    if user.role == 'proprietaire' and user.proprietaire_profile:
+        qs = qs.filter(local__proprietaire=user.proprietaire_profile)
+    total = qs.count(); payes = qs.filter(statut='paye').count(); retard = qs.filter(statut='retard').count()
+    enc = sum(float(l.montant_paye) for l in qs); imp = sum(float(l.solde_restant) for l in qs)
+    return Response({'total_loyers':total,'loyers_payes':payes,'loyers_retard':retard,
+        'taux_paiement':round(payes/total*100,1) if total else 0,'montant_encaisse':enc,'montant_impaye':imp})
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def rapport_journalier(request):
