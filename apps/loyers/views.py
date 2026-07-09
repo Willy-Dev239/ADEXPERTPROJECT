@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from datetime import date
 from .models import Loyer, Paiement, Bordereau
 from .serializers import LoyerSerializer, PaiementSerializer, BordereauSerializer
-
+import json
 class LoyerListCreate(generics.ListCreateAPIView):
     serializer_class = LoyerSerializer
     permission_classes = [IsAuthenticated]
@@ -129,6 +129,18 @@ def quittance_html(request, pk):
     badge_color = '#065f46' if solde <= 0 else '#78350f'
     badge_label = '✅ SOLDÉ' if solde <= 0 else '⚠️ PARTIEL'
 
+    # ── QR code : nom locataire, montant payé, référence bancaire ──
+    dernier_paiement = loyer.paiements.order_by('-date_paiement').first()
+    if dernier_paiement:
+        banque_ref = dernier_paiement.reference or dernier_paiement.get_mode_paiement_display()
+    else:
+        banque_ref = '—'
+    qr_content = (
+        f"ADEXPERT | Locataire: {loyer.locataire_nom} | "
+        f"Montant payé: {paye:,.0f} BIF | Référence: {banque_ref}"
+    )
+    qr_content_js = json.dumps(qr_content)
+
     html = f"""<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <title>Quittance — {loyer.locataire_nom}</title>
 <style>
@@ -147,7 +159,6 @@ def quittance_html(request, pk):
     padding: 0 !important;
   }}
   .btn-print {{ display: none !important; }}
-  /* Force la suppression des headers/footers navigateur */
   head title {{ display: none; }}
 }}
 body {{
@@ -159,7 +170,6 @@ body {{
   color: #111;
 }}
 
-/* ── bouton impression (disparaît à l'impression) ── */
 .btn-print {{
   display: block;
   width: 100%;
@@ -176,7 +186,6 @@ body {{
 }}
 .btn-print:hover {{ background: #1d3799; }}
 
-/* ── en-tête ── */
 .hd {{ text-align: center; border-bottom: 1px dashed #555; padding-bottom: 5px; margin-bottom: 5px; }}
 .hd h1 {{ font-size: 13px; font-weight: 800; color: #1e40af; }}
 .hd p  {{ font-size: 9px; color: #555; margin-top: 1px; }}
@@ -191,7 +200,6 @@ body {{
   color: {badge_color};
 }}
 
-/* ── lignes info ── */
 .sep {{ border: none; border-top: 1px dashed #aaa; margin: 5px 0; }}
 .row {{ display: flex; justify-content: space-between; margin: 2px 0; }}
 .row .lbl {{ color: #555; }}
@@ -205,33 +213,28 @@ body {{
   letter-spacing: .5px;
 }}
 
-/* ── tableau paiements ── */
 table {{ width: 100%; border-collapse: collapse; margin: 3px 0; }}
 th {{ font-size: 9px; color: #555; text-align: left; border-bottom: 1px solid #ccc; padding-bottom: 2px; }}
 td {{ font-size: 10px; padding: 1px 0; }}
 td.r {{ text-align: right; }}
 
-/* ── totaux ── */
 .totals .row {{ margin: 2px 0; }}
 .totals .paye {{ color: #10b981; }}
 .totals .solde {{ color: {solde_color}; font-size: 12px; }}
 
-/* ── signature ── */
-.sig {{
+/* ── bloc QR (remplace la signature) ── */
+.qr-box {{
   margin-top: 8px;
   text-align: center;
   border: 1px dashed #ccc;
   border-radius: 4px;
-  padding: 5px;
+  padding: 8px;
 }}
-.sig .sig-lbl  {{ font-size: 9px; color: #777; }}
-.sig .sig-name {{ font-size: 11px; font-weight: 700; margin-top: 12px; }}
-.sig .sig-sub  {{ font-size: 9px; color: #aaa; }}
+.qr-lbl {{ font-size: 9px; color: #777; margin-bottom: 4px; }}
+.qr-sub {{ font-size: 8.5px; color: #aaa; margin-top: 4px; }}
 
-/* ── pied ── */
 .foot {{ text-align: center; font-size: 9px; color: #aaa; margin-top: 6px; }}
 
-/* ── filigrane ── */
 .wm {{
   position: fixed; top: 38%; left: 2%;
   opacity: .04; font-size: 38px; font-weight: 900;
@@ -274,32 +277,28 @@ td.r {{ text-align: right; }}
   <div class="row solde"><span class="lbl"><b>Solde</b></span><span class="val"><b>{solde:,.0f} BIF</b></span></div>
 </div>
 
-<div class="sig">
-  <div class="sig-lbl">L'Administrateur</div>
-  <div style="height:18px"></div>
-  <div class="sig-name">ADEXPERT</div>
-  <div class="sig-sub">(Signature &amp; Cachet)</div>
-<p class="foot">Émis le {date.today().strftime('%d/%m/%Y')} — Document officiel ADEXPERT</p>
+<div class="qr-box">
+  <div class="qr-lbl">Vérification d'authenticité</div>
+  <div id="qrcode" style="display:flex;justify-content:center;margin:4px 0"></div>
+  <div class="qr-sub">Scannez pour vérifier ce paiement</div>
 </div>
+
+<p class="foot">Émis le {date.today().strftime('%d/%m/%Y')} — Document officiel ADEXPERT</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+new QRCode(document.getElementById("qrcode"), {{
+  text: {qr_content_js},
+  width: 90,
+  height: 90,
+  colorDark: "#1e40af",
+  colorLight: "#ffffff",
+  correctLevel: QRCode.CorrectLevel.M
+}});
+</script>
 
 </body></html>"""
     return HttpResponse(html, content_type='text/html; charset=utf-8')
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def rapport_mensuel_loyers(request):
-    
-    mois = int(request.query_params.get('mois', timezone.now().month))
-    annee = int(request.query_params.get('annee', timezone.now().year))
-    qs = Loyer.objects.filter(echeance__month=mois, echeance__year=annee)
-    # ✅ Filtre propriétaire
-    user = request.user
-    if user.role == 'proprietaire' and user.proprietaire_profile:
-        qs = qs.filter(local__proprietaire=user.proprietaire_profile)
-    total = qs.count(); payes = qs.filter(statut='paye').count(); retard = qs.filter(statut='retard').count()
-    enc = sum(float(l.montant_paye) for l in qs); imp = sum(float(l.solde_restant) for l in qs)
-    return Response({'total_loyers':total,'loyers_payes':payes,'loyers_retard':retard,
-        'taux_paiement':round(payes/total*100,1) if total else 0,'montant_encaisse':enc,'montant_impaye':imp})
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def rapport_journalier(request):
