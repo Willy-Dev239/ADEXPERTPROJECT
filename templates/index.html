@@ -2263,12 +2263,12 @@ async function loadLoyers(filtre) {
       var sp = parseFloat(x.solde_restant) || 0;
       var acts = '';
       if (S.write && x.statut !== 'paye') acts += `<button class="btn btn-primary btn-sm" onclick="openPay(${x.id},'${esc(x.locataire_nom)}','${esc(x.libelle)}',${x.montant_total})">💳</button> `;
-      if (x.quittance_envoyee) acts += `<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Voir la quittance">🧾</button> `;
       if (parseFloat(x.montant_paye) > 0) {
-        acts += x.quittance_envoyee
-          ? `<button class="btn btn-sm" disabled title="Déjà envoyée" style="opacity:.5">✅</button>`
-          : `<button class="btn btn-sm" onclick="envoyerQuittance(${x.id}, this)" title="Envoyer au locataire">📤</button>`;
-      }
+  acts += `<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Voir la quittance">🧾</button> `;
+  acts += x.quittance_envoyee
+    ? `<button class="btn btn-sm" disabled title="Déjà envoyée" style="opacity:.5">✅</button>`
+    : `<button class="btn btn-sm" onclick="envoyerQuittance(${x.id}, this)" title="Envoyer au locataire">📤</button>`;
+}
       return `<tr><td>${x.locataire_nom}</td><td>${x.local_reference}</td><td>${x.libelle}</td><td><strong>${f(x.montant_total)}</strong></td><td style="color:var(--green)">${f(x.montant_paye)}</td><td style="color:${sp > 0 ? 'var(--red)' : 'var(--green)'}"><strong>${sp < 0 ? '+' + f(Math.abs(sp)) : f(sp)}</strong></td><td>${fd(x.echeance)}</td><td><span class="bs ${bm[x.statut] || 'bs-attente'}">${x.statut_display}</span></td><td style="white-space:nowrap">${acts}</td></tr>`;
     }).join('');
   } catch(e) { tb.innerHTML = '<tr><td colspan="9" style="color:var(--red);text-align:center;padding:20px">Erreur</td></tr>'; }
