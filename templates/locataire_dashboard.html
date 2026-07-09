@@ -1034,7 +1034,8 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
     <div class="modal-body"><div id="mc-quit"><div class="loader"></div></div></div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-quit')">Fermer</button>
-      {% comment %} <button class="btn btn-success" id="btn-print"><i class="fas fa-print"></i> Imprimer / PDF</button> {% endcomment %}
+      
+      <button class="btn btn-success" id="btn-print"><i class="fas fa-print"></i> Imprimer / PDF</button> 
     </div>
   </div>
 </div>
@@ -1272,11 +1273,27 @@ async function loadMesLoyers(filtre){
 // Quittance
 async function showQuit(id){
   document.getElementById('mc-quit').innerHTML='<div class="loader">Génération...</div>';
-  document.getElementById('btn-print').onclick=()=>window.open('/api/loyers/'+id+'/quittance/','_blank');
+
+  document.getElementById('btn-print').onclick = async () => {
+    try {
+      const res = await fetch(BASE + '/loyers/' + id + '/quittance/', {
+        headers: { 'Authorization': 'Token ' + S.token }
+      });
+      if (!res.ok) throw new Error('Erreur ' + res.status);
+      const html = await res.text();
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+      w.focus();
+    } catch(e) {
+      alert('Impossible d\'ouvrir la quittance : ' + e.message);
+    }
+  };
+
   openModal('m-quit');
   try{
     var l=await api('/loyers/'+id+'/');if(!l)return;
-    var paye=parseFloat(l.montant_paye)||0,tot=parseFloat(l.montant_total)||0,sol=tot-paye;
+    var paye=parseFloat(l.montant_paye)||0, tot=parseFloat(l.montant_total)||0, sol=tot-paye;
     var ok=paye>=tot;
     var paiements=(l.paiements||[]).map(p=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px">
       <span style="color:var(--text2)">${fd(p.date_paiement)} · ${p.mode_paiement||'—'}</span>
@@ -1296,7 +1313,6 @@ async function showQuit(id){
       `<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Cliquez sur <strong>🖨️ Imprimer / PDF</strong> pour la quittance officielle compacte.</div>`;
   }catch(e){document.getElementById('mc-quit').innerHTML=err('Erreur: '+e.message);}
 }
-
 // ══════════════════════════════════════════════
 //  HISTORIQUE
 // ══════════════════════════════════════════════
