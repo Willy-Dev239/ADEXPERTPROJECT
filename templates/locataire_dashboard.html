@@ -1254,7 +1254,7 @@ async function loadMesLoyers(filtre){
     document.getElementById('tb-loyers').innerHTML=l.map(x=>{
       var sp=parseFloat(x.solde_restant)||0;
       var acts='';
-      if(parseFloat(x.montant_paye)>0)acts+=`<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Quittance"><i class="fas fa-file-invoice"></i></button> `;
+      if(x.quittance_envoyee)acts+=`<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Quittance"><i class="fas fa-file-invoice"></i></button> `;
       if(x.statut!=='paye')acts+=`<button class="btn btn-sm btn-primary" onclick="openModalBordereau(${x.id},'${esc(x.libelle)}')" title="Envoyer bordereau"><i class="fas fa-upload"></i></button>`;
       return`<tr>
         <td><strong style="color:var(--text)">${x.libelle}</strong></td>
@@ -1607,7 +1607,10 @@ async function loadNotifications(){
           <div class="notif-msg">${n.message}</div>
           <div class="notif-time">${new Date(n.created_at).toLocaleString('fr-FR')}</div>
         </div>
-        ${!n.lu?`<button class="btn btn-sm" onclick="marquerLu(${n.id},this)"><i class="fas fa-check"></i> Lu</button>`:'<span style="font-size:10px;color:var(--text3)">Lu</span>'}
+        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+          ${n.loyer?`<button class="btn btn-sm btn-primary" onclick="showQuit(${n.loyer})"><i class="fas fa-file-invoice-dollar"></i> Quittance</button>`:''}
+          ${!n.lu?`<button class="btn btn-sm" onclick="marquerLu(${n.id},this)"><i class="fas fa-check"></i> Lu</button>`:'<span style="font-size:10px;color:var(--text3)">Lu</span>'}
+        </div>
       </div>`).join('');
   }catch(e){document.getElementById('notif-list').innerHTML=err('Erreur: '+e.message);}
 }

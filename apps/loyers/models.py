@@ -13,6 +13,7 @@ class Loyer(models.Model):
     charges = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     echeance = models.DateField()
     statut = models.CharField(max_length=20, choices=STATUT, default='attente')
+    quittance_envoyee = models.BooleanField(default=False)
     informations_complementaires = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     @property

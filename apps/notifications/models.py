@@ -12,6 +12,10 @@ class Notification(models.Model):
         'locataires.Locataire', on_delete=models.CASCADE,
         related_name='notifications', null=True, blank=True
     )
+    loyer = models.ForeignKey(
+        'loyers.Loyer', on_delete=models.CASCADE,
+        related_name='notifications', null=True, blank=True
+    )
     titre = models.CharField(max_length=200)
     message = models.TextField()
     type_notif = models.CharField(max_length=20, choices=TYPE_CHOICES, default='rappel')

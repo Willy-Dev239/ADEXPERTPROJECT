@@ -456,19 +456,22 @@ def envoyer_quittance(request, pk):
     if float(loyer.montant_paye) <= 0:
         return Response({'error': 'Aucun paiement enregistré pour ce loyer.'}, status=400)
 
+    loyer.quittance_envoyee = True
+    loyer.save(update_fields=['quittance_envoyee'])
+
     try:
         from apps.notifications.models import Notification
         Notification.objects.create(
             destinataire_locataire=loyer.locataire,
+            loyer=loyer,
             titre='🧾 Quittance disponible',
-            message=f'La quittance de votre loyer «{loyer.libelle}» ({loyer.local_reference}) a été générée par l\'administration. Consultez-la dans votre espace, rubrique Loyers & Paiements.',
+            message=f'La quittance de votre loyer «{loyer.libelle}» ({loyer.local_reference}) a été générée par l\'administration. Cliquez ici pour la télécharger.',
             type_notif='paiement'
         )
     except Exception as e:
         return Response({'error': f'Erreur lors de la notification : {e}'}, status=500)
 
     return Response({'detail': 'Quittance envoyée au locataire.'})
-
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def valider_bordereau(request, pk):
