@@ -135,10 +135,8 @@ def quittance_html(request, pk):
         banque_ref = dernier_paiement.reference or dernier_paiement.get_mode_paiement_display()
     else:
         banque_ref = '—'
-    qr_content = (
-        f"ADEXPERT | Locataire: {loyer.locataire_nom} | "
-        f"Montant payé: {paye:,.0f} BIF | Référence: {banque_ref}"
-    )
+   verification_path = request.build_absolute_uri(f'/api/loyers/{loyer.id}/verifier-quittance/')
+    qr_content = verification_path
     from urllib.parse import quote
     qr_content_url = quote(qr_content)
 
@@ -291,7 +289,73 @@ td.r {{ text-align: right; }}
 </body></html>"""
     return HttpResponse(html, content_type='text/html; charset=utf-8')
 
+from django.shortcuts import render
+from rest_framework.decorators import permission_classes as drf_permission_classes
+from rest_framework.permissions import AllowAny
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def verifier_quittance(request, pk):
+    try:
+        loyer = Loyer.objects.get(pk=pk)
+    except Loyer.DoesNotExist:
+        html = """<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vérification — Introuvable</title>
+<style>
+body{font-family:'Segoe UI',sans-serif;background:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.card{background:#fff;border-radius:16px;padding:32px 28px;max-width:360px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.1);text-align:center}
+.logo{font-size:20px;font-weight:800;color:#1e40af;margin-bottom:4px}
+.sub{font-size:12px;color:#64748b;margin-bottom:20px}
+.badge{display:inline-block;padding:8px 18px;border-radius:30px;font-weight:700;font-size:14px;background:#fee2e2;color:#991b1b;margin-bottom:14px}
+.msg{font-size:13px;color:#475569;line-height:1.6}
+</style></head><body>
+<div class="card">
+  <div class="logo">🏛️ ADEXPERT</div>
+  <div class="sub">Vérification de quittance</div>
+  <div class="badge">❌ INTROUVABLE</div>
+  <div class="msg">Ce document n'est pas reconnu par ADEXPERT. Il ne correspond à aucun paiement enregistré dans notre système.</div>
+</div>
+</body></html>"""
+        return HttpResponse(html, content_type='text/html; charset=utf-8')
+
+    paye = float(loyer.montant_paye)
+    total = float(loyer.montant_total)
+    solde = total - paye
+    statut_label = 'Soldé' if solde <= 0 else 'Partiel'
+    badge_bg = '#d1fae5' if solde <= 0 else '#fef3c7'
+    badge_color = '#065f46' if solde <= 0 else '#78350f'
+    now_str = timezone.now().strftime('%d/%m/%Y à %Hh%M')
+
+    html = f"""<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vérification — Quittance ADEXPERT</title>
+<style>
+body{{font-family:'Segoe UI',sans-serif;background:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:20px}}
+.card{{background:#fff;border-radius:16px;padding:32px 28px;max-width:380px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.1)}}
+.logo{{font-size:20px;font-weight:800;color:#1e40af;text-align:center;margin-bottom:4px}}
+.sub{{font-size:12px;color:#64748b;text-align:center;margin-bottom:18px}}
+.badge-wrap{{text-align:center;margin-bottom:18px}}
+.badge{{display:inline-block;padding:8px 18px;border-radius:30px;font-weight:700;font-size:14px;background:{badge_bg};color:{badge_color}}}
+.desc{{font-size:12.5px;color:#475569;line-height:1.6;margin-bottom:18px;text-align:center}}
+.row{{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px}}
+.row .lbl{{color:#94a3b8}}
+.row .val{{font-weight:700;color:#0f172a}}
+.foot{{text-align:center;font-size:10.5px;color:#94a3b8;margin-top:18px}}
+</style></head><body>
+<div class="card">
+  <div class="logo">🏛️ ADEXPERT</div>
+  <div class="sub">Vérification de quittance</div>
+  <div class="badge-wrap"><span class="badge">✅ QUITTANCE AUTHENTIQUE</span></div>
+  <div class="desc">Cette quittance a été émise par ADEXPERT et correspond à un paiement enregistré dans notre système.</div>
+  <div class="row"><span class="lbl">Locataire</span><span class="val">{loyer.locataire_nom}</span></div>
+  <div class="row"><span class="lbl">Local</span><span class="val">{loyer.local_reference}</span></div>
+  <div class="row"><span class="lbl">Montant payé</span><span class="val">{paye:,.0f} BIF</span></div>
+  <div class="row"><span class="lbl">Statut</span><span class="val">{statut_label}</span></div>
+  <div class="foot">Vérifié le {now_str}</div>
+</div>
+</body></html>"""
+    return HttpResponse(html, content_type='text/html; charset=utf-8')
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
