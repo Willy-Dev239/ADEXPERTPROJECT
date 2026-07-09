@@ -135,7 +135,8 @@ def quittance_html(request, pk):
         banque_ref = dernier_paiement.reference or dernier_paiement.get_mode_paiement_display()
     else:
         banque_ref = '—'
-   verification_path = request.build_absolute_uri(f'/api/loyers/{loyer.id}/verifier-quittance/')
+        
+    verification_path = request.build_absolute_uri(f'/api/loyers/{loyer.id}/verifier-quittance/')
     qr_content = verification_path
     from urllib.parse import quote
     qr_content_url = quote(qr_content)
