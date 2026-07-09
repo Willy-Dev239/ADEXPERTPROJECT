@@ -139,7 +139,8 @@ def quittance_html(request, pk):
         f"ADEXPERT | Locataire: {loyer.locataire_nom} | "
         f"Montant payé: {paye:,.0f} BIF | Référence: {banque_ref}"
     )
-    qr_content_js = json.dumps(qr_content)
+    from urllib.parse import quote
+    qr_content_url = quote(qr_content)
 
     html = f"""<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
 <title>Quittance — {loyer.locataire_nom}</title>
@@ -276,26 +277,16 @@ td.r {{ text-align: right; }}
   <div class="row paye"><span class="lbl">Payé</span><span class="val">{paye:,.0f} BIF</span></div>
   <div class="row solde"><span class="lbl"><b>Solde</b></span><span class="val"><b>{solde:,.0f} BIF</b></span></div>
 </div>
-
 <div class="qr-box">
   <div class="qr-lbl">Vérification d'authenticité</div>
-  <div id="qrcode" style="display:flex;justify-content:center;margin:4px 0"></div>
+  <div style="display:flex;justify-content:center;margin:4px 0">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data={qr_content_url}" width="90" height="90" alt="QR Code">
+  </div>
   <div class="qr-sub">Scannez pour vérifier ce paiement</div>
 </div>
 
 <p class="foot">Émis le {date.today().strftime('%d/%m/%Y')} — Document officiel ADEXPERT</p>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script>
-new QRCode(document.getElementById("qrcode"), {{
-  text: {qr_content_js},
-  width: 90,
-  height: 90,
-  colorDark: "#1e40af",
-  colorLight: "#ffffff",
-  correctLevel: QRCode.CorrectLevel.M
-}});
-</script>
 
 </body></html>"""
     return HttpResponse(html, content_type='text/html; charset=utf-8')
