@@ -104,25 +104,47 @@ def dashboard_view(request):
         }
     })
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def portefeuille_view(request):
     from apps.locaux.models import Local
     from apps.loyers.models import Loyer
     from apps.proprietaires.models import Proprietaire
+    from apps.contrats_societe.models import ContratSociete
+
     today = timezone.now().date(); m, y = today.month, today.year
     props = Proprietaire.objects.all()
     stats = []
+    tot_comm_cabinet = 0
+
     for p in props:
         loyers = Loyer.objects.filter(local__proprietaire=p, echeance__month=m, echeance__year=y)
-        rev = sum(float(l.montant_paye) for l in loyers); comm = round(rev*0.09,2)
-        stats.append({'nom':p.nom,'nb_locaux':Local.objects.filter(proprietaire=p).count(),'revenu_brut':rev,'commission_9pct':comm,'net_verse':round(rev*0.91,2)})
+        rev = sum(float(l.montant_paye) for l in loyers)
+
+        # ✅ Taux réel depuis ContratSociete
+        taux_comm = 0.09
+        cs = ContratSociete.objects.filter(proprietaire=p, statut='actif').first()
+        if cs:
+            taux_comm = float(cs.taux_commission) / 100
+
+        comm = round(rev * taux_comm, 2)
+        tot_comm_cabinet += comm
+
+        stats.append({
+            'nom': p.nom,
+            'nb_locaux': Local.objects.filter(proprietaire=p).count(),
+            'revenu_brut': rev,
+            'commission_9pct': comm,
+            'taux_commission': round(taux_comm * 100, 2),
+            'net_verse': round(rev * (1 - taux_comm), 2)
+        })
+
     retards = Loyer.objects.filter(statut='retard')
     creances = [{'locataire':l.locataire_nom,'local':l.local_reference,'solde':float(l.solde_restant),'statut':l.statut} for l in retards]
     tot_rev = sum(float(l.montant_paye) for l in Loyer.objects.filter(echeance__month=m,echeance__year=y))
+
     return Response({
-        'commission_cabinet_9pct': round(tot_rev*0.09,2),
+        'commission_cabinet_9pct': round(tot_comm_cabinet, 2),
         'revenus_bruts_mois': tot_rev,
         'nb_proprietaires': props.count(),
         'loyers_anticipes': 0,
