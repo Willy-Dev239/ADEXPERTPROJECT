@@ -49,7 +49,6 @@ PROVINCES_COMMUNES = {
         'Gishubi',
         'Gitega',
         'Kiganda',
-        'Kiganda',
         'Muramvya',
         'Mwaro',
         'Nyabihanga',
