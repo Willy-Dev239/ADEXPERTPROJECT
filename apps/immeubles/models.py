@@ -3,12 +3,60 @@ from django.db import models
 from apps.proprietaires.models import Proprietaire
 
 PROVINCES_COMMUNES = {
-    'Bujumbura': ['Mukaza','Ntahangwa','Muha','Kanyosha','Buterere','Gihosha','Ngagara','Rohero','Buyenzi','Bwiza'],
-    'Gitega': ['Gitega','Mutumba','Giheta','Itaba','Bugendana','Nyangungu','Ryansoro','Gishubi','Makebuko','Mutaho'],
-    'Burunga': ['Burunga','Isare','Mugamba','Matana','Bururi','Songa','Rumonge','Vyanda'],
-    'Butanyerera': ['Butanyerera','Gasorwe','Muyinga','Gashoho','Buhinyuza','Butihinda','Giteranyi','Mabayi'],
-    'Buhumuza': ['Buhumuza','Kirundo','Busoni','Bugabira','Vumbi','Ntega','Bwambarangwe','Gitobe'],
+    'Buhumuza': [
+        'Butaganzwa',
+        'Butihinda',
+        'Cankuzo',
+        'Gisagara',
+        'Gisuru',
+        'Muyinga',
+        'Ruyigi'
+    ],
+    'Bujumbura': [
+        'Bubanza',
+        'Bukinanyana',
+        'Cibitoke',
+        'Isare',
+        'Mpanda',
+        'Mugere',
+        'Mugina',
+        'Muhuta',
+        'Mukaza',
+        'Ntahangwa',
+        'Rwibaga'
+    ],
+    'Burunga': [
+        'Bururi',
+        'Makamba',
+        'Matana',
+        'Musongati',
+        'Nyanza',
+        'Rumonge',
+        'Rutana'
+    ],
+    'Butanyerera': [
+        'Busoni',
+        'Kayanza',
+        'Kiremba',
+        'Kirundo',
+        'Matongo',
+        'Muhanga',
+        'Ngozi',
+        'Tangara'
+    ],
+    'Gitega': [
+        'Bugendana',
+        'Gishubi',
+        'Gitega',
+        'Kiganda',
+        'Kiganda',
+        'Muramvya',
+        'Mwaro',
+        'Nyabihanga',
+        'Shombo'
+    ]
 }
+
 PROVINCE_CHOICES = [(p, p) for p in PROVINCES_COMMUNES.keys()]
 
 
