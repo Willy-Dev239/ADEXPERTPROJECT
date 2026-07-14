@@ -1,1 +1,2246 @@
-[{"model": "sessions.session", "pk": "0y7gf5ive7kpps1a5yjsouiv607pquie", "fields": {"session_data": ".eJxVjDsOwjAQBe_iGllefxdK-pzBsr0bHECxFCcV4u4QKQW0b2beS8S0rTVunZc4kbgIEKffLafy4HkHdE_zrcnS5nWZstwVedAuh0b8vB7u30FNvX5rVBi8gsRkKDgKYBjAo3YeRsjGKhswFEeAwN5rPGvLI6ICHDMV5cT7A6vxNow:1wLnC3:s5extTXFQgFHfHmaeUiHdp3E2PyzhL1GZIoXIVFj4Lg", "expire_date": "2026-05-23T19:18:31.184Z"}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$ORTYYp5g08q1VIraIzRQFK$HPVbl4MTCVSseAOgfegeMaWsCSKBHGQCE+/m7k+uPQ8=", "last_login": "2026-05-09T19:18:31.164Z", "is_superuser": true, "username": "admin", "first_name": "Admin", "last_name": "Systeme", "email": "admin@infinityhome.bi", "is_staff": true, "is_active": true, "date_joined": "2026-05-09T19:06:25.630Z", "role": "admin", "telephone": "", "locataire_profile": null, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$9gHf7Zw7rMPFExsUxw3SWX$ccCU5KpqlrYtG17n6phDReXnkeIX8pKIi6MtYPH1h3M=", "last_login": null, "is_superuser": false, "username": "gestionnaire1", "first_name": "Marie", "last_name": "HAKIZIMANA", "email": "gest@infinityhome.bi", "is_staff": false, "is_active": true, "date_joined": "2026-05-09T19:06:26.634Z", "role": "gestionnaire", "telephone": "", "locataire_profile": null, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$4l34jdZdOHREPLqcIOwUaB$DclRoTHadWSm/Bd1h5mrIlrCh23PbCeMYWJPc2lG8bQ=", "last_login": null, "is_superuser": false, "username": "proprietaire1", "first_name": "Jean Pierre", "last_name": "NKURUNZIZA", "email": "prop@email.com", "is_staff": false, "is_active": true, "date_joined": "2026-05-09T19:06:27.571Z", "role": "proprietaire", "telephone": "", "locataire_profile": null, "proprietaire_profile": 1, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$5kDqimskg5tRjz5Q05M4V2$JBn30O5jmYqU9AGTEFKgZHBPNLNJlGdZh9IfmevDxI4=", "last_login": null, "is_superuser": false, "username": "locataire1", "first_name": "Patrick", "last_name": "HABIMANA", "email": "patrick@email.com", "is_staff": false, "is_active": true, "date_joined": "2026-05-09T19:06:28.703Z", "role": "locataire", "telephone": "", "locataire_profile": 1, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$bdoWVlYBidY0TYxXQHRIKc$gLJkIi0lC3Hk2WojXWo8VnhLx7GGB+rHgnfd8XQ6rN4=", "last_login": null, "is_superuser": false, "username": "supportADE", "first_name": "", "last_name": "", "email": "support@ade.bi", "is_staff": true, "is_active": true, "date_joined": "2026-05-09T19:16:05.219Z", "role": "lecteur", "telephone": "", "locataire_profile": null, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$S8GM26VhsmrMzmSQ4TWfPO$//UkiQDQKLyxb4OniyB2ghLi1onRtBROAaq4ScILQk0=", "last_login": null, "is_superuser": false, "username": "Willy", "first_name": "Willy", "last_name": "Kabura", "email": "nyamitw@gmail.com", "is_staff": false, "is_active": true, "date_joined": "2026-05-10T14:54:51.389Z", "role": "lecteur", "telephone": "67000988", "locataire_profile": null, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$B7AZmdqFHuPaj4bToF0NNp$uzUa+ljbyijQ3jW35OX6+RQ7XPJ0lFFxK7W0iHkisyw=", "last_login": null, "is_superuser": false, "username": "kabura", "first_name": "Gerard", "last_name": "Kabura", "email": "kabura@gmail.com", "is_staff": false, "is_active": true, "date_joined": "2026-05-10T14:56:26.359Z", "role": "gestionnaire", "telephone": "", "locataire_profile": null, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$7tWt16qSeBuStHlNRtjqIn$T5WqEerWg+OwSACrrp8iMFAD6DRHj/iuIYl8pLnt7tM=", "last_login": null, "is_superuser": false, "username": "diella", "first_name": "Diella", "last_name": "keza", "email": "", "is_staff": false, "is_active": true, "date_joined": "2026-05-10T15:17:51.833Z", "role": "gestionnaire", "telephone": "", "locataire_profile": null, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$WH7dvoSdweCajVpzxVppxj$zNLzgXaHbtR9qejeeneuuKwbB77q67s7UO/1tGZ+kxY=", "last_login": null, "is_superuser": false, "username": "MarcIIII", "first_name": "Keza", "last_name": "Jeanine", "email": "", "is_staff": false, "is_active": true, "date_joined": "2026-05-14T15:11:05.635Z", "role": "locataire", "telephone": "", "locataire_profile": 2, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$tZ0Ej2IBuFu9778G2wliGG$b695eCwVKTwMx2COZhUbmRa06HcFp6XO12zPBE0Slws=", "last_login": null, "is_superuser": false, "username": "JohnKarikurubu", "first_name": "John", "last_name": "Karikurubu", "email": "", "is_staff": false, "is_active": true, "date_joined": "2026-05-26T08:10:01.570Z", "role": "lecteur", "telephone": "", "locataire_profile": null, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$OD35Yxrfl21kGJo7l7sGZL$icS1BChwfgmuOoJhNFPp9RA/T6YsNXuzLl8JLQS8LKs=", "last_login": null, "is_superuser": false, "username": "niyuru", "first_name": "Willy", "last_name": "Niyuru", "email": "w@gmail.com", "is_staff": false, "is_active": true, "date_joined": "2026-05-26T08:21:14.212Z", "role": "proprietaire", "telephone": "", "locataire_profile": null, "proprietaire_profile": 2, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$NIZ604ZGiAkj6HOVyFE73G$ijM6So6rR3zHu9RKh75b1rYwFPWlawT8wbaH0IsBfvE=", "last_login": null, "is_superuser": false, "username": "Wallace", "first_name": "Wallace", "last_name": "Rukundo", "email": "walla@gmail.com", "is_staff": false, "is_active": true, "date_joined": "2026-05-28T09:30:37.334Z", "role": "lecteur", "telephone": "", "locataire_profile": null, "proprietaire_profile": null, "groups": [], "user_permissions": []}}, {"model": "auth_app.user", "fields": {"password": "pbkdf2_sha256$600000$LqPEGb9LzZYG5FcnQdjqAd$J/64KXYDsJ9PIjBWg/ehyYDITugDRgR1Ww9p7yQfWFU=", "last_login": null, "is_superuser": false, "username": "hilaire", "first_name": "Hilaire", "last_name": "Ngenzebuhoro", "email": "hilaire@gmail.com", "is_staff": false, "is_active": true, "date_joined": "2026-06-03T10:26:36.177Z", "role": "locataire", "telephone": "", "locataire_profile": 5, "proprietaire_profile": 4, "groups": [], "user_permissions": []}}, {"model": "proprietaires.proprietaire", "pk": 1, "fields": {"nom": "NKURUNZIZA Jean Pierre", "telephone": "+257 79 001 001", "email": "jean@email.com", "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "mot_de_passe_temp": "", "informations_complementaires": "", "created_at": "2026-05-09T19:06:27.534Z"}}, {"model": "proprietaires.proprietaire", "pk": 2, "fields": {"nom": "Ruberinyange Johnatta", "telephone": "2576800232", "email": "johnatta@gmail.com", "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "mot_de_passe_temp": "", "informations_complementaires": "", "created_at": "2026-05-12T15:28:06.126Z"}}, {"model": "proprietaires.proprietaire", "pk": 4, "fields": {"nom": "Ngenzebuhoro Hilaire", "telephone": "2573022255", "email": "hilaire@gmail.com", "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "mot_de_passe_temp": "", "informations_complementaires": "", "created_at": "2026-06-03T10:21:24.198Z"}}, {"model": "proprietaires.proprietaire", "pk": 5, "fields": {"nom": "Gahungu Eloi", "telephone": "", "email": "", "adresse_province": "Gitega", "adresse_commune": "Gitega", "adresse_quartier": "", "mot_de_passe_temp": "", "informations_complementaires": "", "created_at": "2026-06-05T10:38:57.255Z"}}, {"model": "immeubles.immeuble", "pk": 1, "fields": {"nom": "Immeuble Rohero Center", "proprietaire": null, "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "annee_construction": 2018, "informations_complementaires": "", "created_at": "2026-05-09T19:06:28.484Z"}}, {"model": "immeubles.immeuble", "pk": 2, "fields": {"nom": "Immeuble", "proprietaire": null, "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "annee_construction": 2015, "informations_complementaires": "", "created_at": "2026-05-10T18:58:53.185Z"}}, {"model": "immeubles.immeuble", "pk": 3, "fields": {"nom": "Ndongozi", "proprietaire": null, "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "rohero", "annee_construction": 2017, "informations_complementaires": "", "created_at": "2026-05-11T07:08:17.647Z"}}, {"model": "immeubles.immeuble", "pk": 4, "fields": {"nom": "VMarket", "proprietaire": null, "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "annee_construction": null, "informations_complementaires": "", "created_at": "2026-05-26T15:32:33.923Z"}}, {"model": "immeubles.immeuble", "pk": 5, "fields": {"nom": "Ndamama House", "proprietaire": null, "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "annee_construction": null, "informations_complementaires": "", "created_at": "2026-06-03T10:21:58.475Z"}}, {"model": "locaux.local", "pk": 1, "fields": {"reference": "L-001", "type_local": "appartement", "proprietaire": 1, "immeuble": 1, "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "superficie": "65.00", "annee_construction": null, "meuble": true, "informations_complementaires": "", "created_at": "2026-05-09T19:06:28.672Z"}}, {"model": "locaux.local", "pk": 2, "fields": {"reference": "L-002", "type_local": "appartement", "proprietaire": 1, "immeuble": 2, "adresse_province": "Gitega", "adresse_commune": "Mutumba", "adresse_quartier": "Musinzira", "superficie": "230.00", "annee_construction": null, "meuble": true, "informations_complementaires": "", "created_at": "2026-05-10T19:00:02.951Z"}}, {"model": "locaux.local", "pk": 3, "fields": {"reference": "C4410", "type_local": "bureau", "proprietaire": 1, "immeuble": 3, "adresse_province": "Bujumbura", "adresse_commune": "Ntahangwa", "adresse_quartier": "Kigobe Nord", "superficie": "9.00", "annee_construction": 2018, "meuble": true, "informations_complementaires": "", "created_at": "2026-05-12T15:30:49.420Z"}}, {"model": "locaux.local", "pk": 5, "fields": {"reference": "Ndamm-L0012", "type_local": "maison", "proprietaire": 4, "immeuble": 5, "adresse_province": "Bujumbura", "adresse_commune": "Mukaza", "adresse_quartier": "Rohero", "superficie": "200.00", "annee_construction": null, "meuble": true, "informations_complementaires": "", "created_at": "2026-06-03T10:22:58.373Z"}}, {"model": "locataires.locataire", "pk": 1, "fields": {"nom_prenom": "HABIMANA Patrick", "telephone": "+257 79 002 002", "email": "patrick@email.com", "adresse_postale": "", "informations_complementaires": "", "mot_de_passe_temp": "", "created_at": "2026-05-09T19:06:28.694Z"}}, {"model": "locataires.locataire", "pk": 2, "fields": {"nom_prenom": "Gerard", "telephone": "", "email": "", "adresse_postale": "", "informations_complementaires": "", "mot_de_passe_temp": "", "created_at": "2026-05-10T19:01:45.108Z"}}, {"model": "locataires.locataire", "pk": 3, "fields": {"nom_prenom": "Eva Ntibantunganya", "telephone": "", "email": "evnet@gmail.com", "adresse_postale": "", "informations_complementaires": "", "mot_de_passe_temp": "", "created_at": "2026-05-12T15:32:07.839Z"}}, {"model": "locataires.locataire", "pk": 4, "fields": {"nom_prenom": "Nahayo Remy", "telephone": "25775200221", "email": "remy@gmail.com", "adresse_postale": "", "informations_complementaires": "", "mot_de_passe_temp": "", "created_at": "2026-06-03T10:23:38.250Z"}}, {"model": "locataires.locataire", "pk": 5, "fields": {"nom_prenom": "Hilaire Ngenzebuhoro", "telephone": "", "email": "", "adresse_postale": "", "informations_complementaires": "", "mot_de_passe_temp": "", "created_at": "2026-06-04T11:35:40.517Z"}}, {"model": "contrats.contrat", "pk": 1, "fields": {"numero": "C-2026-001", "locataire": 1, "local": 1, "statut": "actif", "loyer_hors_charges": "300000.00", "provisions_charges": "25000.00", "periodicite": "mensuel", "depot_garantie": "600000.00", "date_entree": "2026-01-01", "date_sortie": null, "informations_complementaires": "", "created_at": "2026-05-09T19:06:29.890Z"}}, {"model": "contrats.contrat", "pk": 2, "fields": {"numero": "c-2026-002", "locataire": 2, "local": 1, "statut": "actif", "loyer_hors_charges": "350000.00", "provisions_charges": "0.00", "periodicite": "mensuel", "depot_garantie": "0.00", "date_entree": "2026-05-10", "date_sortie": null, "informations_complementaires": "", "created_at": "2026-05-10T19:02:44.857Z"}}, {"model": "contrats.contrat", "pk": 3, "fields": {"numero": "C-2026-05-12", "locataire": 3, "local": 3, "statut": "actif", "loyer_hors_charges": "400000.00", "provisions_charges": "0.00", "periodicite": "mensuel", "depot_garantie": "0.00", "date_entree": "2026-05-12", "date_sortie": null, "informations_complementaires": "", "created_at": "2026-05-12T15:33:11.093Z"}}, {"model": "contrats.contrat", "pk": 4, "fields": {"numero": "C-Ndamma-2026", "locataire": 4, "local": 5, "statut": "actif", "loyer_hors_charges": "300000.00", "provisions_charges": "0.00", "periodicite": "mensuel", "depot_garantie": "0.00", "date_entree": "2026-06-03", "date_sortie": null, "informations_complementaires": "", "created_at": "2026-06-03T10:24:31.033Z"}}, {"model": "contrats.contrat", "pk": 5, "fields": {"numero": "c-5-2026", "locataire": 5, "local": 5, "statut": "expire", "loyer_hors_charges": "300000.00", "provisions_charges": "0.00", "periodicite": "mensuel", "depot_garantie": "0.00", "date_entree": "2026-06-04", "date_sortie": "2027-06-04", "informations_complementaires": "", "created_at": "2026-06-04T11:37:33.159Z"}}, {"model": "contrats.contratsociete", "pk": 1, "fields": {"numero": "CS-2026-662", "proprietaire": 1, "date_signature": "2026-05-10", "date_effet": "2026-05-10", "date_expiration": "2026-05-10", "statut": "actif", "taux_commission": "3.00", "periodicite_reversement": "mensuel", "frais_entree": "4000000.00", "service_gestion_loyers": true, "service_quittances": true, "service_recherche_locataires": true, "service_gestion_travaux": true, "service_suivi_fiscal": true, "service_rapports": true, "service_loyers_impayes": true, "service_assurances": true, "service_judiciaire": true, "service_impots_locatifs": true, "service_clients": true, "service_touristique": false, "constat_lieu": true, "inventaire_immeuble": true, "clauses_particulieres": "", "notes_internes": "", "created_at": "2026-05-10T14:18:45.631Z"}}, {"model": "loyers.loyer", "pk": 30, "fields": {"contrat": 3, "locataire": 1, "local": 3, "libelle": "Loyer 2026", "periode_debut": "2026-06-02", "periode_fin": null, "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-06-02", "statut": "paye", "informations_complementaires": "", "created_at": "2026-06-02T12:40:59.181Z"}}, {"model": "loyers.loyer", "pk": 31, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer June 2026", "periode_debut": "2026-06-02", "periode_fin": "2026-07-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2026-06-02", "statut": "paye", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.142Z"}}, {"model": "loyers.loyer", "pk": 32, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer July 2026", "periode_debut": "2026-07-02", "periode_fin": "2026-08-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2026-07-02", "statut": "paye", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.231Z"}}, {"model": "loyers.loyer", "pk": 33, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer August 2026", "periode_debut": "2026-08-02", "periode_fin": "2026-09-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2026-08-02", "statut": "paye", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.402Z"}}, {"model": "loyers.loyer", "pk": 34, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer September 2026", "periode_debut": "2026-09-02", "periode_fin": "2026-10-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2026-09-02", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.500Z"}}, {"model": "loyers.loyer", "pk": 35, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer October 2026", "periode_debut": "2026-10-02", "periode_fin": "2026-11-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2026-10-02", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.572Z"}}, {"model": "loyers.loyer", "pk": 36, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer November 2026", "periode_debut": "2026-11-02", "periode_fin": "2026-12-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2026-11-02", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.623Z"}}, {"model": "loyers.loyer", "pk": 37, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer December 2026", "periode_debut": "2026-12-02", "periode_fin": "2027-01-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2026-12-02", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.671Z"}}, {"model": "loyers.loyer", "pk": 38, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer January 2027", "periode_debut": "2027-01-02", "periode_fin": "2027-02-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2027-01-02", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.729Z"}}, {"model": "loyers.loyer", "pk": 39, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer February 2027", "periode_debut": "2027-02-02", "periode_fin": "2027-03-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2027-02-02", "statut": "paye", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.777Z"}}, {"model": "loyers.loyer", "pk": 40, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer March 2027", "periode_debut": "2027-03-02", "periode_fin": "2027-04-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2027-03-02", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.843Z"}}, {"model": "loyers.loyer", "pk": 41, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer April 2027", "periode_debut": "2027-04-02", "periode_fin": "2027-05-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2027-04-02", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.910Z"}}, {"model": "loyers.loyer", "pk": 42, "fields": {"contrat": 1, "locataire": 1, "local": 1, "libelle": "Loyer May 2027", "periode_debut": "2027-05-02", "periode_fin": "2027-06-01", "loyer_hors_charges": "300000.00", "charges": "25000.00", "echeance": "2027-05-02", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-02T14:30:49.987Z"}}, {"model": "loyers.loyer", "pk": 43, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer June 2026", "periode_debut": "2026-06-03", "periode_fin": "2026-07-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-06-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:53.669Z"}}, {"model": "loyers.loyer", "pk": 44, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer July 2026", "periode_debut": "2026-07-03", "periode_fin": "2026-08-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-07-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:53.753Z"}}, {"model": "loyers.loyer", "pk": 45, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer August 2026", "periode_debut": "2026-08-03", "periode_fin": "2026-09-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-08-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:53.835Z"}}, {"model": "loyers.loyer", "pk": 46, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer September 2026", "periode_debut": "2026-09-03", "periode_fin": "2026-10-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-09-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:53.877Z"}}, {"model": "loyers.loyer", "pk": 47, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer October 2026", "periode_debut": "2026-10-03", "periode_fin": "2026-11-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-10-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:53.905Z"}}, {"model": "loyers.loyer", "pk": 48, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer November 2026", "periode_debut": "2026-11-03", "periode_fin": "2026-12-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-11-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:53.937Z"}}, {"model": "loyers.loyer", "pk": 49, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer December 2026", "periode_debut": "2026-12-03", "periode_fin": "2027-01-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-12-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:54.009Z"}}, {"model": "loyers.loyer", "pk": 50, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer January 2027", "periode_debut": "2027-01-03", "periode_fin": "2027-02-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-01-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:54.048Z"}}, {"model": "loyers.loyer", "pk": 51, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer February 2027", "periode_debut": "2027-02-03", "periode_fin": "2027-03-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-02-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:54.059Z"}}, {"model": "loyers.loyer", "pk": 52, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer March 2027", "periode_debut": "2027-03-03", "periode_fin": "2027-04-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-03-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:54.070Z"}}, {"model": "loyers.loyer", "pk": 53, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer April 2027", "periode_debut": "2027-04-03", "periode_fin": "2027-05-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-04-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:54.082Z"}}, {"model": "loyers.loyer", "pk": 54, "fields": {"contrat": 4, "locataire": 4, "local": 5, "libelle": "Loyer May 2027", "periode_debut": "2027-05-03", "periode_fin": "2027-06-02", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-05-03", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-03T14:39:54.092Z"}}, {"model": "loyers.loyer", "pk": 55, "fields": {"contrat": 2, "locataire": 2, "local": 1, "libelle": "Loyer June 2026", "periode_debut": "2026-06-05", "periode_fin": "2026-07-04", "loyer_hors_charges": "350000.00", "charges": "0.00", "echeance": "2026-06-05", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-05T12:10:27.715Z"}}, {"model": "loyers.loyer", "pk": 56, "fields": {"contrat": 2, "locataire": 2, "local": 1, "libelle": "Loyer July 2026", "periode_debut": "2026-07-05", "periode_fin": "2026-08-04", "loyer_hors_charges": "350000.00", "charges": "0.00", "echeance": "2026-07-05", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-05T12:10:27.801Z"}}, {"model": "loyers.loyer", "pk": 57, "fields": {"contrat": 2, "locataire": 2, "local": 1, "libelle": "Loyer August 2026", "periode_debut": "2026-08-05", "periode_fin": "2026-09-04", "loyer_hors_charges": "350000.00", "charges": "0.00", "echeance": "2026-08-05", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-05T12:10:27.817Z"}}, {"model": "loyers.loyer", "pk": 58, "fields": {"contrat": 2, "locataire": 2, "local": 1, "libelle": "Loyer September 2026", "periode_debut": "2026-09-05", "periode_fin": "2026-10-04", "loyer_hors_charges": "350000.00", "charges": "0.00", "echeance": "2026-09-05", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-05T12:10:27.827Z"}}, {"model": "loyers.loyer", "pk": 59, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer June 2026", "periode_debut": "2026-06-08", "periode_fin": "2026-07-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-06-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.445Z"}}, {"model": "loyers.loyer", "pk": 60, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer July 2026", "periode_debut": "2026-07-08", "periode_fin": "2026-08-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-07-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.497Z"}}, {"model": "loyers.loyer", "pk": 61, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer August 2026", "periode_debut": "2026-08-08", "periode_fin": "2026-09-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-08-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.513Z"}}, {"model": "loyers.loyer", "pk": 62, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer September 2026", "periode_debut": "2026-09-08", "periode_fin": "2026-10-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-09-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.606Z"}}, {"model": "loyers.loyer", "pk": 63, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer October 2026", "periode_debut": "2026-10-08", "periode_fin": "2026-11-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-10-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.650Z"}}, {"model": "loyers.loyer", "pk": 64, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer November 2026", "periode_debut": "2026-11-08", "periode_fin": "2026-12-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-11-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.780Z"}}, {"model": "loyers.loyer", "pk": 65, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer December 2026", "periode_debut": "2026-12-08", "periode_fin": "2027-01-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2026-12-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.813Z"}}, {"model": "loyers.loyer", "pk": 66, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer January 2027", "periode_debut": "2027-01-08", "periode_fin": "2027-02-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-01-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.852Z"}}, {"model": "loyers.loyer", "pk": 67, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer February 2027", "periode_debut": "2027-02-08", "periode_fin": "2027-03-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-02-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.879Z"}}, {"model": "loyers.loyer", "pk": 68, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer March 2027", "periode_debut": "2027-03-08", "periode_fin": "2027-04-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-03-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.901Z"}}, {"model": "loyers.loyer", "pk": 69, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer April 2027", "periode_debut": "2027-04-08", "periode_fin": "2027-05-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-04-08", "statut": "attente", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.956Z"}}, {"model": "loyers.loyer", "pk": 70, "fields": {"contrat": 5, "locataire": 5, "local": 5, "libelle": "Loyer May 2027", "periode_debut": "2027-05-08", "periode_fin": "2027-06-07", "loyer_hors_charges": "300000.00", "charges": "0.00", "echeance": "2027-05-08", "statut": "paye", "informations_complementaires": "", "created_at": "2026-06-08T09:52:28.978Z"}}, {"model": "loyers.paiement", "pk": 88, "fields": {"loyer": 30, "montant": "300000.00", "date_paiement": "2026-06-02", "mode_paiement": "virement", "reference": "", "created_by": ["admin"], "created_at": "2026-06-02T12:41:09.835Z"}}, {"model": "loyers.paiement", "pk": 89, "fields": {"loyer": 31, "montant": "325000.00", "date_paiement": "2026-06-02", "mode_paiement": "virement", "reference": "", "created_by": ["gestionnaire1"], "created_at": "2026-06-02T14:33:07.833Z"}}, {"model": "loyers.paiement", "pk": 90, "fields": {"loyer": 32, "montant": "325000.00", "date_paiement": "2026-06-03", "mode_paiement": "virement", "reference": "", "created_by": ["admin"], "created_at": "2026-06-03T10:29:08.678Z"}}, {"model": "loyers.paiement", "pk": 91, "fields": {"loyer": 33, "montant": "325000.00", "date_paiement": "2026-06-03", "mode_paiement": "virement", "reference": "", "created_by": ["admin"], "created_at": "2026-06-03T15:19:14.225Z"}}, {"model": "loyers.paiement", "pk": 92, "fields": {"loyer": 39, "montant": "300000.00", "date_paiement": "2026-06-03", "mode_paiement": "virement", "reference": "", "created_by": ["admin"], "created_at": "2026-06-03T15:22:51.877Z"}}, {"model": "loyers.paiement", "pk": 93, "fields": {"loyer": 39, "montant": "325000.00", "date_paiement": "2026-06-05", "mode_paiement": "virement", "reference": "", "created_by": ["admin"], "created_at": "2026-06-05T15:55:18.299Z"}}, {"model": "loyers.paiement", "pk": 94, "fields": {"loyer": 70, "montant": "200000.00", "date_paiement": "2026-06-08", "mode_paiement": "virement", "reference": "", "created_by": ["gestionnaire1"], "created_at": "2026-06-08T10:54:45.585Z"}}, {"model": "loyers.paiement", "pk": 95, "fields": {"loyer": 70, "montant": "300000.00", "date_paiement": "2026-06-09", "mode_paiement": "especes", "reference": "", "created_by": ["admin"], "created_at": "2026-06-09T09:28:51.173Z"}}, {"model": "loyers.bordereau", "pk": 1, "fields": {"locataire": 1, "loyer": null, "photo": "bordereaux/2026/05/HFX23OGaUAAbqgV.jpg", "notes": "", "statut": "valide", "commentaire_admin": "", "created_at": "2026-05-10T07:11:31.171Z"}}, {"model": "loyers.bordereau", "pk": 13, "fields": {"locataire": 1, "loyer": null, "photo": "bordereaux/2026/05/HGnAZezWUAAqSXK_EO9eg7q.jpg", "notes": "", "statut": "valide", "commentaire_admin": "", "created_at": "2026-05-11T08:52:44.931Z"}}, {"model": "loyers.bordereau", "pk": 24, "fields": {"locataire": 1, "loyer": null, "photo": "bordereaux/2026/05/20260408_231050.jpg", "notes": "", "statut": "valide", "commentaire_admin": "", "created_at": "2026-05-22T14:08:13.075Z"}}, {"model": "loyers.bordereau", "pk": 25, "fields": {"locataire": 1, "loyer": null, "photo": "bordereaux/2026/06/WhatsApp_Image_2026-05-24_at_2.59.04_PM.jpeg", "notes": "", "statut": "valide", "commentaire_admin": "", "created_at": "2026-06-02T14:30:01.578Z"}}, {"model": "loyers.bordereau", "pk": 26, "fields": {"locataire": 1, "loyer": 31, "photo": "bordereaux/2026/06/WhatsApp_Image_2026-05-24_at_2.59.04_PM_kiacSTp.jpeg", "notes": "", "statut": "valide", "commentaire_admin": "", "created_at": "2026-06-02T14:32:06.060Z"}}, {"model": "charges.charge", "pk": 1, "fields": {"libelle": "traveaux entretien", "type_charge": "travaux", "local": 1, "immeuble": 1, "montant_ttc": "450000.00", "date_charge": "2026-05-10", "notes": "", "created_at": "2026-05-10T14:17:35.704Z"}}, {"model": "charges.charge", "pk": 2, "fields": {"libelle": "L00099", "type_charge": "impot_foncier", "local": 1, "immeuble": 2, "montant_ttc": "6000000.00", "date_charge": "2026-05-14", "notes": "", "created_at": "2026-05-14T14:15:30.956Z"}}, {"model": "charges.charge", "pk": 3, "fields": {"libelle": "L00099", "type_charge": "impot_foncier", "local": 1, "immeuble": 2, "montant_ttc": "6000000.00", "date_charge": "2026-05-14", "notes": "", "created_at": "2026-05-14T14:15:33.282Z"}}, {"model": "charges.charge", "pk": 4, "fields": {"libelle": "L00099", "type_charge": "impot_foncier", "local": 1, "immeuble": 2, "montant_ttc": "6000000.00", "date_charge": "2026-05-14", "notes": "", "created_at": "2026-05-14T14:15:33.722Z"}}, {"model": "charges.charge", "pk": 5, "fields": {"libelle": "L00099", "type_charge": "impot_foncier", "local": 1, "immeuble": 2, "montant_ttc": "6000000.00", "date_charge": "2026-05-14", "notes": "", "created_at": "2026-05-14T14:15:34.346Z"}}, {"model": "chat.groupchat", "pk": 1, "fields": {"immeuble": 1, "proprietaire": 1, "nom": "Chat — Immeuble Rohero Center", "created_at": "2026-05-09T19:06:28.519Z"}}, {"model": "chat.groupchat", "pk": 2, "fields": {"immeuble": 2, "proprietaire": 1, "nom": "Chat — Immeuble", "created_at": "2026-05-26T12:07:07.214Z"}}, {"model": "chat.groupchat", "pk": 4, "fields": {"immeuble": 5, "proprietaire": 4, "nom": "Chat — Ndamama House", "created_at": "2026-06-03T10:24:51.617Z"}}, {"model": "chat.groupchat", "pk": 5, "fields": {"immeuble": 3, "proprietaire": 1, "nom": "Chat — Ndongozi", "created_at": "2026-06-08T07:18:17.025Z"}}, {"model": "chat.groupmessage", "pk": 1, "fields": {"group": 1, "auteur": ["locataire1"], "contenu": "hhhhh", "created_at": "2026-05-26T11:59:55.044Z"}}, {"model": "chat.groupmessage", "pk": 2, "fields": {"group": 1, "auteur": ["gestionnaire1"], "contenu": "Bonjour", "created_at": "2026-05-26T12:00:40.454Z"}}, {"model": "chat.groupmessage", "pk": 3, "fields": {"group": 2, "auteur": ["gestionnaire1"], "contenu": "Hello", "created_at": "2026-05-26T12:07:37.248Z"}}, {"model": "chat.groupmessage", "pk": 5, "fields": {"group": 1, "auteur": ["locataire1"], "contenu": "hh", "created_at": "2026-05-28T08:51:44.876Z"}}, {"model": "chat.groupmessage", "pk": 6, "fields": {"group": 1, "auteur": ["locataire1"], "contenu": "^Saluuuuut", "created_at": "2026-05-29T12:31:49.988Z"}}, {"model": "chat.groupmessage", "pk": 7, "fields": {"group": 1, "auteur": ["niyuru"], "contenu": "saluuuuuuuuuuuuuu", "created_at": "2026-05-30T06:42:56.349Z"}}, {"model": "chat.groupmessage", "pk": 9, "fields": {"group": 1, "auteur": ["locataire1"], "contenu": "helooooooooooooo", "created_at": "2026-05-30T19:20:08.726Z"}}, {"model": "chat.groupmessage", "pk": 11, "fields": {"group": 4, "auteur": ["admin"], "contenu": "hi", "created_at": "2026-06-03T10:25:00.486Z"}}, {"model": "chat.groupmessage", "pk": 12, "fields": {"group": 1, "auteur": ["proprietaire1"], "contenu": "sqlu", "created_at": "2026-06-04T11:32:24.013Z"}}, {"model": "chat.groupmessage", "pk": 13, "fields": {"group": 1, "auteur": ["locataire1"], "contenu": "hello", "created_at": "2026-06-04T12:09:21.658Z"}}, {"model": "chat.groupmessage", "pk": 14, "fields": {"group": 4, "auteur": ["gestionnaire1"], "contenu": "hi", "created_at": "2026-06-09T09:43:49.901Z"}}, {"model": "notifications.notification", "pk": 1, "fields": {"destinataire_locataire": 1, "titre": "Bordereau validé", "message": "Votre bordereau de paiement a été validé ✅.", "type_notif": "bordereau", "lu": true, "created_at": "2026-05-10T14:10:21.033Z"}}, {"model": "notifications.notification", "pk": 22, "fields": {"destinataire_locataire": 1, "titre": "Bordereau validé", "message": "Votre bordereau de paiement a été validé ✅.", "type_notif": "bordereau", "lu": true, "created_at": "2026-05-11T08:54:57.914Z"}}, {"model": "notifications.notification", "pk": 23, "fields": {"destinataire_locataire": 1, "titre": "Bordereau validé", "message": "Votre bordereau de paiement a été validé ✅.", "type_notif": "bordereau", "lu": true, "created_at": "2026-05-26T08:08:32.273Z"}}, {"model": "authtoken.token", "pk": "d18b5f41d5baa23b672c4c7dcc581f731f253521", "fields": {"user": ["gestionnaire1"], "created": "2026-06-09T08:24:02.773Z"}}]
+[
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$ORTYYp5g08q1VIraIzRQFK$HPVbl4MTCVSseAOgfegeMaWsCSKBHGQCE+/m7k+uPQ8=",
+    "last_login": "2026-05-09T19:18:31.164Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Admin",
+    "last_name": "Systeme",
+    "email": "admin@infinityhome.bi",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-09T19:06:25.630Z",
+    "role": "admin",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$9gHf7Zw7rMPFExsUxw3SWX$ccCU5KpqlrYtG17n6phDReXnkeIX8pKIi6MtYPH1h3M=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "gestionnaire1",
+    "first_name": "Marie",
+    "last_name": "HAKIZIMANA",
+    "email": "gest@infinityhome.bi",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-09T19:06:26.634Z",
+    "role": "gestionnaire",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$4l34jdZdOHREPLqcIOwUaB$DclRoTHadWSm/Bd1h5mrIlrCh23PbCeMYWJPc2lG8bQ=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "proprietaire1",
+    "first_name": "Jean Pierre",
+    "last_name": "NKURUNZIZA",
+    "email": "prop@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-09T19:06:27.571Z",
+    "role": "proprietaire",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": 1,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$5kDqimskg5tRjz5Q05M4V2$JBn30O5jmYqU9AGTEFKgZHBPNLNJlGdZh9IfmevDxI4=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "locataire1",
+    "first_name": "Patrick",
+    "last_name": "HABIMANA",
+    "email": "patrick@email.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-09T19:06:28.703Z",
+    "role": "locataire",
+    "telephone": "",
+    "locataire_profile": 1,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$bdoWVlYBidY0TYxXQHRIKc$gLJkIi0lC3Hk2WojXWo8VnhLx7GGB+rHgnfd8XQ6rN4=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "supportADE",
+    "first_name": "",
+    "last_name": "",
+    "email": "support@ade.bi",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-09T19:16:05.219Z",
+    "role": "lecteur",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$S8GM26VhsmrMzmSQ4TWfPO$//UkiQDQKLyxb4OniyB2ghLi1onRtBROAaq4ScILQk0=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Willy",
+    "first_name": "Willy",
+    "last_name": "Kabura",
+    "email": "nyamitw@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-10T14:54:51.389Z",
+    "role": "lecteur",
+    "telephone": "67000988",
+    "locataire_profile": null,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$B7AZmdqFHuPaj4bToF0NNp$uzUa+ljbyijQ3jW35OX6+RQ7XPJ0lFFxK7W0iHkisyw=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "kabura",
+    "first_name": "Gerard",
+    "last_name": "Kabura",
+    "email": "kabura@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-10T14:56:26.359Z",
+    "role": "gestionnaire",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$7tWt16qSeBuStHlNRtjqIn$T5WqEerWg+OwSACrrp8iMFAD6DRHj/iuIYl8pLnt7tM=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "diella",
+    "first_name": "Diella",
+    "last_name": "keza",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-10T15:17:51.833Z",
+    "role": "gestionnaire",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$WH7dvoSdweCajVpzxVppxj$zNLzgXaHbtR9qejeeneuuKwbB77q67s7UO/1tGZ+kxY=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "MarcIIII",
+    "first_name": "Keza",
+    "last_name": "Jeanine",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-14T15:11:05.635Z",
+    "role": "locataire",
+    "telephone": "",
+    "locataire_profile": 2,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$tZ0Ej2IBuFu9778G2wliGG$b695eCwVKTwMx2COZhUbmRa06HcFp6XO12zPBE0Slws=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "JohnKarikurubu",
+    "first_name": "John",
+    "last_name": "Karikurubu",
+    "email": "",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-26T08:10:01.570Z",
+    "role": "lecteur",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$OD35Yxrfl21kGJo7l7sGZL$icS1BChwfgmuOoJhNFPp9RA/T6YsNXuzLl8JLQS8LKs=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "niyuru",
+    "first_name": "Willy",
+    "last_name": "Niyuru",
+    "email": "w@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-26T08:21:14.212Z",
+    "role": "proprietaire",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": 2,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$NIZ604ZGiAkj6HOVyFE73G$ijM6So6rR3zHu9RKh75b1rYwFPWlawT8wbaH0IsBfvE=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "Wallace",
+    "first_name": "Wallace",
+    "last_name": "Rukundo",
+    "email": "walla@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-05-28T09:30:37.334Z",
+    "role": "lecteur",
+    "telephone": "",
+    "locataire_profile": null,
+    "proprietaire_profile": null,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth_app.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$LqPEGb9LzZYG5FcnQdjqAd$J/64KXYDsJ9PIjBWg/ehyYDITugDRgR1Ww9p7yQfWFU=",
+    "last_login": null,
+    "is_superuser": false,
+    "username": "hilaire",
+    "first_name": "Hilaire",
+    "last_name": "Ngenzebuhoro",
+    "email": "hilaire@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2026-06-03T10:26:36.177Z",
+    "role": "locataire",
+    "telephone": "",
+    "locataire_profile": 5,
+    "proprietaire_profile": 4,
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "proprietaires.proprietaire",
+  "pk": 1,
+  "fields": {
+    "nom": "NKURUNZIZA Jean Pierre",
+    "telephone": "+257 79 001 001",
+    "email": "jean@email.com",
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "mot_de_passe_temp": "",
+    "informations_complementaires": "",
+    "created_at": "2026-05-09T19:06:27.534Z"
+  }
+},
+{
+  "model": "proprietaires.proprietaire",
+  "pk": 2,
+  "fields": {
+    "nom": "Ruberinyange Johnatta",
+    "telephone": "2576800232",
+    "email": "johnatta@gmail.com",
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "mot_de_passe_temp": "",
+    "informations_complementaires": "",
+    "created_at": "2026-05-12T15:28:06.126Z"
+  }
+},
+{
+  "model": "proprietaires.proprietaire",
+  "pk": 4,
+  "fields": {
+    "nom": "Ngenzebuhoro Hilaire",
+    "telephone": "2573022255",
+    "email": "hilaire@gmail.com",
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "mot_de_passe_temp": "",
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T10:21:24.198Z"
+  }
+},
+{
+  "model": "proprietaires.proprietaire",
+  "pk": 5,
+  "fields": {
+    "nom": "Gahungu Eloi",
+    "telephone": "",
+    "email": "",
+    "adresse_province": "Gitega",
+    "adresse_commune": "Gitega",
+    "adresse_quartier": "",
+    "mot_de_passe_temp": "",
+    "informations_complementaires": "",
+    "created_at": "2026-06-05T10:38:57.255Z"
+  }
+},
+{
+  "model": "immeubles.immeuble",
+  "pk": 1,
+  "fields": {
+    "nom": "Immeuble Rohero Center",
+    "proprietaire": null,
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "annee_construction": 2018,
+    "informations_complementaires": "",
+    "created_at": "2026-05-09T19:06:28.484Z"
+  }
+},
+{
+  "model": "immeubles.immeuble",
+  "pk": 2,
+  "fields": {
+    "nom": "Immeuble",
+    "proprietaire": null,
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "annee_construction": 2015,
+    "informations_complementaires": "",
+    "created_at": "2026-05-10T18:58:53.185Z"
+  }
+},
+{
+  "model": "immeubles.immeuble",
+  "pk": 3,
+  "fields": {
+    "nom": "Ndongozi",
+    "proprietaire": null,
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "rohero",
+    "annee_construction": 2017,
+    "informations_complementaires": "",
+    "created_at": "2026-05-11T07:08:17.647Z"
+  }
+},
+{
+  "model": "immeubles.immeuble",
+  "pk": 4,
+  "fields": {
+    "nom": "VMarket",
+    "proprietaire": null,
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "annee_construction": null,
+    "informations_complementaires": "",
+    "created_at": "2026-05-26T15:32:33.923Z"
+  }
+},
+{
+  "model": "immeubles.immeuble",
+  "pk": 5,
+  "fields": {
+    "nom": "Ndamama House",
+    "proprietaire": null,
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "annee_construction": null,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T10:21:58.475Z"
+  }
+},
+{
+  "model": "locaux.local",
+  "pk": 1,
+  "fields": {
+    "reference": "L-001",
+    "type_local": "appartement",
+    "proprietaire": 1,
+    "immeuble": 1,
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "superficie": "65.00",
+    "annee_construction": null,
+    "meuble": true,
+    "informations_complementaires": "",
+    "created_at": "2026-05-09T19:06:28.672Z"
+  }
+},
+{
+  "model": "locaux.local",
+  "pk": 2,
+  "fields": {
+    "reference": "L-002",
+    "type_local": "appartement",
+    "proprietaire": 1,
+    "immeuble": 2,
+    "adresse_province": "Gitega",
+    "adresse_commune": "Mutumba",
+    "adresse_quartier": "Musinzira",
+    "superficie": "230.00",
+    "annee_construction": null,
+    "meuble": true,
+    "informations_complementaires": "",
+    "created_at": "2026-05-10T19:00:02.951Z"
+  }
+},
+{
+  "model": "locaux.local",
+  "pk": 3,
+  "fields": {
+    "reference": "C4410",
+    "type_local": "bureau",
+    "proprietaire": 1,
+    "immeuble": 3,
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Ntahangwa",
+    "adresse_quartier": "Kigobe Nord",
+    "superficie": "9.00",
+    "annee_construction": 2018,
+    "meuble": true,
+    "informations_complementaires": "",
+    "created_at": "2026-05-12T15:30:49.420Z"
+  }
+},
+{
+  "model": "locaux.local",
+  "pk": 5,
+  "fields": {
+    "reference": "Ndamm-L0012",
+    "type_local": "maison",
+    "proprietaire": 4,
+    "immeuble": 5,
+    "adresse_province": "Bujumbura",
+    "adresse_commune": "Mukaza",
+    "adresse_quartier": "Rohero",
+    "superficie": "200.00",
+    "annee_construction": null,
+    "meuble": true,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T10:22:58.373Z"
+  }
+},
+{
+  "model": "locaux.local",
+  "pk": 7,
+  "fields": {
+    "reference": "0111",
+    "type_local": "appartement",
+    "proprietaire": 5,
+    "immeuble": 4,
+    "adresse_province": "",
+    "adresse_commune": "",
+    "adresse_quartier": "",
+    "superficie": "5000.00",
+    "annee_construction": 2015,
+    "meuble": true,
+    "informations_complementaires": "kiriri",
+    "created_at": "2026-07-06T08:34:30.003Z"
+  }
+},
+{
+  "model": "locaux.local",
+  "pk": 8,
+  "fields": {
+    "reference": "01141",
+    "type_local": "appartement",
+    "proprietaire": 2,
+    "immeuble": 2,
+    "adresse_province": "",
+    "adresse_commune": "",
+    "adresse_quartier": "",
+    "superficie": "25000.00",
+    "annee_construction": 2015,
+    "meuble": true,
+    "informations_complementaires": "",
+    "created_at": "2026-07-06T08:35:53.309Z"
+  }
+},
+{
+  "model": "locataires.locataire",
+  "pk": 1,
+  "fields": {
+    "nom_prenom": "HABIMANA Patrick",
+    "telephone": "+257 79 002 002",
+    "email": "patrick@email.com",
+    "adresse_postale": "",
+    "informations_complementaires": "",
+    "mot_de_passe_temp": "",
+    "created_at": "2026-05-09T19:06:28.694Z"
+  }
+},
+{
+  "model": "locataires.locataire",
+  "pk": 2,
+  "fields": {
+    "nom_prenom": "Gerard",
+    "telephone": "",
+    "email": "",
+    "adresse_postale": "",
+    "informations_complementaires": "",
+    "mot_de_passe_temp": "",
+    "created_at": "2026-05-10T19:01:45.108Z"
+  }
+},
+{
+  "model": "locataires.locataire",
+  "pk": 3,
+  "fields": {
+    "nom_prenom": "Eva Ntibantunganya",
+    "telephone": "",
+    "email": "evnet@gmail.com",
+    "adresse_postale": "",
+    "informations_complementaires": "",
+    "mot_de_passe_temp": "",
+    "created_at": "2026-05-12T15:32:07.839Z"
+  }
+},
+{
+  "model": "locataires.locataire",
+  "pk": 4,
+  "fields": {
+    "nom_prenom": "Nahayo Remy",
+    "telephone": "25775200221",
+    "email": "remy@gmail.com",
+    "adresse_postale": "",
+    "informations_complementaires": "",
+    "mot_de_passe_temp": "",
+    "created_at": "2026-06-03T10:23:38.250Z"
+  }
+},
+{
+  "model": "locataires.locataire",
+  "pk": 5,
+  "fields": {
+    "nom_prenom": "Hilaire Ngenzebuhoro",
+    "telephone": "",
+    "email": "",
+    "adresse_postale": "",
+    "informations_complementaires": "",
+    "mot_de_passe_temp": "",
+    "created_at": "2026-06-04T11:35:40.517Z"
+  }
+},
+{
+  "model": "contrats.contrat",
+  "pk": 1,
+  "fields": {
+    "numero": "C-2026-001",
+    "locataire": 1,
+    "local": 1,
+    "statut": "actif",
+    "loyer_hors_charges": "300000.00",
+    "provisions_charges": "25000.00",
+    "periodicite": "mensuel",
+    "depot_garantie": "600000.00",
+    "date_entree": "2026-01-01",
+    "date_sortie": null,
+    "informations_complementaires": "",
+    "created_at": "2026-05-09T19:06:29.890Z"
+  }
+},
+{
+  "model": "contrats.contrat",
+  "pk": 2,
+  "fields": {
+    "numero": "c-2026-002",
+    "locataire": 2,
+    "local": 1,
+    "statut": "actif",
+    "loyer_hors_charges": "350000.00",
+    "provisions_charges": "0.00",
+    "periodicite": "mensuel",
+    "depot_garantie": "0.00",
+    "date_entree": "2026-05-10",
+    "date_sortie": null,
+    "informations_complementaires": "",
+    "created_at": "2026-05-10T19:02:44.857Z"
+  }
+},
+{
+  "model": "contrats.contrat",
+  "pk": 3,
+  "fields": {
+    "numero": "C-2026-05-12",
+    "locataire": 3,
+    "local": 3,
+    "statut": "actif",
+    "loyer_hors_charges": "400000.00",
+    "provisions_charges": "0.00",
+    "periodicite": "mensuel",
+    "depot_garantie": "0.00",
+    "date_entree": "2026-05-12",
+    "date_sortie": null,
+    "informations_complementaires": "",
+    "created_at": "2026-05-12T15:33:11.093Z"
+  }
+},
+{
+  "model": "contrats.contrat",
+  "pk": 4,
+  "fields": {
+    "numero": "C-Ndamma-2026",
+    "locataire": 4,
+    "local": 5,
+    "statut": "actif",
+    "loyer_hors_charges": "300000.00",
+    "provisions_charges": "0.00",
+    "periodicite": "mensuel",
+    "depot_garantie": "0.00",
+    "date_entree": "2026-06-03",
+    "date_sortie": null,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T10:24:31.033Z"
+  }
+},
+{
+  "model": "contrats.contrat",
+  "pk": 5,
+  "fields": {
+    "numero": "c-5-2026",
+    "locataire": 5,
+    "local": 5,
+    "statut": "expire",
+    "loyer_hors_charges": "300000.00",
+    "provisions_charges": "0.00",
+    "periodicite": "mensuel",
+    "depot_garantie": "0.00",
+    "date_entree": "2026-06-04",
+    "date_sortie": "2027-06-04",
+    "informations_complementaires": "",
+    "created_at": "2026-06-04T11:37:33.159Z"
+  }
+},
+{
+  "model": "contrats.contratsociete",
+  "pk": 1,
+  "fields": {
+    "numero": "CS-2026-662",
+    "proprietaire": 1,
+    "date_signature": "2026-05-10",
+    "date_effet": "2026-05-10",
+    "date_expiration": "2027-05-10",
+    "statut": "actif",
+    "taux_commission": "10.00",
+    "periodicite_reversement": "mensuel",
+    "frais_entree": "4000000.00",
+    "service_gestion_loyers": true,
+    "service_quittances": true,
+    "service_recherche_locataires": true,
+    "service_gestion_travaux": true,
+    "service_suivi_fiscal": true,
+    "service_rapports": true,
+    "service_loyers_impayes": true,
+    "service_assurances": true,
+    "service_judiciaire": true,
+    "service_impots_locatifs": true,
+    "service_clients": true,
+    "service_touristique": false,
+    "constat_lieu": true,
+    "inventaire_immeuble": true,
+    "clauses_particulieres": "",
+    "notes_internes": "",
+    "created_at": "2026-05-10T14:18:45.631Z"
+  }
+},
+{
+  "model": "contrats.bordereauvirement",
+  "pk": 1,
+  "fields": {
+    "proprietaire": 1,
+    "contrat_societe": 1,
+    "montant": "450000.00",
+    "date_virement": "2026-07-07",
+    "reference_virement": "45875555",
+    "banque": "",
+    "fichier": "03f4ed22-2afe-4d44-acc0-bd9f5b1df92b",
+    "statut": "valide",
+    "commentaire_admin": null,
+    "traite_par": [
+      "admin"
+    ],
+    "date_traitement": "2026-07-07T09:37:01.711Z",
+    "date_creation": "2026-07-07T09:26:04.485Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 30,
+  "fields": {
+    "contrat": 3,
+    "locataire": 1,
+    "local": 3,
+    "libelle": "Loyer 2026",
+    "periode_debut": "2026-06-02",
+    "periode_fin": null,
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-06-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T12:40:59.181Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 31,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer June 2026",
+    "periode_debut": "2026-06-02",
+    "periode_fin": "2026-07-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2026-06-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.142Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 32,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer July 2026",
+    "periode_debut": "2026-07-02",
+    "periode_fin": "2026-08-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2026-07-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.231Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 33,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer August 2026",
+    "periode_debut": "2026-08-02",
+    "periode_fin": "2026-09-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2026-08-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.402Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 34,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer September 2026",
+    "periode_debut": "2026-09-02",
+    "periode_fin": "2026-10-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2026-09-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.500Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 35,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer October 2026",
+    "periode_debut": "2026-10-02",
+    "periode_fin": "2026-11-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2026-10-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.572Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 36,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer November 2026",
+    "periode_debut": "2026-11-02",
+    "periode_fin": "2026-12-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2026-11-02",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.623Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 37,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer December 2026",
+    "periode_debut": "2026-12-02",
+    "periode_fin": "2027-01-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2026-12-02",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.671Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 38,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer January 2027",
+    "periode_debut": "2027-01-02",
+    "periode_fin": "2027-02-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2027-01-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.729Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 39,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer February 2027",
+    "periode_debut": "2027-02-02",
+    "periode_fin": "2027-03-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2027-02-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.777Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 40,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer March 2027",
+    "periode_debut": "2027-03-02",
+    "periode_fin": "2027-04-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2027-03-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.843Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 41,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer April 2027",
+    "periode_debut": "2027-04-02",
+    "periode_fin": "2027-05-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2027-04-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.910Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 42,
+  "fields": {
+    "contrat": 1,
+    "locataire": 1,
+    "local": 1,
+    "libelle": "Loyer May 2027",
+    "periode_debut": "2027-05-02",
+    "periode_fin": "2027-06-01",
+    "loyer_hors_charges": "300000.00",
+    "charges": "25000.00",
+    "echeance": "2027-05-02",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-02T14:30:49.987Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 43,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer June 2026",
+    "periode_debut": "2026-06-03",
+    "periode_fin": "2026-07-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-06-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:53.669Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 44,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer July 2026",
+    "periode_debut": "2026-07-03",
+    "periode_fin": "2026-08-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-07-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:53.753Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 45,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer August 2026",
+    "periode_debut": "2026-08-03",
+    "periode_fin": "2026-09-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-08-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:53.835Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 46,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer September 2026",
+    "periode_debut": "2026-09-03",
+    "periode_fin": "2026-10-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-09-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:53.877Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 47,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer October 2026",
+    "periode_debut": "2026-10-03",
+    "periode_fin": "2026-11-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-10-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:53.905Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 48,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer November 2026",
+    "periode_debut": "2026-11-03",
+    "periode_fin": "2026-12-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-11-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:53.937Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 49,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer December 2026",
+    "periode_debut": "2026-12-03",
+    "periode_fin": "2027-01-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-12-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:54.009Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 50,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer January 2027",
+    "periode_debut": "2027-01-03",
+    "periode_fin": "2027-02-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-01-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:54.048Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 51,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer February 2027",
+    "periode_debut": "2027-02-03",
+    "periode_fin": "2027-03-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-02-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:54.059Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 52,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer March 2027",
+    "periode_debut": "2027-03-03",
+    "periode_fin": "2027-04-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-03-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:54.070Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 53,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer April 2027",
+    "periode_debut": "2027-04-03",
+    "periode_fin": "2027-05-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-04-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:54.082Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 54,
+  "fields": {
+    "contrat": 4,
+    "locataire": 4,
+    "local": 5,
+    "libelle": "Loyer May 2027",
+    "periode_debut": "2027-05-03",
+    "periode_fin": "2027-06-02",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-05-03",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-03T14:39:54.092Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 55,
+  "fields": {
+    "contrat": 2,
+    "locataire": 2,
+    "local": 1,
+    "libelle": "Loyer June 2026",
+    "periode_debut": "2026-06-05",
+    "periode_fin": "2026-07-04",
+    "loyer_hors_charges": "350000.00",
+    "charges": "0.00",
+    "echeance": "2026-06-05",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-05T12:10:27.715Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 56,
+  "fields": {
+    "contrat": 2,
+    "locataire": 2,
+    "local": 1,
+    "libelle": "Loyer July 2026",
+    "periode_debut": "2026-07-05",
+    "periode_fin": "2026-08-04",
+    "loyer_hors_charges": "350000.00",
+    "charges": "0.00",
+    "echeance": "2026-07-05",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-05T12:10:27.801Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 57,
+  "fields": {
+    "contrat": 2,
+    "locataire": 2,
+    "local": 1,
+    "libelle": "Loyer August 2026",
+    "periode_debut": "2026-08-05",
+    "periode_fin": "2026-09-04",
+    "loyer_hors_charges": "350000.00",
+    "charges": "0.00",
+    "echeance": "2026-08-05",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-05T12:10:27.817Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 58,
+  "fields": {
+    "contrat": 2,
+    "locataire": 2,
+    "local": 1,
+    "libelle": "Loyer September 2026",
+    "periode_debut": "2026-09-05",
+    "periode_fin": "2026-10-04",
+    "loyer_hors_charges": "350000.00",
+    "charges": "0.00",
+    "echeance": "2026-09-05",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-05T12:10:27.827Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 59,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer June 2026",
+    "periode_debut": "2026-06-08",
+    "periode_fin": "2026-07-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-06-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.445Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 60,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer July 2026",
+    "periode_debut": "2026-07-08",
+    "periode_fin": "2026-08-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-07-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.497Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 61,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer August 2026",
+    "periode_debut": "2026-08-08",
+    "periode_fin": "2026-09-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-08-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.513Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 62,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer September 2026",
+    "periode_debut": "2026-09-08",
+    "periode_fin": "2026-10-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-09-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.606Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 63,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer October 2026",
+    "periode_debut": "2026-10-08",
+    "periode_fin": "2026-11-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-10-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.650Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 64,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer November 2026",
+    "periode_debut": "2026-11-08",
+    "periode_fin": "2026-12-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-11-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.780Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 65,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer December 2026",
+    "periode_debut": "2026-12-08",
+    "periode_fin": "2027-01-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2026-12-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.813Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 66,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer January 2027",
+    "periode_debut": "2027-01-08",
+    "periode_fin": "2027-02-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-01-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.852Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 67,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer February 2027",
+    "periode_debut": "2027-02-08",
+    "periode_fin": "2027-03-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-02-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.879Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 68,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer March 2027",
+    "periode_debut": "2027-03-08",
+    "periode_fin": "2027-04-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-03-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.901Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 69,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer April 2027",
+    "periode_debut": "2027-04-08",
+    "periode_fin": "2027-05-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-04-08",
+    "statut": "attente",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.956Z"
+  }
+},
+{
+  "model": "loyers.loyer",
+  "pk": 70,
+  "fields": {
+    "contrat": 5,
+    "locataire": 5,
+    "local": 5,
+    "libelle": "Loyer May 2027",
+    "periode_debut": "2027-05-08",
+    "periode_fin": "2027-06-07",
+    "loyer_hors_charges": "300000.00",
+    "charges": "0.00",
+    "echeance": "2027-05-08",
+    "statut": "paye",
+    "quittance_envoyee": false,
+    "informations_complementaires": "",
+    "created_at": "2026-06-08T09:52:28.978Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 88,
+  "fields": {
+    "loyer": 30,
+    "montant": "300000.00",
+    "date_paiement": "2026-06-02",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-06-02T12:41:09.835Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 89,
+  "fields": {
+    "loyer": 31,
+    "montant": "325000.00",
+    "date_paiement": "2026-06-02",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "gestionnaire1"
+    ],
+    "created_at": "2026-06-02T14:33:07.833Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 90,
+  "fields": {
+    "loyer": 32,
+    "montant": "325000.00",
+    "date_paiement": "2026-06-03",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-06-03T10:29:08.678Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 91,
+  "fields": {
+    "loyer": 33,
+    "montant": "325000.00",
+    "date_paiement": "2026-06-03",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-06-03T15:19:14.225Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 92,
+  "fields": {
+    "loyer": 39,
+    "montant": "300000.00",
+    "date_paiement": "2026-06-03",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-06-03T15:22:51.877Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 93,
+  "fields": {
+    "loyer": 39,
+    "montant": "325000.00",
+    "date_paiement": "2026-06-05",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-06-05T15:55:18.299Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 94,
+  "fields": {
+    "loyer": 70,
+    "montant": "200000.00",
+    "date_paiement": "2026-06-08",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "gestionnaire1"
+    ],
+    "created_at": "2026-06-08T10:54:45.585Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 95,
+  "fields": {
+    "loyer": 70,
+    "montant": "300000.00",
+    "date_paiement": "2026-06-09",
+    "mode_paiement": "especes",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-06-09T09:28:51.173Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 96,
+  "fields": {
+    "loyer": 34,
+    "montant": "325000.00",
+    "date_paiement": "2026-07-06",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-06T12:03:43.750Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 97,
+  "fields": {
+    "loyer": 35,
+    "montant": "325000.00",
+    "date_paiement": "2026-07-06",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-06T12:03:58.406Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 98,
+  "fields": {
+    "loyer": 42,
+    "montant": "325000.00",
+    "date_paiement": "2026-07-06",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-06T12:04:03.258Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 99,
+  "fields": {
+    "loyer": 41,
+    "montant": "325000.00",
+    "date_paiement": "2026-07-06",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-06T12:04:07.482Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 100,
+  "fields": {
+    "loyer": 40,
+    "montant": "325000.00",
+    "date_paiement": "2026-07-06",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-06T12:04:11.190Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 101,
+  "fields": {
+    "loyer": 38,
+    "montant": "325000.00",
+    "date_paiement": "2026-07-06",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-06T12:04:16.671Z"
+  }
+},
+{
+  "model": "loyers.paiement",
+  "pk": 102,
+  "fields": {
+    "loyer": 58,
+    "montant": "350000.00",
+    "date_paiement": "2026-07-06",
+    "mode_paiement": "virement",
+    "reference": "",
+    "created_by": [
+      "admin"
+    ],
+    "created_at": "2026-07-06T12:04:24.532Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 1,
+  "fields": {
+    "locataire": 1,
+    "loyer": null,
+    "photo": null,
+    "notes": "",
+    "statut": "valide",
+    "commentaire_admin": "",
+    "created_at": "2026-05-10T07:11:31.171Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 13,
+  "fields": {
+    "locataire": 1,
+    "loyer": null,
+    "photo": null,
+    "notes": "",
+    "statut": "valide",
+    "commentaire_admin": "",
+    "created_at": "2026-05-11T08:52:44.931Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 24,
+  "fields": {
+    "locataire": 1,
+    "loyer": null,
+    "photo": null,
+    "notes": "",
+    "statut": "valide",
+    "commentaire_admin": "",
+    "created_at": "2026-05-22T14:08:13.075Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 25,
+  "fields": {
+    "locataire": 1,
+    "loyer": null,
+    "photo": null,
+    "notes": "",
+    "statut": "valide",
+    "commentaire_admin": "",
+    "created_at": "2026-06-02T14:30:01.578Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 26,
+  "fields": {
+    "locataire": 1,
+    "loyer": 31,
+    "photo": null,
+    "notes": "",
+    "statut": "valide",
+    "commentaire_admin": "",
+    "created_at": "2026-06-02T14:32:06.060Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 27,
+  "fields": {
+    "locataire": 1,
+    "loyer": 34,
+    "photo": null,
+    "notes": "2020200",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-06-30T07:22:32.886Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 28,
+  "fields": {
+    "locataire": 1,
+    "loyer": 34,
+    "photo": null,
+    "notes": "200522",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-06-30T15:53:42.721Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 29,
+  "fields": {
+    "locataire": 1,
+    "loyer": 34,
+    "photo": null,
+    "notes": "20000001111",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-06-30T17:04:01.946Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 30,
+  "fields": {
+    "locataire": 1,
+    "loyer": 34,
+    "photo": null,
+    "notes": "502222222",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-07-02T08:14:25.958Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 31,
+  "fields": {
+    "locataire": 1,
+    "loyer": 34,
+    "photo": null,
+    "notes": "55555555",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-07-02T09:15:00.052Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 32,
+  "fields": {
+    "locataire": 1,
+    "loyer": 34,
+    "photo": null,
+    "notes": "888888888",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-07-02T09:20:47.066Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 33,
+  "fields": {
+    "locataire": 1,
+    "loyer": 34,
+    "photo": null,
+    "notes": "77777777777777",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-07-02T10:30:16.638Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 34,
+  "fields": {
+    "locataire": 1,
+    "loyer": 35,
+    "photo": null,
+    "notes": "6666666666666",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-07-02T11:05:48.354Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 35,
+  "fields": {
+    "locataire": 1,
+    "loyer": 34,
+    "photo": null,
+    "notes": "22222222222222222",
+    "statut": "en_attente",
+    "commentaire_admin": "",
+    "created_at": "2026-07-02T11:20:38.523Z"
+  }
+},
+{
+  "model": "loyers.bordereau",
+  "pk": 36,
+  "fields": {
+    "locataire": 1,
+    "loyer": 36,
+    "photo": null,
+    "notes": "11111111111111111111111111111",
+    "statut": "valide",
+    "commentaire_admin": "",
+    "created_at": "2026-07-02T11:33:00.167Z"
+  }
+},
+{
+  "model": "charges.charge",
+  "pk": 1,
+  "fields": {
+    "libelle": "traveaux entretien",
+    "type_charge": "travaux",
+    "local": 1,
+    "immeuble": 1,
+    "montant_ttc": "450000.00",
+    "date_charge": "2026-05-10",
+    "notes": "",
+    "created_at": "2026-05-10T14:17:35.704Z"
+  }
+},
+{
+  "model": "charges.charge",
+  "pk": 2,
+  "fields": {
+    "libelle": "L00099",
+    "type_charge": "impot_foncier",
+    "local": 1,
+    "immeuble": 2,
+    "montant_ttc": "6000000.00",
+    "date_charge": "2026-05-14",
+    "notes": "",
+    "created_at": "2026-05-14T14:15:30.956Z"
+  }
+},
+{
+  "model": "charges.charge",
+  "pk": 3,
+  "fields": {
+    "libelle": "L00099",
+    "type_charge": "impot_foncier",
+    "local": 1,
+    "immeuble": 2,
+    "montant_ttc": "6000000.00",
+    "date_charge": "2026-05-14",
+    "notes": "",
+    "created_at": "2026-05-14T14:15:33.282Z"
+  }
+},
+{
+  "model": "charges.charge",
+  "pk": 4,
+  "fields": {
+    "libelle": "L00099",
+    "type_charge": "impot_foncier",
+    "local": 1,
+    "immeuble": 2,
+    "montant_ttc": "6000000.00",
+    "date_charge": "2026-05-14",
+    "notes": "",
+    "created_at": "2026-05-14T14:15:33.722Z"
+  }
+},
+{
+  "model": "charges.charge",
+  "pk": 5,
+  "fields": {
+    "libelle": "L00099",
+    "type_charge": "impot_foncier",
+    "local": 1,
+    "immeuble": 2,
+    "montant_ttc": "6000000.00",
+    "date_charge": "2026-05-14",
+    "notes": "",
+    "created_at": "2026-05-14T14:15:34.346Z"
+  }
+},
+{
+  "model": "chat.groupchat",
+  "pk": 1,
+  "fields": {
+    "immeuble": 1,
+    "proprietaire": 1,
+    "nom": "Chat — Immeuble Rohero Center",
+    "created_at": "2026-05-09T19:06:28.519Z"
+  }
+},
+{
+  "model": "chat.groupchat",
+  "pk": 2,
+  "fields": {
+    "immeuble": 2,
+    "proprietaire": 1,
+    "nom": "Chat — Immeuble",
+    "created_at": "2026-05-26T12:07:07.214Z"
+  }
+},
+{
+  "model": "chat.groupchat",
+  "pk": 4,
+  "fields": {
+    "immeuble": 5,
+    "proprietaire": 4,
+    "nom": "Chat — Ndamama House",
+    "created_at": "2026-06-03T10:24:51.617Z"
+  }
+},
+{
+  "model": "chat.groupchat",
+  "pk": 5,
+  "fields": {
+    "immeuble": 3,
+    "proprietaire": 1,
+    "nom": "Chat — Ndongozi",
+    "created_at": "2026-06-08T07:18:17.025Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 1,
+  "fields": {
+    "group": 1,
+    "auteur": [
+      "locataire1"
+    ],
+    "contenu": "hhhhh",
+    "created_at": "2026-05-26T11:59:55.044Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 2,
+  "fields": {
+    "group": 1,
+    "auteur": [
+      "gestionnaire1"
+    ],
+    "contenu": "Bonjour",
+    "created_at": "2026-05-26T12:00:40.454Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 3,
+  "fields": {
+    "group": 2,
+    "auteur": [
+      "gestionnaire1"
+    ],
+    "contenu": "Hello",
+    "created_at": "2026-05-26T12:07:37.248Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 5,
+  "fields": {
+    "group": 1,
+    "auteur": [
+      "locataire1"
+    ],
+    "contenu": "hh",
+    "created_at": "2026-05-28T08:51:44.876Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 6,
+  "fields": {
+    "group": 1,
+    "auteur": [
+      "locataire1"
+    ],
+    "contenu": "^Saluuuuut",
+    "created_at": "2026-05-29T12:31:49.988Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 7,
+  "fields": {
+    "group": 1,
+    "auteur": [
+      "niyuru"
+    ],
+    "contenu": "saluuuuuuuuuuuuuu",
+    "created_at": "2026-05-30T06:42:56.349Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 9,
+  "fields": {
+    "group": 1,
+    "auteur": [
+      "locataire1"
+    ],
+    "contenu": "helooooooooooooo",
+    "created_at": "2026-05-30T19:20:08.726Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 11,
+  "fields": {
+    "group": 4,
+    "auteur": [
+      "admin"
+    ],
+    "contenu": "hi",
+    "created_at": "2026-06-03T10:25:00.486Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 12,
+  "fields": {
+    "group": 1,
+    "auteur": [
+      "proprietaire1"
+    ],
+    "contenu": "sqlu",
+    "created_at": "2026-06-04T11:32:24.013Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 13,
+  "fields": {
+    "group": 1,
+    "auteur": [
+      "locataire1"
+    ],
+    "contenu": "hello",
+    "created_at": "2026-06-04T12:09:21.658Z"
+  }
+},
+{
+  "model": "chat.groupmessage",
+  "pk": 14,
+  "fields": {
+    "group": 4,
+    "auteur": [
+      "gestionnaire1"
+    ],
+    "contenu": "hi",
+    "created_at": "2026-06-09T09:43:49.901Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 1,
+  "fields": {
+    "destinataire_locataire": 1,
+    "loyer": null,
+    "titre": "Bordereau validé",
+    "message": "Votre bordereau de paiement a été validé ✅.",
+    "type_notif": "bordereau",
+    "lu": true,
+    "created_at": "2026-05-10T14:10:21.033Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 22,
+  "fields": {
+    "destinataire_locataire": 1,
+    "loyer": null,
+    "titre": "Bordereau validé",
+    "message": "Votre bordereau de paiement a été validé ✅.",
+    "type_notif": "bordereau",
+    "lu": true,
+    "created_at": "2026-05-11T08:54:57.914Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 23,
+  "fields": {
+    "destinataire_locataire": 1,
+    "loyer": null,
+    "titre": "Bordereau validé",
+    "message": "Votre bordereau de paiement a été validé ✅.",
+    "type_notif": "bordereau",
+    "lu": true,
+    "created_at": "2026-05-26T08:08:32.273Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 24,
+  "fields": {
+    "destinataire_locataire": 5,
+    "loyer": null,
+    "titre": "Affirmation paiement",
+    "message": "Bien recu",
+    "type_notif": "avertissement",
+    "lu": false,
+    "created_at": "2026-07-06T08:50:22.080Z"
+  }
+},
+{
+  "model": "notifications.notification",
+  "pk": 25,
+  "fields": {
+    "destinataire_locataire": 1,
+    "loyer": null,
+    "titre": "affirmation paiement",
+    "message": "bien recu",
+    "type_notif": "avertissement",
+    "lu": true,
+    "created_at": "2026-07-06T09:02:58.357Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "931bf4c36975cd8d42834858386fdcf70623f1b5",
+  "fields": {
+    "user": [
+      "admin"
+    ],
+    "created": "2026-07-10T10:52:20.669Z"
+  }
+},
+{
+  "model": "authtoken.token",
+  "pk": "f10eb04e07c50888400d967cd5abe5910a678643",
+  "fields": {
+    "user": [
+      "gestionnaire1"
+    ],
+    "created": "2026-07-05T12:47:14.942Z"
+  }
+}
+]
