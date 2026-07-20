@@ -659,13 +659,12 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
       <div class="stat-sub" id="d-paye-sub">BIF versés</div>
       <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
     </div>
-    <div class="stat-card" style="--c:linear-gradient(90deg,#ef4444,#dc2626)">
-      <div class="stat-label">Solde restant</div>
-      <div class="stat-value" id="d-solde">—</div>
-      <div class="stat-sub" id="d-retard-sub">BIF restants</div>
-      <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
-    </div>
-  </div>
+   <div class="stat-card" id="d-solde-card" style="--c:linear-gradient(90deg,#ef4444,#dc2626)">
+  <div class="stat-label">Solde restant</div>
+  <div class="stat-value" id="d-solde">—</div>
+  <div class="stat-sub" id="d-retard-sub">BIF restants</div>
+  <div class="stat-icon"><i class="fas fa-exclamation-triangle" id="d-solde-icon"></i></div>
+</div>
   <div class="two-col">
     <div class="card">
       <div class="card-title"><span><i class="fas fa-home" style="color:var(--accent);margin-right:6px"></i>Mon Local</span></div>
@@ -1151,9 +1150,38 @@ async function loadDashboard(){
     var sit=d.situation_financiere||{};
     document.getElementById('d-total').textContent=f(sit.total_loyers);
     document.getElementById('d-paye').textContent=f(sit.montant_paye);
-    document.getElementById('d-solde').textContent=f(sit.solde_restant);
-    document.getElementById('d-retard-sub').textContent=sit.loyers_en_retard>0?`⚠️ ${sit.loyers_en_retard} en retard`:'✅ Aucun retard';
+
+    var totalDu=parseFloat(sit.total_loyers)||0;
+    var paye=parseFloat(sit.montant_paye)||0;
+    var ecart=paye-totalDu; // >0 = surplus, <0 = reste à payer
+
+    var soldeEl=document.getElementById('d-solde');
+    var subEl=document.getElementById('d-retard-sub');
+    var cardEl=document.getElementById('d-solde-card');
+    var iconEl=document.getElementById('d-solde-icon');
+
+    if(ecart>0){
+      soldeEl.textContent='+'+f(ecart)+' BIF';
+      soldeEl.style.color='var(--green)';
+      subEl.textContent='✅ Trop-perçu';
+      cardEl.style.setProperty('--c','linear-gradient(90deg,#10b981,#059669)');
+      iconEl.className='fas fa-check-circle';
+    }else if(ecart<0){
+      soldeEl.textContent='-'+f(Math.abs(ecart))+' BIF';
+      soldeEl.style.color='var(--red)';
+      subEl.textContent=sit.loyers_en_retard>0?`⚠️ ${sit.loyers_en_retard} en retard`:'BIF restants';
+      cardEl.style.setProperty('--c','linear-gradient(90deg,#ef4444,#dc2626)');
+      iconEl.className='fas fa-exclamation-triangle';
+    }else{
+      soldeEl.textContent='0 BIF';
+      soldeEl.style.color='var(--text)';
+      subEl.textContent='✅ Soldé';
+      cardEl.style.setProperty('--c','linear-gradient(90deg,#6366f1,#8b5cf6)');
+      iconEl.className='fas fa-check-double';
+    }
+
     document.getElementById('badge-retard').textContent=sit.loyers_en_retard||0;
+
     if(sit.loyers_en_retard>0){
       document.getElementById('dash-alerte').innerHTML=`<div class="info-box info-err" style="margin-bottom:16px"><i class="fas fa-exclamation-triangle"></i> Vous avez <strong>${sit.loyers_en_retard} loyer(s) en retard</strong>. Veuillez régulariser votre situation ou contacter l'administration.</div>`;
       document.getElementById('dash-alerte').classList.remove('hidden');
@@ -1231,7 +1259,6 @@ async function loadDashboard(){
     if(unread>0)dot.style.display='';else dot.style.display='none';
   }catch(e){}
 }
-
 // ══════════════════════════════════════════════
 //  MES LOYERS
 // ══════════════════════════════════════════════

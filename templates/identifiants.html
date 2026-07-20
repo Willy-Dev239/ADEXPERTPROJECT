@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADEXPERT | Récupération des identifiants</title>
+<title>ADEXPER | Récupération des identifiants</title>
 <script>
 (function(){
   var t=localStorage.getItem('authToken');
@@ -425,6 +425,7 @@ async function loadImmeubles() {
     document.getElementById('imm-grid').innerHTML =
       `<div class="empty"><div class="icon">⚠️</div><div class="title">Erreur de chargement</div><div>${e.message}</div></div>`;
   }
+}
 
 
 // ════════════════════════════════════════
@@ -712,13 +713,13 @@ async function doReset() {
 //  EMAIL (lien mailto)
 // ════════════════════════════════════════
 function sendByEmail(email, username) {
-  var subject = encodeURIComponent('[InfinityHome] Vos identifiants de connexion');
+  var subject = encodeURIComponent('[ADEXPER] Vos identifiants de connexion');
   var body = encodeURIComponent(
-    'Bonjour,\n\nVoici vos identifiants pour accéder à la plateforme InfinityHome :\n\n' +
+    'Bonjour,\n\nVoici vos identifiants pour accéder à la plateforme ADEXPER :\n\n' +
     'Nom d\'utilisateur : ' + username + '\n' +
     'Lien de connexion : ' + window.location.origin + '/login/\n\n' +
     'Pour des raisons de sécurité, votre mot de passe vous sera communiqué séparément.\n\n' +
-    'Cordialement,\nL\'équipe InfinityHome'
+    'Cordialement,\nL\'équipe ADEXPER'
   );
   window.open('mailto:' + email + '?subject=' + subject + '&body=' + body, '_blank');
 }
@@ -813,11 +814,6 @@ async function init() {
       `<option value="">⚠️ Erreur: ${e.message}</option>`;
   }
 }
-
-
-
-
-
 (function initAccess(){
   var role = localStorage.getItem('role') || '';
   var name = localStorage.getItem('fullname') || localStorage.getItem('username') || '';
