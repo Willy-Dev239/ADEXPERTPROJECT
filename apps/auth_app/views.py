@@ -40,8 +40,7 @@ class ChangePasswordView(APIView):
         request.user.set_password(new_pwd)
         request.user.save()
         return Response({'message': 'Mot de passe mis à jour.'})
-class ResetUserPasswordView(APIView):
-    permission_classes = [IsAuthenticated, IsAdminOrGestionnaire]
+
 
 # ── CSRF (Feature 9) ─────────────────────────────────────────
 @api_view(['GET'])
@@ -51,6 +50,33 @@ def csrf_token_view(request):
 
 class ResetUserPasswordView(APIView):
     permission_classes = [IsAuthenticated, IsAdminOrGestionnaire]
+
+    def post(self, request, user_id):
+        new_pwd = request.data.get('new_password', '')
+        reason = request.data.get('reason', '')
+
+        if not new_pwd:
+            return Response({'new_password': 'Ce champ est requis.'}, status=status.HTTP_400_BAD_REQUEST)
+        if len(new_pwd) < 4:
+            return Response({'new_password': 'Minimum 4 caractères.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response({'detail': 'Utilisateur introuvable.'}, status=status.HTTP_404_NOT_FOUND)
+
+        user.set_password(new_pwd)
+        user.save()
+
+        # Garder une trace en clair pour affichage admin, si le profil lié existe
+        if user.locataire_profile:
+            user.locataire_profile.mot_de_passe_temp = new_pwd
+            user.locataire_profile.save(update_fields=['mot_de_passe_temp'])
+        elif user.proprietaire_profile:
+            user.proprietaire_profile.mot_de_passe_temp = new_pwd
+            user.proprietaire_profile.save(update_fields=['mot_de_passe_temp'])
+
+        return Response({'message': f'Mot de passe réinitialisé pour {user.username}.', 'reason': reason})
 # ── LOGIN ─────────────────────────────────────────────────────
 @api_view(['POST'])
 @permission_classes([AllowAny])

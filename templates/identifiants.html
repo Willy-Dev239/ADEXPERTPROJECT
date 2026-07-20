@@ -664,21 +664,19 @@ function openReset(userId, nom, username) {
 }
 
 function generatePwd() {
-  var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$!';
   var pwd = '';
-  for (var i = 0; i < 12; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+  for (var i = 0; i < 4; i++) pwd += Math.floor(Math.random() * 10);
   document.getElementById('inp-new-pwd').value = pwd;
   document.getElementById('inp-confirm-pwd').value = pwd;
-  showToast('Mot de passe généré !', 'ok');
+  showToast('Code généré !', 'ok');
 }
-
 async function doReset() {
   var pwd = document.getElementById('inp-new-pwd').value.trim();
   var conf = document.getElementById('inp-confirm-pwd').value.trim();
   var reason = document.getElementById('inp-reset-reason').value.trim();
 
   if (!pwd) { showToast('Veuillez saisir un mot de passe', 'err'); return; }
-  if (pwd.length < 6) { showToast('Mot de passe trop court (min. 6 caractères)', 'err'); return; }
+  if (pwd.length < 4) { showToast('Mot de passe trop court (min. 4 caractères)', 'err'); return; }
   if (pwd !== conf) { showToast('Les mots de passe ne correspondent pas', 'err'); return; }
 
   document.getElementById('btn-do-reset').disabled = true;

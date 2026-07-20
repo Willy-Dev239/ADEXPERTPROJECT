@@ -27,9 +27,78 @@ class ImmeubleViewSet(viewsets.ModelViewSet):
 
 class ImmeubleActeursView(APIView):
     permission_classes = [IsAuthenticated, IsAdminOrGestionnaire]
-    ...
 
+    def get(self, request, immeuble_id):
+        try:
+            immeuble = Immeuble.objects.get(pk=immeuble_id)
+        except Immeuble.DoesNotExist:
+            return Response({'detail': 'Immeuble introuvable.'}, status=404)
 
+        locaux = Local.objects.filter(immeuble=immeuble)
+        acteurs = []
+
+        # ── PROPRIÉTAIRES ──
+        from apps.proprietaires.models import Proprietaire
+        proprietaires = Proprietaire.objects.filter(locaux__in=locaux).distinct()
+        for p in proprietaires:
+            ua = getattr(p, 'user_account', None)
+            local_ref = locaux.filter(proprietaire=p).values_list('reference', flat=True).first()
+            acteurs.append({
+                'id': ua.id if ua else None,
+                'nom_prenom': p.nom,
+                'username': ua.username if ua else '',
+                'email': (ua.email if ua else p.email) or '',
+                'telephone': p.telephone,
+                'role': 'proprietaire',
+                'is_active': ua.is_active if ua else True,
+                'last_login': ua.last_login if ua else None,
+                'date_joined': ua.date_joined if ua else None,
+                'mot_de_passe_temp': p.mot_de_passe_temp,
+                'local_reference': local_ref or '',
+                'immeuble_nom': immeuble.nom,
+            })
+
+        # ── LOCATAIRES ──
+        from apps.locataires.models import Locataire
+        locataires = Locataire.objects.filter(contrats__local__in=locaux, contrats__statut='actif').distinct()
+        for loc in locataires:
+            ua = getattr(loc, 'user_account', None)
+            local_actuel = loc.local_actuel
+            acteurs.append({
+                'id': ua.id if ua else None,
+                'nom_prenom': loc.nom_prenom,
+                'username': ua.username if ua else '',
+                'email': (ua.email if ua else loc.email) or '',
+                'telephone': loc.telephone,
+                'role': 'locataire',
+                'is_active': ua.is_active if ua else True,
+                'last_login': ua.last_login if ua else None,
+                'date_joined': ua.date_joined if ua else None,
+                'mot_de_passe_temp': loc.mot_de_passe_temp,
+                'local_reference': local_actuel.reference if local_actuel else '',
+                'immeuble_nom': immeuble.nom,
+            })
+
+        # ── GESTIONNAIRES & ADMINS (globaux à la plateforme) ──
+        from apps.auth_app.models import User
+        staff = User.objects.filter(role__in=['gestionnaire', 'admin'])
+        for u in staff:
+            acteurs.append({
+                'id': u.id,
+                'nom_prenom': u.full_name,
+                'username': u.username,
+                'email': u.email or '',
+                'telephone': u.telephone,
+                'role': u.role,
+                'is_active': u.is_active,
+                'last_login': u.last_login,
+                'date_joined': u.date_joined,
+                'mot_de_passe_temp': '',
+                'local_reference': '',
+                'immeuble_nom': immeuble.nom,
+            })
+
+        return Response({'acteurs': acteurs})
 class ImmeubleListCreate(generics.ListCreateAPIView):
     serializer_class = ImmeubleSerializer
     permission_classes = [IsAuthenticated]
