@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,16 +15,24 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
+  --radius:14px;
+}
+[data-theme="dark"]{
   --bg:#0b0f1a;--surface:#111827;--surface2:#1a2234;--surface3:#212d42;
   --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
   --text:#f1f5f9;--text2:#94a3b8;--text3:#475569;
   --green:#10b981;--green2:#059669;
   --accent:#3b82f6;--red:#ef4444;--amber:#f59e0b;--purple:#8b5cf6;
-  --radius:14px;
+}
+[data-theme="light"]{
+  --bg:#f4f6fb;--surface:#ffffff;--surface2:#f1f4fa;--surface3:#e7ebf3;
+  --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.13);
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --green:#059669;--green2:#047857;
+  --accent:#2563eb;--red:#dc2626;--amber:#d97706;--purple:#7c3aed;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
-
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;transition:background .2s ease,color .2s ease}
 /* ── TOPBAR ── */
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
 .logo{display:flex;align-items:center;gap:10px}
@@ -185,6 +193,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
   <div class="topbar-right">
+    <button class="btn btn-sm" onclick="toggleTheme()" id="theme-btn" title="Changer le thème">
+  <span id="theme-icon">☀️</span>
+</button>
     <span id="role-pill" style="padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid"></span>
     <button class="btn btn-sm" onclick="window.history.back()">← Retour</button>
     <button class="btn btn-sm btn-primary" onclick="openModal('m-help')">❓ Aide</button>
@@ -251,6 +262,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <div class="search-bar">
       <input class="search-input" id="search-acteur" placeholder="🔍 Rechercher par nom, username, email..." oninput="filterActeurs()">
       <span class="result-count" id="result-count">— résultats</span>
+      <button class="btn btn-sm" id="btn-toggle-view" onclick="toggleView()">📊 Vue tableau</button>
       <button class="btn btn-sm btn-success" onclick="exportCSV()">⬇️ Exporter CSV</button>
       <button class="btn btn-sm btn-primary" onclick="printPage()">🖨️ Imprimer</button>
     </div>
@@ -258,6 +270,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <!-- Grille acteurs -->
     <div class="acteurs-grid" id="acteurs-grid"></div>
   </div>
+
+  <div class="table-wrap" id="acteurs-table-wrap" style="display:none;overflow-x:auto;border-radius:10px">
+  <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+    <thead>
+      <tr style="background:var(--surface2)">
+        <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);text-transform:uppercase">Nom</th>
+        <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);text-transform:uppercase">Username</th>
+        <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);text-transform:uppercase">Email</th>
+        <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);text-transform:uppercase">Téléphone</th>
+        <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);text-transform:uppercase">Rôle</th>
+        <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);text-transform:uppercase">Mot de passe</th>
+        <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);text-transform:uppercase">Statut</th>
+        <th style="text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-size:10px;color:var(--text3);text-transform:uppercase">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="acteurs-table-body"></tbody>
+  </table>
+</div>
 
 </div><!-- /main -->
 
@@ -516,7 +546,11 @@ function filterActeurs() {
     return roleOk && searchOk;
   });
   document.getElementById('result-count').textContent = filtered.length + ' résultat(s)';
-  renderActeurs(filtered);
+  if (_viewMode === 'table') {
+    renderActeursTable(filtered);
+  } else {
+    renderActeurs(filtered);
+  }
 }
 
 // ════════════════════════════════════════
@@ -597,6 +631,54 @@ function renderActeurs(list) {
   }).join('');
 }
 
+
+var _viewMode = 'grid'; // 'grid' ou 'table'
+
+function toggleView() {
+  _viewMode = _viewMode === 'grid' ? 'table' : 'grid';
+  var btn = document.getElementById('btn-toggle-view');
+  if (_viewMode === 'table') {
+    btn.textContent = '🗂️ Vue grille';
+    document.getElementById('acteurs-grid').style.display = 'none';
+    document.getElementById('acteurs-table-wrap').style.display = 'block';
+  } else {
+    btn.textContent = '📊 Vue tableau';
+    document.getElementById('acteurs-grid').style.display = 'grid';
+    document.getElementById('acteurs-table-wrap').style.display = 'none';
+  }
+  filterActeurs(); // re-render dans le mode courant
+}
+
+function renderActeursTable(list) {
+  var tbody = document.getElementById('acteurs-table-body');
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text3)">Aucun acteur trouvé</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map((a, idx) => {
+    var rs = roleStyle(a.role);
+    var pwdId = 'tpwd-' + (a.id || idx);
+    var statut = a.is_active !== false
+      ? '<span style="color:var(--green)">● Actif</span>'
+      : '<span style="color:var(--red)">● Inactif</span>';
+    return `<tr>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text)">${escHtml(a.nom_prenom || a.username || '—')}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);font-family:monospace">${escHtml(a.username || '—')}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2)">${escHtml(a.email || '—')}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2)">${escHtml(a.telephone || '—')}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border)"><span class="ac-role-badge" style="background:${rs.badge};color:${rs.badgeColor}">${rs.label}</span></td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border)">
+        <span class="mono password" id="${pwdId}" onclick="togglePwd('${pwdId}')" style="cursor:pointer">${escHtml(a.mot_de_passe_temp || a.password_display || '••••')}</span>
+        <button class="copy-btn" onclick="copyVal('${escAttr(a.mot_de_passe_temp || a.password_display || '')}',this)" title="Copier">📋</button>
+      </td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border)">${statut}</td>
+      <td style="padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap">
+        <button class="btn btn-sm btn-amber" onclick="openReset(${a.id},'${escAttr(a.nom_prenom || a.username || '')}','${escAttr(a.username || '')}')">🔐</button>
+        ${a.email ? `<button class="btn btn-sm btn-primary" onclick="sendByEmail('${escAttr(a.email)}','${escAttr(a.username || '')}')">📧</button>` : ''}
+      </td>
+    </tr>`;
+  }).join('');
+}
 // ════════════════════════════════════════
 //  INTERACTIONS CARTES
 // ════════════════════════════════════════
@@ -784,7 +866,23 @@ document.querySelectorAll('.modal-overlay').forEach(o => {
 // ════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════
-
+function toggleTheme(){
+  var html=document.documentElement;
+  var current=html.getAttribute('data-theme');
+  var next=current==='dark'?'light':'dark';
+  html.setAttribute('data-theme',next);
+  localStorage.setItem('theme',next);
+  updateThemeIcon(next);
+}
+function updateThemeIcon(theme){
+  var icon=document.getElementById('theme-icon');
+  if(icon) icon.textContent = theme==='dark' ? '☀️' : '🌙';
+}
+(function(){
+  var t=localStorage.getItem('theme')||'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  updateThemeIcon(t);
+})();
 async function init() {
   // Vérifier le token
   if (!S.token) {
@@ -846,6 +944,7 @@ async function init() {
       </div>`;
     return;
   }
+
   loadImmeubles();
 })();
 </script>
