@@ -1,11 +1,24 @@
 from django.db import models
 from django.utils import timezone
 from pyuploadcare.dj.models import ImageField
-class Loyer(models.Model):
+from apps.core.models import SoftDeleteModel
+class Loyer(SoftDeleteModel):
     STATUT = [('attente','En attente'),('partiel','Partiel'),('paye','Payé'),('retard','En retard')]
-    contrat = models.ForeignKey('contrats.Contrat', on_delete=models.SET_NULL, null=True, blank=True, related_name='loyers')
-    locataire = models.ForeignKey('locataires.Locataire', on_delete=models.PROTECT, related_name='loyers')
-    local = models.ForeignKey('locaux.Local', on_delete=models.PROTECT, related_name='loyers')
+
+    contrat = models.ForeignKey(
+        'contrats.Contrat',
+        on_delete=models.PROTECT,   # plus SET_NULL — un contrat lié à des loyers ne doit pas pouvoir être supprimé
+        null=False, blank=False,    # devient obligatoire
+        related_name='loyers'
+    )
+    locataire = models.ForeignKey(
+        'locataires.Locataire', on_delete=models.PROTECT,
+        related_name='loyers', editable=False   # piloté par le trigger, plus par l'app
+    )
+    local = models.ForeignKey(
+        'locaux.Local', on_delete=models.PROTECT,
+        related_name='loyers', editable=False   # idem
+    )
     libelle = models.CharField(max_length=200)
     periode_debut = models.DateField()
     periode_fin = models.DateField(null=True, blank=True)
@@ -16,6 +29,7 @@ class Loyer(models.Model):
     quittance_envoyee = models.BooleanField(default=False)
     informations_complementaires = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     @property
     def montant_total(self): return self.loyer_hors_charges + self.charges
     @property
@@ -26,7 +40,9 @@ class Loyer(models.Model):
     def locataire_nom(self): return self.locataire.nom_prenom
     @property
     def local_reference(self): return self.local.reference
+
     def get_statut_display_custom(self): return dict(self.STATUT).get(self.statut, self.statut)
+
     def update_statut(self):
         p = self.montant_paye; t = self.montant_total
         if p >= t: self.statut = 'paye'
@@ -34,6 +50,16 @@ class Loyer(models.Model):
         elif timezone.now().date() > self.echeance: self.statut = 'retard'
         else: self.statut = 'attente'
         self.save(update_fields=['statut'])
+
+    def save(self, *args, **kwargs):
+        # Filet de sécurité applicatif : même si le trigger SQL garantit la
+        # cohérence en base, on s'assure qu'un objet Python fraîchement
+        # instancié (avant tout INSERT réel) reflète bien le contrat
+        if self.contrat_id:
+            self.local_id = self.contrat.local_id
+            self.locataire_id = self.contrat.locataire_id
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ['-echeance']
 

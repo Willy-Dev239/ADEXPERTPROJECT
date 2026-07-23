@@ -1,8 +1,13 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from apps.core.models import SoftDeleteModel
 
-class Contrat(models.Model):
+from django.db.models import Q, CheckConstraint
+
+from django.db.models import Q, CheckConstraint, UniqueConstraint
+
+class Contrat(SoftDeleteModel):
     STATUT = [('actif','Actif'),('resilie','Résilié'),('expire','Expiré')]
     PERIOD = [('mensuel','Mensuel'),('bimensuel','Bi-mensuel'),('trimestriel','Trimestriel'),('semestriel','Semestriel'),('annuel','Annuel')]
     numero = models.CharField(max_length=50, unique=True)
@@ -20,13 +25,10 @@ class Contrat(models.Model):
 
     @property
     def locataire_nom(self): return self.locataire.nom_prenom
-
     @property
     def local_reference(self): return self.local.reference
-
     @property
     def statut_display(self): return dict(self.STATUT).get(self.statut, self.statut)
-
     @property
     def periodicite_display(self): return dict(self.PERIOD).get(self.periodicite, self.periodicite)
 
@@ -36,10 +38,38 @@ class Contrat(models.Model):
                 raise ValidationError({
                     'date_sortie': "La date de sortie doit être postérieure à la date d'entrée."
                 })
+        # Filet applicatif : donne un message clair côté formulaire/API,
+        # avant même de taper la DB et recevoir une erreur SQL brute
+        if self.statut == 'actif':
+            conflit = Contrat.objects.filter(
+                local_id=self.local_id, statut='actif'
+            ).exclude(pk=self.pk)
+            if conflit.exists():
+                raise ValidationError({
+                    'statut': "Ce local a déjà un contrat actif. "
+                              "Résiliez-le avant d'en activer un nouveau."
+                })
 
     class Meta:
         ordering = ['-created_at']
-
+        constraints = [
+            CheckConstraint(
+                check=Q(statut__in=['actif', 'resilie', 'expire']),
+                name='chk_contrat_statut',
+            ),
+            CheckConstraint(
+                check=Q(periodicite__in=['mensuel', 'bimensuel', 'trimestriel', 'semestriel', 'annuel']),
+                name='chk_contrat_periodicite',
+            ),
+            CheckConstraint(
+                check=Q(date_sortie__isnull=True) | Q(date_sortie__gt=models.F('date_entree')),
+                name='chk_contrat_dates',
+            ),
+            UniqueConstraint(
+                fields=['local'], condition=Q(statut='actif'),
+                name='uniq_local_actif',
+            ),
+        ]
 
 class ContratSociete(models.Model):
     STATUT = [('actif','Actif'),('expire','Expiré'),('resilie','Résilié')]
@@ -91,12 +121,6 @@ class ContratSociete(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-        
-        
-        
-        
-
-
 
 class BordereauVirement(models.Model):
     STATUT_CHOICES = [

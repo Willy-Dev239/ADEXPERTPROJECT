@@ -1,4 +1,8 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.db.models import Q, UniqueConstraint
+
+
 class Proprietaire(models.Model):
     nom = models.CharField(max_length=200)
     telephone = models.CharField(max_length=30, blank=True)
@@ -9,8 +13,39 @@ class Proprietaire(models.Model):
     mot_de_passe_temp = models.CharField(max_length=128, blank=True, default='')
     informations_complementaires = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
     @property
     def nb_locaux(self): return self.locaux.count()
+
+    def clean(self):
+        self.email = self.email.strip().lower()
+        self.telephone = self.telephone.strip().replace(' ', '').replace('-', '')
+
+        if self.email:
+            conflit = Proprietaire.objects.filter(email=self.email).exclude(pk=self.pk)
+            if conflit.exists():
+                raise ValidationError({'email': "Un propriétaire utilise déjà cet email."})
+
+        if self.telephone:
+            conflit = Proprietaire.objects.filter(telephone=self.telephone).exclude(pk=self.pk)
+            if conflit.exists():
+                raise ValidationError({'telephone': "Un propriétaire utilise déjà ce téléphone."})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     def __str__(self): return self.nom
+
     class Meta:
         ordering = ['nom']
+        constraints = [
+            UniqueConstraint(
+                fields=['email'], condition=~Q(email=''),
+                name='uniq_proprietaire_email',
+            ),
+            UniqueConstraint(
+                fields=['telephone'], condition=~Q(telephone=''),
+                name='uniq_proprietaire_telephone',
+            ),
+        ]
