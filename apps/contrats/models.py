@@ -5,7 +5,6 @@ from apps.core.models import SoftDeleteModel
 
 from django.db.models import Q, CheckConstraint
 
-from django.db.models import Q, CheckConstraint, UniqueConstraint
 
 class Contrat(SoftDeleteModel):
     STATUT = [('actif','Actif'),('resilie','Résilié'),('expire','Expiré')]
@@ -39,7 +38,10 @@ class Contrat(SoftDeleteModel):
                     'date_sortie': "La date de sortie doit être postérieure à la date d'entrée."
                 })
         # Filet applicatif : donne un message clair côté formulaire/API,
-        # avant même de taper la DB et recevoir une erreur SQL brute
+        # avant même de taper la DB et recevoir une erreur SQL brute.
+        # Cette vérification remplace la UniqueConstraint conditionnelle
+        # (non supportée par MariaDB) — c'est ici la seule garantie
+        # qu'un seul contrat actif existe par local.
         if self.statut == 'actif':
             conflit = Contrat.objects.filter(
                 local_id=self.local_id, statut='actif'
@@ -65,11 +67,8 @@ class Contrat(SoftDeleteModel):
                 check=Q(date_sortie__isnull=True) | Q(date_sortie__gt=models.F('date_entree')),
                 name='chk_contrat_dates',
             ),
-            UniqueConstraint(
-                fields=['local'], condition=Q(statut='actif'),
-                name='uniq_local_actif',
-            ),
         ]
+
 
 class ContratSociete(models.Model):
     STATUT = [('actif','Actif'),('expire','Expiré'),('resilie','Résilié')]
@@ -122,6 +121,7 @@ class ContratSociete(models.Model):
     class Meta:
         ordering = ['-created_at']
 
+
 class BordereauVirement(models.Model):
     STATUT_CHOICES = [
         ('en_attente', 'En attente de validation'),
@@ -151,4 +151,4 @@ class BordereauVirement(models.Model):
         ordering = ['-date_creation']
 
     def __str__(self):
-        return f"Virement {self.montant} BIF - {self.proprietaire} - {self.statut}"     
+        return f"Virement {self.montant} BIF - {self.proprietaire} - {self.statut}"

@@ -1,12 +1,12 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.db.models import Q, UniqueConstraint
+from django.db.models import UniqueConstraint
 
 
 class Locataire(models.Model):
     nom_prenom = models.CharField(max_length=200)
-    telephone = models.CharField(max_length=30, blank=True)
-    email = models.EmailField(blank=True)
+    telephone = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
     adresse_postale = models.CharField(max_length=300, blank=True)
     informations_complementaires = models.TextField(blank=True)
     mot_de_passe_temp = models.CharField(max_length=128, blank=True, default='')
@@ -26,8 +26,13 @@ class Locataire(models.Model):
         return {'total_loyers': total, 'montant_paye': paye, 'solde_restant': total - paye, 'loyers_en_retard': retard}
 
     def clean(self):
-        self.email = self.email.strip().lower()
-        self.telephone = self.telephone.strip().replace(' ', '').replace('-', '')
+        # Normalisation : chaîne vide -> None, pour que MariaDB
+        # laisse passer plusieurs locataires "sans email/téléphone"
+        self.email = self.email.strip().lower() if self.email else None
+        self.telephone = (
+            self.telephone.strip().replace(' ', '').replace('-', '')
+            if self.telephone else None
+        )
 
         if self.email:
             conflit = Locataire.objects.filter(email=self.email).exclude(pk=self.pk)
@@ -48,12 +53,6 @@ class Locataire(models.Model):
     class Meta:
         ordering = ['nom_prenom']
         constraints = [
-            UniqueConstraint(
-                fields=['email'], condition=~Q(email=''),
-                name='uniq_locataire_email',
-            ),
-            UniqueConstraint(
-                fields=['telephone'], condition=~Q(telephone=''),
-                name='uniq_locataire_telephone',
-            ),
+            UniqueConstraint(fields=['email'], name='uniq_locataire_email'),
+            UniqueConstraint(fields=['telephone'], name='uniq_locataire_telephone'),
         ]

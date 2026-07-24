@@ -1,12 +1,12 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from django.db.models import Q, UniqueConstraint
+from django.db.models import UniqueConstraint
 
 
 class Proprietaire(models.Model):
     nom = models.CharField(max_length=200)
-    telephone = models.CharField(max_length=30, blank=True)
-    email = models.EmailField(blank=True)
+    telephone = models.CharField(max_length=30, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
     adresse_province = models.CharField(max_length=100, blank=True)
     adresse_commune = models.CharField(max_length=100, blank=True)
     adresse_quartier = models.CharField(max_length=100, blank=True)
@@ -18,8 +18,11 @@ class Proprietaire(models.Model):
     def nb_locaux(self): return self.locaux.count()
 
     def clean(self):
-        self.email = self.email.strip().lower()
-        self.telephone = self.telephone.strip().replace(' ', '').replace('-', '')
+        self.email = self.email.strip().lower() if self.email else None
+        self.telephone = (
+            self.telephone.strip().replace(' ', '').replace('-', '')
+            if self.telephone else None
+        )
 
         if self.email:
             conflit = Proprietaire.objects.filter(email=self.email).exclude(pk=self.pk)
@@ -40,12 +43,6 @@ class Proprietaire(models.Model):
     class Meta:
         ordering = ['nom']
         constraints = [
-            UniqueConstraint(
-                fields=['email'], condition=~Q(email=''),
-                name='uniq_proprietaire_email',
-            ),
-            UniqueConstraint(
-                fields=['telephone'], condition=~Q(telephone=''),
-                name='uniq_proprietaire_telephone',
-            ),
+            UniqueConstraint(fields=['email'], name='uniq_proprietaire_email'),
+            UniqueConstraint(fields=['telephone'], name='uniq_proprietaire_telephone'),
         ]
