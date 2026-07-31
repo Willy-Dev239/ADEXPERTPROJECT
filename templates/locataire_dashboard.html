@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
@@ -554,6 +555,7 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
   .payment-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
+<script src="{% static 'js/i18n.js' %}"></script>
 </head>
 <body>
 
@@ -624,10 +626,19 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
     </div>
   </div>
   <div class="topbar-right">
-    <!-- Theme toggle -->
-    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Changer le thème">
-      <i class="fas fa-sun" id="theme-icon"></i>
+    <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
+      <span id="theme-icon">🌙</span>
     </button>
+    <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="rn">🇧🇮 Kirundi</option>
+      <option value="sw">🇹🇿 Kiswahili</option>
+      <option value="rw">🇷🇼 Kinyarwanda</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
     <!-- Notification bell -->
     <button class="notif-btn" onclick="goSection('notifications',document.querySelector('[onclick*=notifications]'))" title="Notifications">
       <i class="fas fa-bell"></i>
@@ -642,7 +653,6 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
 
 <!-- CONTENT -->
 <div class="content">
-
 <!-- ════ DASHBOARD ════ -->
 <div class="section active" id="s-dashboard">
   <div id="dash-alerte" class="hidden"></div>

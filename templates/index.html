@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -309,6 +310,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
   .province-commune-group{grid-template-columns:1fr}
 }
 </style>
+<script src="{% static 'js/i18n.js' %}"></script>
 </head>
 <body>
 <script>
@@ -392,21 +394,24 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     <button class="btn btn-ghost" onclick="openModal('m-rappels')" style="position:relative">
       🔔 <span id="nb-rappels">0</span>
     </button>
-
-
-  <!-- NOUVEAU BOUTON THÈME -->
-  <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
-    <span id="theme-icon">🌙</span>
-  </button>
-  <!-- fin nouveau -->
-  <span class="role-pill" id="role-pill"></span>
-  ...
-    <button class="btn btn-primary" id="btn-add" onclick="handleAdd()">+ Ajouter</button>
+    <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
+      <span id="theme-icon">🌙</span>
+    </button>
+    <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="rn">🇧🇮 Kirundi</option>
+      <option value="sw">🇹🇿 Kiswahili</option>
+      <option value="rw">🇷🇼 Kinyarwanda</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+    <button class="btn btn-primary" id="btn-add" onclick="handleAdd()" data-i18n="topbar.add">+ Ajouter</button>
   </div>
-</div>
+</div><!-- ← cette ligne manquait -->
 
 <div class="content">
-
 <!-- ═══════ DASHBOARD ═══════ -->
 <div class="section active" id="s-dashboard">
 

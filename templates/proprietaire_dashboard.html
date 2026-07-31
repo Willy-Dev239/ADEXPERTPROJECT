@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ADEXPER | Espace Propriétaire</title>
+<script src="{% static 'js/i18n.js' %}"></script>
 <script>
 (function(){
   var t=localStorage.getItem('authToken');
@@ -303,6 +305,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   .main{margin-left:0}
 }
 </style>
+<script src="{% static 'js/i18n.js' %}"></script>
 </head>
 <body>
 
@@ -355,18 +358,25 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   <div class="topbar-left">
     <div class="topbar-title" id="page-title">Tableau de bord</div>
   </div>
-  
   <div class="topbar-right">
-       <!-- Theme toggle -->
-<button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Changer le thème">
-  <i class="fas fa-sun" id="theme-icon"></i>
-</button>
-    <span class="role-pill">🏘️ Propriétaire</span>
-
-    <button class="btn btn-sm" onclick="goSection('mes-loyers')" style="color:var(--red);border-color:rgba(239,68,68,.25)">
-      🔔 <span id="nb-retard-top">0</span> en retard
+    <span class="role-pill" id="role-pill"></span>
+    <button class="btn btn-ghost" onclick="openModal('m-rappels')" style="position:relative">
+      🔔 <span id="nb-rappels">0</span>
     </button>
-
+    <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
+      <span id="theme-icon">🌙</span>
+    </button>
+    <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
+      <option value="fr">🇫🇷 Français</option>
+      <option value="en">🇬🇧 English</option>
+      <option value="rn">🇧🇮 Kirundi</option>
+      <option value="sw">🇹🇿 Kiswahili</option>
+      <option value="rw">🇷🇼 Kinyarwanda</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="zh">🇨🇳 中文</option>
+    </select>
+    <button class="btn btn-primary" id="btn-add" onclick="handleAdd()" data-i18n="topbar.add">+ Ajouter</button>
   </div>
 </div>
 
