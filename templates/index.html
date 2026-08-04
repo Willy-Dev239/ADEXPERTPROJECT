@@ -333,16 +333,16 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
   </div>
   <div style="flex:1">
-    <div class="nav-group">Principal</div>
-    <div class="nav-item active" onclick="goSection('dashboard',this)"><span class="nav-icon">📊</span>Tableau de bord</div>
-
-    <div class="nav-group">Gestion</div>
-    <div class="nav-item" onclick="goSection('proprietaires',this)"><span class="nav-icon">🤝</span>Propriétaires</div>
-    <div class="nav-item" onclick="goSection('immeubles',this)"><span class="nav-icon">🏗️</span>Immeubles</div>
-    <div class="nav-item" onclick="goSection('locaux',this)"><span class="nav-icon">🏠</span>Locaux</div>
-    <div class="nav-item" onclick="goSection('locataires',this)"><span class="nav-icon">👤</span>Locataires</div>
-    <div class="nav-item" onclick="goSection('contrats',this)"><span class="nav-icon">📄</span>Contrats Location</div>
-    <div class="nav-item" onclick="goSection('contrats_societe',this)"><span class="nav-icon">🤝</span>Contrats Société</div>
+    <div class="nav-group" data-i18n="nav.principal" >Principal</div>
+    <!-- APRÈS -->
+<div class="nav-item active" onclick="goSection('dashboard',this)"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Tableau de bord</span></div>
+    <div class="nav-group" data-i18n="nav.gestion" >Gestion</div>
+    <div class="nav-item" onclick="goSection('proprietaires',this)"><span class="nav-icon">🤝</span><span data-i18n="nav.proprietaires">Propriétaires</span></div>
+    <div class="nav-item" onclick="goSection('immeubles',this)"><span class="nav-icon">🏗️</span><span data-i18n="nav.immeubles">Immeubles</span></div>
+    <div class="nav-item" onclick="goSection('locaux',this)"><span class="nav-icon">🏠</span><span data-i18n="nav.locaux">Locaux</span></div>
+    <div class="nav-item" onclick="goSection('locataires',this)"><span class="nav-icon">👤</span><span data-i18n="nav.locataires">Locataires</span></div>
+    <div class="nav-item" onclick="goSection('contrats',this)"><span class="nav-icon">📄</span><span data-i18n="nav.contrats">Contrats Location</span></div>
+    <div class="nav-item" onclick="goSection('contrats_societe',this)"><span class="nav-icon">🤝</span><span data-i18n="nav.contrats_societe">Contrats Société</span></div>
     <div class="nav-item" onclick="goSection('loyers',this)">
       <span class="nav-icon">💰</span>Loyers & Paiements
       <span class="nav-badge" id="badge-retard">0</span>
@@ -356,21 +356,18 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <span class="nav-badge" id="badge-vir">0</span>
     </div>
 
-    <div class="nav-group">Analyse</div>
-
-
-    <div class="nav-group">Analyse</div>
+    <div class="nav-group" data-i18n="nav.analyse" >Analyse</div>
     <div class="nav-item" onclick="goSection('rapports',this)"><span class="nav-icon">📈</span>Rapports</div>
     <div class="nav-item" onclick="goSection('portefeuille',this)"><span class="nav-icon">💼</span>Portefeuille</div>
 
-    <div class="nav-group">Communication</div>
+    <div class="nav-group" data-i18n="nav.communication" >Communication</div>
     <div class="nav-item" onclick="goSection('chat',this)"><span class="nav-icon">💬</span>Chat Immeubles</div>
     <div class="nav-item" onclick="goSection('notifications',this)">
       <span class="nav-icon">🔔</span>Notifications
       <span class="nav-badge" id="badge-notif" style="display:none">!</span>
     </div>
 
-    <div class="nav-group nav-hidden" id="nav-sec-admin">Administration</div>
+    <div class="nav-group nav-hidden" id="nav-sec-admin" data-i18n="nav.administration" >Administration</div>
     <div class="nav-item nav-hidden" id="nav-users" onclick="goSection('utilisateurs',this)"><span class="nav-icon">👥</span>Gestion des Utilisateurs</div>
   </div>
   <div class="sb-footer">
@@ -1484,9 +1481,9 @@ function initUI(){
   document.getElementById('sb-avatar').textContent=(S.username||'?').charAt(0).toUpperCase();
   document.getElementById('sb-name').textContent=S.fullname||S.username;
   var rd={admin:'Administrateur',gestionnaire:'Gestionnaire',lecteur:'Lecteur'};
-  document.getElementById('sb-role').textContent=rd[S.role]||S.role;
-  var rp=document.getElementById('role-pill');
-  rp.textContent=rd[S.role]||S.role;
+  document.getElementById('sb-role').textContent=t('role.'+S.role)||S.role;
+   var rp=document.getElementById('role-pill');
+rp.textContent=t('role.'+S.role)||S.role;
   rp.className='role-pill rp-'+(S.role||'lecteur');
   if(S.admin){
     document.getElementById('nav-sec-admin').classList.remove('nav-hidden');
@@ -1528,7 +1525,7 @@ var LOADERS={
   locataires:loadLocas,
   contrats:loadCont,
   contrats_societe:loadCS,
-  loyers:()=>{ loadLoyerFilters(); loadLoyers('tous'); }, // ✅ un seul
+  loyers:()=>{ loadLoyerFilters(); loadLoyers('tous'); }, 
   charges:loadCh,
   bordereaux:loadBordereaux,
   virements:loadVirements,
@@ -1544,7 +1541,7 @@ var LOADERS={
   locataires:loadLocas,
   contrats:loadCont,
   contrats_societe:loadCS,
-  loyers:()=>{ loadLoyerFilters(); loadLoyers('tous'); }, // ✅ un seul
+  loyers:()=>{ loadLoyerFilters(); loadLoyers('tous'); }, 
   charges:loadCh,
   bordereaux:loadBordereaux,
   virements:loadVirements,
