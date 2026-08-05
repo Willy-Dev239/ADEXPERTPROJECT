@@ -18,6 +18,9 @@ class Charge(SoftDeleteModel):
     date_charge = models.DateField()
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='charges_crees')
+    validated_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, related_name='charges_valides')
+    update_at = models.DateTimeField(auto_now=True)
 
     @property
     def local_reference(self): return self.local.reference if self.local else None

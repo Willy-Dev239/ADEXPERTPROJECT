@@ -10,12 +10,35 @@ class Proprietaire(models.Model):
     adresse_province = models.CharField(max_length=100, blank=True)
     adresse_commune = models.CharField(max_length=100, blank=True)
     adresse_quartier = models.CharField(max_length=100, blank=True)
-    mot_de_passe_temp = models.CharField(max_length=128, blank=True, default='')
+    activation_token = models.CharField(max_length=128, blank=True, null=True, unique=True)
+    expiration_token = models.DateTimeField(null=True, blank=True)
     informations_complementaires = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
     def nb_locaux(self): return self.locaux.count()
+
+    def generer_token_activation(self, duree_heures=48):
+        """Génère un jeton d'activation sécurisé et sa date d'expiration."""
+        self.activation_token = secrets.token_urlsafe(32)
+        self.expiration_token = timezone.now() + timedelta(hours=duree_heures)
+        self.save(update_fields=['activation_token', 'expiration_token'])
+        return self.activation_token
+
+    def token_est_valide(self, token):
+        """Vérifie que le jeton fourni correspond et n'a pas expiré."""
+        return (
+            self.activation_token
+            and self.activation_token == token
+            and self.expiration_token
+            and timezone.now() < self.expiration_token
+        )
+
+    def invalider_token(self):
+        """Consomme le jeton après activation réussie."""
+        self.activation_token = None
+        self.expiration_token = None
+        self.save(update_fields=['activation_token', 'expiration_token'])
 
     def clean(self):
         self.email = self.email.strip().lower() if self.email else None

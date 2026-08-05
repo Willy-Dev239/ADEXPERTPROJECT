@@ -3,21 +3,27 @@ from django.utils import timezone
 from pyuploadcare.dj.models import ImageField
 from apps.core.models import SoftDeleteModel
 class Loyer(SoftDeleteModel):
-    STATUT = [('attente','En attente'),('partiel','Partiel'),('paye','Payé'),('retard','En retard')]
+    STATUT = [
+        ('attente', 'En attente'),
+        ('partiel', 'Partiellement payé'),
+        ('paye', 'Payé'),
+        ('retard', 'En retard'),
+        ('annule', 'Annulé'),
+    ]
 
     contrat = models.ForeignKey(
         'contrats.Contrat',
-        on_delete=models.PROTECT,   # plus SET_NULL — un contrat lié à des loyers ne doit pas pouvoir être supprimé
-        null=False, blank=False,    # devient obligatoire
+        on_delete=models.PROTECT,
+        null=False, blank=False,
         related_name='loyers'
     )
     locataire = models.ForeignKey(
         'locataires.Locataire', on_delete=models.PROTECT,
-        related_name='loyers', editable=False   # piloté par le trigger, plus par l'app
+        related_name='loyers', editable=False
     )
     local = models.ForeignKey(
         'locaux.Local', on_delete=models.PROTECT,
-        related_name='loyers', editable=False   # idem
+        related_name='loyers', editable=False
     )
     libelle = models.CharField(max_length=200)
     periode_debut = models.DateField()
@@ -29,6 +35,9 @@ class Loyer(SoftDeleteModel):
     quittance_envoyee = models.BooleanField(default=False)
     informations_complementaires = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='Loyers_crees')
+    validated_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, related_name='Loyers_valides')
+    update_at = models.DateTimeField(auto_now=True)
 
     @property
     def montant_total(self): return self.loyer_hors_charges + self.charges
@@ -44,6 +53,8 @@ class Loyer(SoftDeleteModel):
     def get_statut_display_custom(self): return dict(self.STATUT).get(self.statut, self.statut)
 
     def update_statut(self):
+        if self.statut == 'annule':
+            return  # un loyer annulé ne doit pas être recalculé automatiquement
         p = self.montant_paye; t = self.montant_total
         if p >= t: self.statut = 'paye'
         elif p > 0: self.statut = 'partiel'
@@ -52,9 +63,6 @@ class Loyer(SoftDeleteModel):
         self.save(update_fields=['statut'])
 
     def save(self, *args, **kwargs):
-        # Filet de sécurité applicatif : même si le trigger SQL garantit la
-        # cohérence en base, on s'assure qu'un objet Python fraîchement
-        # instancié (avant tout INSERT réel) reflète bien le contrat
         if self.contrat_id:
             self.local_id = self.contrat.local_id
             self.locataire_id = self.contrat.locataire_id
@@ -62,24 +70,34 @@ class Loyer(SoftDeleteModel):
 
     class Meta:
         ordering = ['-echeance']
-
 class Paiement(models.Model):
     MODE = [('especes','Espèces'),('virement','Virement'),('cheque','Chèque'),('mobile_money','Mobile Money'),('autre','Autre')]
+    STATUT_VALIDATION = [('en_attente', 'En attente'), ('valide', 'Validé')]
+
     loyer = models.ForeignKey(Loyer, on_delete=models.CASCADE, related_name='paiements')
     montant = models.DecimalField(max_digits=12, decimal_places=2)
     date_paiement = models.DateField()
     mode_paiement = models.CharField(max_length=20, choices=MODE, default='especes')
     reference = models.CharField(max_length=100, blank=True)
-    created_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True)
+    reference_transaction = models.CharField(max_length=100, blank=True, help_text="Référence bancaire / mobile money de la transaction")
+    banque_operateur = models.CharField(max_length=100, blank=True, help_text="Nom de la banque ou de l'opérateur mobile money")
+    encaisse_par = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='paiements_encaisses')
+    statut_validation = models.CharField(max_length=20, choices=STATUT_VALIDATION, default='en_attente')
+    date_validation = models.DateTimeField(null=True, blank=True)
+    commentaire = models.TextField(blank=True)
+    created_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='paiements_crees')
+    validated_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, related_name='paiements_valides')
+    update_at = models.DateTimeField(auto_now=True)
+
+    
     created_at = models.DateTimeField(auto_now_add=True)
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.loyer.update_statut()
+
     class Meta:
         ordering = ['-date_paiement']
-
-
-
 from pyuploadcare.dj.models import ImageField
 import re
 

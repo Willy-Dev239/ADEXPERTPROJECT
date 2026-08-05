@@ -7,12 +7,18 @@ from django.db.models import Q, CheckConstraint
 
 
 class Contrat(SoftDeleteModel):
-    STATUT = [('actif','Actif'),('resilie','Résilié'),('expire','Expiré')]
+    STATUT = [
+        ('brouillon', 'Brouillon'),
+        ('actif', 'Actif'),
+        ('expire', 'Expiré'),
+        ('resilie', 'Résilié'),
+        ('renouvele', 'Renouvelé'),
+    ]
     PERIOD = [('mensuel','Mensuel'),('bimensuel','Bi-mensuel'),('trimestriel','Trimestriel'),('semestriel','Semestriel'),('annuel','Annuel')]
     numero = models.CharField(max_length=50, unique=True)
     locataire = models.ForeignKey('locataires.Locataire', on_delete=models.PROTECT, related_name='contrats')
     local = models.ForeignKey('locaux.Local', on_delete=models.PROTECT, related_name='contrats')
-    statut = models.CharField(max_length=20, choices=STATUT, default='actif')
+    statut = models.CharField(max_length=20, choices=STATUT, default='brouillon')
     loyer_hors_charges = models.DecimalField(max_digits=12, decimal_places=2)
     provisions_charges = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     periodicite = models.CharField(max_length=20, choices=PERIOD, default='mensuel')
@@ -21,6 +27,9 @@ class Contrat(SoftDeleteModel):
     date_sortie = models.DateField(null=True, blank=True)
     informations_complementaires = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='contrats_crees')
+    validated_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, related_name='contrats_valides')
+    update_at = models.DateTimeField(auto_now=True)
 
     @property
     def locataire_nom(self): return self.locataire.nom_prenom
@@ -37,11 +46,6 @@ class Contrat(SoftDeleteModel):
                 raise ValidationError({
                     'date_sortie': "La date de sortie doit être postérieure à la date d'entrée."
                 })
-        # Filet applicatif : donne un message clair côté formulaire/API,
-        # avant même de taper la DB et recevoir une erreur SQL brute.
-        # Cette vérification remplace la UniqueConstraint conditionnelle
-        # (non supportée par MariaDB) — c'est ici la seule garantie
-        # qu'un seul contrat actif existe par local.
         if self.statut == 'actif':
             conflit = Contrat.objects.filter(
                 local_id=self.local_id, statut='actif'
@@ -56,7 +60,7 @@ class Contrat(SoftDeleteModel):
         ordering = ['-created_at']
         constraints = [
             CheckConstraint(
-                check=Q(statut__in=['actif', 'resilie', 'expire']),
+                check=Q(statut__in=['brouillon', 'actif', 'expire', 'resilie', 'renouvele']),
                 name='chk_contrat_statut',
             ),
             CheckConstraint(
@@ -68,7 +72,6 @@ class Contrat(SoftDeleteModel):
                 name='chk_contrat_dates',
             ),
         ]
-
 
 class ContratSociete(models.Model):
     STATUT = [('actif','Actif'),('expire','Expiré'),('resilie','Résilié')]
