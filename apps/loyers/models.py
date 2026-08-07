@@ -85,13 +85,18 @@ class Paiement(models.Model):
     statut_validation = models.CharField(max_length=20, choices=STATUT_VALIDATION, default='en_attente')
     date_validation = models.DateTimeField(null=True, blank=True)
     commentaire = models.TextField(blank=True)
+    annule = models.BooleanField(default=False)
+    date_annulation = models.DateTimeField(null=True, blank=True)
+    annule_par = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='paiements_annules')
+    motif_annulation = models.TextField(blank=True)
     created_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='paiements_crees')
     validated_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, related_name='paiements_valides')
     update_at = models.DateTimeField(auto_now=True)
 
     
     created_at = models.DateTimeField(auto_now_add=True)
-
+    @property
+    def montant_paye(self): return sum(p.montant for p in self.paiements.filter(annule=False))
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.loyer.update_statut()

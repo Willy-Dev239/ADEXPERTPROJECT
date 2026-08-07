@@ -2,13 +2,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def dashboard_view(request):
     from apps.locaux.models import Local
-    from apps.loyers.models import Loyer
+    from apps.loyers.models import Loyer, Paiement
     from apps.charges.models import Charge
+    from apps.contrats.models import ContratSociete
     from dateutil.relativedelta import relativedelta
 
     user = request.user
@@ -21,8 +21,10 @@ def dashboard_view(request):
 
     # ─── Filtre propriétaire ─────────────────────────────────────────────────
     is_proprio = (user.role == 'proprietaire' and user.proprietaire_profile is not None)
+    filtre_proprio_id = None
     if is_proprio:
         p = user.proprietaire_profile
+        filtre_proprio_id = p.id
         lqs   = lqs.filter(proprietaire=p)
         loyqs = loyqs.filter(local__proprietaire=p)
         chqs  = chqs.filter(local__proprietaire=p)
@@ -30,6 +32,7 @@ def dashboard_view(request):
         # Admin/Gestionnaire : filtre optionnel via query param
         prop_id = request.GET.get('proprietaire')
         if prop_id:
+            filtre_proprio_id = prop_id
             lqs   = lqs.filter(proprietaire_id=prop_id)
             loyqs = loyqs.filter(local__proprietaire_id=prop_id)
             chqs  = chqs.filter(local__proprietaire_id=prop_id)
@@ -45,6 +48,12 @@ def dashboard_view(request):
     occ    = sum(1 for l in lqs if l.est_occupe)
     lm     = loyqs.filter(echeance__month=m, echeance__year=y)
     rev    = sum(float(l.montant_paye) for l in lm)
+
+    # ─── Revenu annuel : basé sur la date réelle d'encaissement, pas l'échéance ──
+    rev_annuel = sum(float(p.montant) for p in Paiement.objects.filter(
+        date_paiement__year=y, loyer__local__in=lqs
+    ))
+
     ch     = sum(float(c.montant_ttc) for c in chqs.filter(date_charge__month=m, date_charge__year=y))
     payes  = lm.filter(statut='paye').count()
     retard = lm.filter(statut='retard').count()
@@ -62,29 +71,44 @@ def dashboard_view(request):
         for l in loyqs.filter(statut='retard')[:5]
     ]
 
-    taux_comm = 0.09
-    if is_proprio:
-        try:
-            from apps.contrats_societe.models import ContratSociete
-            cs = ContratSociete.objects.filter(
-                proprietaire=user.proprietaire_profile, statut='actif'
-            ).first()
-            if cs:
-                taux_comm = float(cs.taux_commission) / 100
-        except Exception:
-            pass
+    # ─── Commission cabinet : taux réel par propriétaire (ContratSociete actif) ──
+    DEFAULT_TAUX = 0.09  # fallback si aucun contrat actif trouvé
 
-    net_reverse = round(rev * (1 - taux_comm), 2)
+    if filtre_proprio_id:
+        # Un seul propriétaire concerné (proprio connecté ou filtre admin)
+        taux_comm = DEFAULT_TAUX
+        cs = ContratSociete.objects.filter(
+            proprietaire_id=filtre_proprio_id, statut='actif'
+        ).first()
+        if cs:
+            taux_comm = float(cs.taux_commission) / 100
+        commission_cabinet = round(rev * taux_comm, 2)
+    else:
+        # Vue admin globale : plusieurs propriétaires, taux potentiellement différents
+        taux_par_proprio = {
+            cs.proprietaire_id: float(cs.taux_commission) / 100
+            for cs in ContratSociete.objects.filter(statut='actif')
+        }
+        commission_cabinet = 0.0
+        for l in lm.select_related('local__proprietaire'):
+            t = taux_par_proprio.get(l.local.proprietaire_id, DEFAULT_TAUX)
+            commission_cabinet += float(l.montant_paye) * t
+        commission_cabinet = round(commission_cabinet, 2)
+        # taux moyen pondéré, uniquement pour affichage éventuel
+        taux_comm = round(commission_cabinet / rev, 4) if rev else DEFAULT_TAUX
+
+    net_reverse = round(rev - commission_cabinet, 2)
 
     return Response({
         'locaux': {
             'total': total, 'occupes': occ, 'libres': total - occ,
             'taux_occupation': round(occ / total * 100, 1) if total else 0
         },
-        'finances': {
+       'finances': {
             'revenus_mois': rev, 'charges_mois': ch,
+            'revenus_annee': rev_annuel,
             'benefice_net': rev - ch,
-            'commission_cabinet': round(rev * taux_comm, 2),
+            'commission_cabinet': commission_cabinet,
             'net_reverse': net_reverse,
         },
         'loyers_mois': {

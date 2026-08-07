@@ -13,4 +13,7 @@ urlpatterns = [
     path('paiements/rapport-journalier/', views.rapport_journalier),
     path('bordereaux/', views.bordereau_list),
     path('bordereaux/<int:pk>/valider/', views.valider_bordereau),
+    path('<int:pk>/paiements/', views.lister_paiements_loyer, name='lister-paiements-loyer'),
+    path('paiements/<int:pk>/annuler/', views.annuler_paiement, name='annuler-paiement'),
+    path('paiements-annules/', views.loyers_paiements_annules),
 ]

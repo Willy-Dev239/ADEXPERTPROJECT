@@ -81,6 +81,29 @@ def loyers_impayes(request):
         qs = qs.filter(local__immeuble_id=immeuble_id)
 
     return Response(LoyerSerializer(qs, many=True).data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def loyers_paiements_annules(request):
+    qs = Loyer.objects.filter(paiements__annule=True).distinct()
+    user = request.user
+
+    # Filtre automatique si l'utilisateur est un propriétaire
+    if user.role == 'proprietaire' and user.proprietaire_profile:
+        qs = qs.filter(local__proprietaire=user.proprietaire_profile)
+    elif user.role == 'locataire' and user.locataire_profile:
+        qs = qs.filter(locataire=user.locataire_profile)
+
+    # Filtres dashboard (admin/gestionnaire)
+    proprietaire_id = request.query_params.get('proprietaire')
+    immeuble_id = request.query_params.get('immeuble')
+    if proprietaire_id:
+        qs = qs.filter(local__proprietaire_id=proprietaire_id)
+    if immeuble_id:
+        qs = qs.filter(local__immeuble_id=immeuble_id)
+
+    return Response(LoyerSerializer(qs, many=True).data)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def enregistrer_paiement(request, pk):
@@ -106,6 +129,53 @@ def enregistrer_paiement(request, pk):
     except Exception:
         pass
     return Response({'detail': 'Paiement enregistré.', 'loyer': LoyerSerializer(loyer).data})
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def lister_paiements_loyer(request, pk):
+    try:
+        loyer = Loyer.objects.get(pk=pk)
+    except Loyer.DoesNotExist:
+        return Response({'error': 'Introuvable.'}, status=404)
+    data = [{
+        'id': p.id,
+        'montant': float(p.montant),
+        'date_paiement': p.date_paiement,
+        'mode_paiement': p.get_mode_paiement_display(),
+        'reference': p.reference,
+        'annule': p.annule,
+        'date_annulation': p.date_annulation,
+        'annule_par': p.annule_par.username if p.annule_par else None,
+        'motif_annulation': p.motif_annulation,
+    } for p in loyer.paiements.all().order_by('-date_paiement')]
+    return Response(data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def annuler_paiement(request, pk):
+    if not (request.user.role in ('admin', 'gestionnaire')):
+        return Response({'error': 'Accès réservé aux admins/gestionnaires.'}, status=403)
+    try:
+        paiement = Paiement.objects.select_related('loyer').get(pk=pk)
+    except Paiement.DoesNotExist:
+        return Response({'error': 'Paiement introuvable.'}, status=404)
+    if paiement.annule:
+        return Response({'error': 'Ce paiement est déjà annulé.'}, status=400)
+
+    paiement.annule = True
+    paiement.date_annulation = timezone.now()
+    paiement.annule_par = request.user
+    paiement.motif_annulation = request.data.get('motif', '')
+    paiement.save(update_fields=['annule', 'date_annulation', 'annule_par', 'motif_annulation'])
+
+    paiement.loyer.update_statut()
+
+    return Response({'message': 'Paiement annulé avec succès.'})
+
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
