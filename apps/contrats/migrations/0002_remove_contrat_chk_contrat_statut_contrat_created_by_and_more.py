@@ -13,10 +13,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveConstraint(
-            model_name='contrat',
-            name='chk_contrat_statut',
-        ),
+        # migrations.RemoveConstraint(
+        #     model_name='contrat',
+        #     name='chk_contrat_statut',
+        # ),
+        
+        migrations.RunSQL(
+    sql="ALTER TABLE contrats_contrat DROP CONSTRAINT IF EXISTS chk_contrat_statut;",
+    reverse_sql=migrations.RunSQL.noop,
+),
         migrations.AddField(
             model_name='contrat',
             name='created_by',
