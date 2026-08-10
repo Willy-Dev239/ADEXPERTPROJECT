@@ -2110,6 +2110,10 @@ async function saveCS(){
     if(id) await api('/contrats/societe/'+id+'/', {method:'PUT', body:JSON.stringify(data)});
     else await api('/contrats/societe/', {method:'POST', body:JSON.stringify(data)});
     closeModal('m-cs'); loadCS();
+
+    // ✅ Le taux de commission a peut-être changé : on rafraîchit tout ce qui l'affiche
+    loadDash();
+    loadPortf();
   } catch(e){
     document.getElementById('al-cs').innerHTML = err(e.message);
   }
@@ -3529,8 +3533,14 @@ async function loadDash() {
     document.getElementById('d-taux-pct').textContent = d.loyers_mois.taux_paiement + '%';
     document.getElementById('d-taux-bar').style.width = d.loyers_mois.taux_paiement + '%';
     document.getElementById('d-taux-det').innerHTML = `<span>${d.loyers_mois.payes} payés</span><span>${d.loyers_mois.retard} en retard</span>`;
+
+    // ✅ Commission : taux réel issu du/des Contrat(s) Société, plus fixe
     document.getElementById('d-commission').textContent = f(d.finances.commission_cabinet) + ' BIF';
-    document.getElementById('d-commission-sub').textContent = 'Sur ' + f(d.finances.revenus_mois) + ' BIF bruts';
+    var tauxLabel = d.finances.taux_commission_effectif != null
+      ? d.finances.taux_commission_effectif + '% sur ' + f(d.finances.revenus_mois) + ' BIF bruts'
+      : 'Sur ' + f(d.finances.revenus_mois) + ' BIF bruts';
+    document.getElementById('d-commission-sub').textContent = tauxLabel;
+
     document.getElementById('d-revenu-annuel').textContent = f(d.finances.revenus_annee) + ' BIF';
     document.getElementById('d-revenu-annuel-sub').textContent = new Date().getFullYear() + ' à ce jour';
     document.getElementById('nb-rappels').textContent = d.rappels.length;
@@ -3558,7 +3568,6 @@ async function loadDash() {
     console.error('Dash:', e);
   }
 }
-
 
 var _pmtCurrentLoyerId = null;
 
