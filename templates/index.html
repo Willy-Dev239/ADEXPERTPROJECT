@@ -981,7 +981,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div class="fg"><label>Informations complémentaires</label><textarea id="loca-info" rows="2" placeholder="Caution solidaire, 2e téléphone…"></textarea></div>
 
       <!-- Feature 3: Situation financière & Historique -->
-      <div id="loca-sit" class="hidden">
+     <div id="loca-sit" class="hidden">
         <div class="sep"></div>
         <div style="font-size:12.5px;font-weight:700;margin-bottom:10px;color:var(--text)">📊 Situation financière</div>
         <div class="kpi-row">
@@ -990,10 +990,40 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
           <div class="kpi"><div class="kpi-label">Solde</div><div class="kpi-val" style="color:var(--red)" id="ls-sol">—</div></div>
           <div class="kpi"><div class="kpi-label">En retard</div><div class="kpi-val" style="color:var(--red)" id="ls-ret">—</div></div>
         </div>
-        <button class="btn btn-ghost btn-sm" onclick="showHistoriqueLocataire()" id="btn-hist">📋 Voir l'historique complet</button>
+
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+          <button class="btn btn-ghost btn-sm" onclick="showHistoriqueLocataire()" id="btn-hist">📋 Voir l'historique complet</button>
+        </div>
+
+        <!-- ── Téléchargement PDF ── -->
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <select id="hist-periode-type" onchange="toggleHistPeriodeInputs()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font-size:12px">
+            <option value="tout">Tout l'historique</option>
+            <option value="mois">Un mois précis</option>
+            <option value="intervalle">Intervalle de dates</option>
+          </select>
+
+          <div id="hist-mois-inputs" class="hidden" style="display:flex;gap:6px">
+            <select id="hist-mois" style="padding:6px 8px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font-size:12px">
+              <option value="1">Janvier</option><option value="2">Février</option><option value="3">Mars</option>
+              <option value="4">Avril</option><option value="5">Mai</option><option value="6">Juin</option>
+              <option value="7">Juillet</option><option value="8">Août</option><option value="9">Septembre</option>
+              <option value="10">Octobre</option><option value="11">Novembre</option><option value="12">Décembre</option>
+            </select>
+            <input type="number" id="hist-annee" placeholder="Année" style="width:75px;padding:6px 8px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font-size:12px">
+          </div>
+
+          <div id="hist-intervalle-inputs" class="hidden" style="display:flex;gap:6px;align-items:center">
+            <input type="date" id="hist-date-debut" style="padding:6px 8px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font-size:12px">
+            <span style="font-size:11px;color:var(--text3)">→</span>
+            <input type="date" id="hist-date-fin" style="padding:6px 8px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font-size:12px">
+          </div>
+
+          <button class="btn btn-success btn-sm" style="margin-left:auto" onclick="downloadHistoriquePdf()">📥 PDF</button>
+        </div>
+
         <div id="loca-historique" class="hidden" style="margin-top:10px;max-height:240px;overflow-y:auto"></div>
       </div>
-    </div>
     <div class="modal-footer-split">
       <button class="btn btn-danger btn-sm hidden" id="del-loca" onclick=""></button>
       {% comment %} <button class="btn btn-danger btn-sm hidden" id="del-loca" onclick="delLoca()">🗑 Supprimer</button> {% endcomment %}
@@ -1888,6 +1918,55 @@ async function showHistoriqueLocataire(){
   }catch(e){hDiv.innerHTML='<div class="info-box info-err">Erreur: '+e.message+'</div>';}
 }
 
+
+function toggleHistPeriodeInputs() {
+  var type = document.getElementById('hist-periode-type').value;
+  document.getElementById('hist-mois-inputs').classList.toggle('hidden', type !== 'mois');
+  document.getElementById('hist-intervalle-inputs').classList.toggle('hidden', type !== 'intervalle');
+}
+
+async function downloadHistoriquePdf() {
+  if (!_currentLocaId) return;
+  var type = document.getElementById('hist-periode-type').value;
+  var params = new URLSearchParams();
+
+  if (type === 'mois') {
+    var mois = document.getElementById('hist-mois').value;
+    var annee = document.getElementById('hist-annee').value;
+    if (!annee) { alert('Indiquez une année.'); return; }
+    params.set('mois', mois);
+    params.set('annee', annee);
+  } else if (type === 'intervalle') {
+    var d1 = document.getElementById('hist-date-debut').value;
+    var d2 = document.getElementById('hist-date-fin').value;
+    if (!d1 || !d2) { alert('Indiquez les deux dates.'); return; }
+    params.set('date_debut', d1);
+    params.set('date_fin', d2);
+  }
+
+  try {
+    var res = await fetch(BASE + '/locataires/' + _currentLocaId + '/historique-pdf/?' + params.toString(), {
+      headers: { 'Authorization': 'Token ' + S.token }
+    });
+    if (!res.ok) {
+      var errBody = await res.json().catch(() => ({}));
+      alert(errBody.error || 'Erreur lors de la génération du PDF.');
+      return;
+    }
+    var blob = await res.blob();
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    var nom = document.getElementById('loca-nom').value || 'locataire';
+    a.download = 'historique_' + nom.replace(/\s+/g, '_') + '.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (e) {
+    alert('Erreur : ' + e.message);
+  }
+}
 async function saveLoca(){
   var id=document.getElementById('loca-id').value;
   var data={nom_prenom:document.getElementById('loca-nom').value,telephone:document.getElementById('loca-tel').value,email:document.getElementById('loca-email').value,adresse_postale:document.getElementById('loca-adr').value,informations_complementaires:document.getElementById('loca-info').value};
