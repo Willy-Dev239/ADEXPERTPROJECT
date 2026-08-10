@@ -42,7 +42,7 @@ class Loyer(SoftDeleteModel):
     @property
     def montant_total(self): return self.loyer_hors_charges + self.charges
     @property
-    def montant_paye(self): return sum(p.montant for p in self.paiements.all())
+    def montant_paye(self): return sum(p.montant for p in self.paiements.filter(annule=False))
     @property
     def solde_restant(self): return self.montant_total - self.montant_paye
     @property

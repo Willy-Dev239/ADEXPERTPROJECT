@@ -510,8 +510,8 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <input id="s-loca" placeholder="🔍 Rechercher..." style="width:200px;padding:7px 12px;border:1px solid var(--border2);border-radius:8px;font-size:12.5px;background:var(--surface2);color:var(--text)" oninput="filtLoca()">
     </div>
     <div class="table-wrap"><table>
-      <thead><tr><th>Nom Prénom</th><th>Téléphone</th><th>Local</th><th>Loyer total</th><th>Payé</th><th>Solde</th><th>Situation</th><th>Actions</th></tr></thead>
-      <tbody id="tb-loca"><tr><td colspan="8" class="loader">Chargement...</td></tr></tbody>
+      <thead><tr><th>Nom Prénom</th><th>Téléphone</th><th>Local</th><th>Loyer total</th><th>Payé</th><th>Solde</th><th>Situation</th></tr></thead>
+       <tbody id="tb-loca"><tr><td colspan="8" class="loader">Chargement...</td></tr></tbody> 
     </table></div>
   </div>
 </div>
@@ -1195,7 +1195,7 @@ async function loadMesLocataires() {
 }
 function renderLocas(list) {
   var tb = document.getElementById('tb-loca');
-  if (!list.length) { tb.innerHTML = '<tr><td colspan="8" class="loader">Aucun locataire</td></tr>'; return; }
+  if (!list.length) { tb.innerHTML = '<tr><td colspan="7" class="loader">Aucun locataire</td></tr>'; return; }
   tb.innerHTML = list.map(t => {
     var s = t.situation_financiere || {};
     var ok = s.loyers_en_retard === 0;
@@ -1207,7 +1207,6 @@ function renderLocas(list) {
       <td style="color:var(--green)">${f(s.montant_paye)} BIF</td>
       <td style="color:${s.solde_restant > 0 ? 'var(--red)' : 'var(--green)'}">${f(s.solde_restant)} BIF</td>
       <td>${ok ? '<span class="bs bs-paye">✅ À jour</span>' : '<span class="bs bs-retard">⚠️ En retard</span>'}</td>
-      <td><button class="btn btn-sm" onclick="showHistorique(${t.id},'${t.nom_prenom.replace(/'/g, "\\'")}')">📊 Historique</button></td>
     </tr>`;
   }).join('');
 }

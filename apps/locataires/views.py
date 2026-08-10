@@ -24,27 +24,41 @@ class LocataireDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Locataire.objects.all()
     serializer_class = LocataireSerializer
     permission_classes = [IsAuthenticated]
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def locataire_historique(request, pk):
     from apps.loyers.models import Loyer, Paiement
+
+    is_proprietaire = request.user.role == 'proprietaire' and not request.user.is_superuser
+
     loyers = Loyer.objects.filter(locataire_id=pk).order_by('-echeance')
     data = []
     for loyer in loyers:
-        paiements = list(Paiement.objects.filter(loyer=loyer).values('montant','date_paiement','mode_paiement','reference'))
-        data.append({'loyer_id':loyer.id,'libelle':loyer.libelle,'periode_debut':loyer.periode_debut,
-            'periode_fin':loyer.periode_fin,'montant_total':float(loyer.montant_total),
-            'montant_paye':float(loyer.montant_paye),'solde_restant':float(loyer.solde_restant),
-            'statut':loyer.statut,'statut_display':loyer.get_statut_display_custom(),
-            'echeance':loyer.echeance,'paiements':paiements})
-    return Response({'locataire_id':pk,'historique':data,
-        'total_loyers':len(data),'loyers_payes':len([d for d in data if d['solde_restant']<=0]),
-        'montant_total_du':sum(d['montant_total'] for d in data),
-        'montant_total_paye':sum(d['montant_paye'] for d in data),
-        'montant_total_restant':sum(d['solde_restant'] for d in data)})
+        item = {
+            'loyer_id': loyer.id, 'libelle': loyer.libelle,
+            'periode_debut': loyer.periode_debut, 'periode_fin': loyer.periode_fin,
+            'montant_total': float(loyer.montant_total), 'montant_paye': float(loyer.montant_paye),
+            'solde_restant': float(loyer.solde_restant), 'statut': loyer.statut,
+            'statut_display': loyer.get_statut_display_custom(), 'echeance': loyer.echeance,
+        }
+        if is_proprietaire:
+            item['paiements'] = []
+        else:
+            item['paiements'] = list(Paiement.objects.filter(loyer=loyer, annule=False).values(
+                'montant', 'date_paiement', 'mode_paiement', 'reference'
+            ))
+        data.append(item)
 
-# @api_view(['POST'])
+    loyers_payes = len([d for d in data if d['solde_restant'] <= 0])
+
+    return Response({'locataire_id': pk, 'historique': data,
+        'total_loyers': len(data),
+        'loyers_payes': loyers_payes,
+        'loyers_restants': len(data) - loyers_payes,
+        'montant_total_du': sum(d['montant_total'] for d in data),
+        'montant_total_paye': sum(d['montant_paye'] for d in data),
+        'montant_total_restant': sum(d['solde_restant'] for d in data)})
+    # @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
 # def upload_bordereau(request, pk):
 #     from apps.loyers.models import Bordereau

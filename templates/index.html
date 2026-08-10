@@ -3583,9 +3583,12 @@ function renderPaiementsList(paiements) {
     var badge = p.annule
       ? `<span class="bs bs-resilie">❌ Annulé</span>`
       : `<span class="bs bs-paye">✅ Actif</span>`;
+    var dateAnnul = p.date_annulation
+      ? new Date(p.date_annulation).toLocaleString('fr-FR', {dateStyle:'short', timeStyle:'short'})
+      : '—';
     var actions = (!p.annule && S.write)
       ? `<button class="btn btn-sm btn-danger" onclick="confirmAnnulerPaiement(${p.id})">Annuler ce paiement</button>`
-      : (p.annule ? `<span style="font-size:11px;color:var(--text3)">Par ${p.annule_par || '—'} le ${fd(p.date_annulation)}${p.motif_annulation ? ' — ' + p.motif_annulation : ''}</span>` : '');
+      : (p.annule ? `<span style="font-size:11px;color:var(--text3)">Par ${p.annule_par || '—'} le ${dateAnnul}${p.motif_annulation ? ' — ' + p.motif_annulation : ''}</span>` : '');
     return `<div class="hist-item">
       <div class="hist-header">
         <div>
@@ -3598,7 +3601,6 @@ function renderPaiementsList(paiements) {
     </div>`;
   }).join('');
 }
-
 async function confirmAnnulerPaiement(paiementId) {
   var motif = prompt('Motif de l\'annulation (optionnel) :');
   if (motif === null) return; // annulé par l'utilisateur

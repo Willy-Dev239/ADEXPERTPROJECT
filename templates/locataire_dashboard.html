@@ -578,9 +578,9 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
       <span class="nav-icon"><i class="fas fa-wallet"></i></span>Mes Loyers
       <span class="nav-badge" id="badge-retard">0</span>
     </div>
-    <div class="nav-item" onclick="goSection('historique',this)">
+    {% comment %} <div class="nav-item" onclick="goSection('historique',this)">
       <span class="nav-icon"><i class="fas fa-history"></i></span>Historique complet
-    </div>
+    </div> {% endcomment %}
     <div class="nav-item" onclick="goSection('bordereaux',this)">
       <span class="nav-icon"><i class="fas fa-receipt"></i></span>Mes Bordereaux
     </div>
@@ -724,13 +724,13 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
 </div>
 
 <!-- ════ HISTORIQUE ════ -->
-<div class="section" id="s-historique">
+{% comment %} <div class="section" id="s-historique">
   <div class="kpi-row" id="kpi-hist"></div>
   <div class="card">
     <div class="card-title"><i class="fas fa-history" style="color:var(--blue);margin-right:6px"></i>Historique complet des paiements</div>
     <div id="hist-content"><div class="loader">Chargement...</div></div>
   </div>
-</div>
+</div> {% endcomment %}
 
 <!-- ════ BORDEREAUX ════ -->
 <div class="section" id="s-bordereaux">

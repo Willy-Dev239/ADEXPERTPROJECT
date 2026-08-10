@@ -47,11 +47,15 @@ def dashboard_view(request):
     total  = lqs.count()
     occ    = sum(1 for l in lqs if l.est_occupe)
     lm     = loyqs.filter(echeance__month=m, echeance__year=y)
-    rev    = sum(float(l.montant_paye) for l in lm)
+
+    # ✅ Revenus du mois : basés sur la date réelle d'encaissement, paiements actifs uniquement
+    rev = sum(float(p.montant) for p in Paiement.objects.filter(
+        date_paiement__month=m, date_paiement__year=y, loyer__local__in=lqs, annule=False
+    ))
 
     # ─── Revenu annuel : basé sur la date réelle d'encaissement, pas l'échéance ──
     rev_annuel = sum(float(p.montant) for p in Paiement.objects.filter(
-        date_paiement__year=y, loyer__local__in=lqs
+        date_paiement__year=y, loyer__local__in=lqs, annule=False
     ))
 
     ch     = sum(float(c.montant_ttc) for c in chqs.filter(date_charge__month=m, date_charge__year=y))
@@ -62,7 +66,9 @@ def dashboard_view(request):
     evo = []
     for i in range(11, -1, -1):
         d  = today - relativedelta(months=i)
-        r2 = sum(float(l.montant_paye) for l in loyqs.filter(echeance__month=d.month, echeance__year=d.year))
+        r2 = sum(float(p.montant) for p in Paiement.objects.filter(
+            date_paiement__month=d.month, date_paiement__year=d.year, loyer__local__in=lqs, annule=False
+        ))
         c2 = sum(float(c.montant_ttc) for c in chqs.filter(date_charge__month=d.month, date_charge__year=d.year))
         evo.append({'mois': d.strftime('%b %Y'), 'revenus': r2, 'charges': c2})
 
@@ -90,9 +96,11 @@ def dashboard_view(request):
             for cs in ContratSociete.objects.filter(statut='actif')
         }
         commission_cabinet = 0.0
-        for l in lm.select_related('local__proprietaire'):
-            t = taux_par_proprio.get(l.local.proprietaire_id, DEFAULT_TAUX)
-            commission_cabinet += float(l.montant_paye) * t
+        for p in Paiement.objects.filter(
+            date_paiement__month=m, date_paiement__year=y, loyer__local__in=lqs, annule=False
+        ).select_related('loyer__local__proprietaire'):
+            t = taux_par_proprio.get(p.loyer.local.proprietaire_id, DEFAULT_TAUX)
+            commission_cabinet += float(p.montant) * t
         commission_cabinet = round(commission_cabinet, 2)
         # taux moyen pondéré, uniquement pour affichage éventuel
         taux_comm = round(commission_cabinet / rev, 4) if rev else DEFAULT_TAUX
@@ -133,7 +141,7 @@ def portefeuille_view(request):
     import traceback
     try:
         from apps.locaux.models import Local
-        from apps.loyers.models import Loyer
+        from apps.loyers.models import Loyer, Paiement
         from apps.proprietaires.models import Proprietaire
         from apps.contrats.models import ContratSociete
         today = timezone.now().date(); m, y = today.month, today.year
@@ -142,8 +150,10 @@ def portefeuille_view(request):
         tot_comm_cabinet = 0
 
         for p in props:
-            loyers = Loyer.objects.filter(local__proprietaire=p, echeance__month=m, echeance__year=y)
-            rev = sum(float(l.montant_paye) for l in loyers)
+            rev = sum(float(pm.montant) for pm in Paiement.objects.filter(
+                date_paiement__month=m, date_paiement__year=y,
+                loyer__local__proprietaire=p, annule=False
+            ))
 
             taux_comm = 0.09
             cs = ContratSociete.objects.filter(proprietaire=p, statut='actif').first()
@@ -164,7 +174,9 @@ def portefeuille_view(request):
 
         retards = Loyer.objects.filter(statut='retard')
         creances = [{'locataire':l.locataire_nom,'local':l.local_reference,'solde':float(l.solde_restant),'statut':l.statut} for l in retards]
-        tot_rev = sum(float(l.montant_paye) for l in Loyer.objects.filter(echeance__month=m,echeance__year=y))
+        tot_rev = sum(float(pm.montant) for pm in Paiement.objects.filter(
+            date_paiement__month=m, date_paiement__year=y, annule=False
+        ))
 
         return Response({
             'commission_cabinet_9pct': round(tot_comm_cabinet, 2),

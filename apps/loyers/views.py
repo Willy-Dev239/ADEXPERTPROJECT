@@ -149,17 +149,20 @@ def lister_paiements_loyer(request, pk):
         'date_annulation': p.date_annulation,
         'annule_par': p.annule_par.username if p.annule_par else None,
         'motif_annulation': p.motif_annulation,
-    } for p in loyer.paiements.all().order_by('-date_paiement')]
+    } for p in loyer.paiements.filter(annule=False).order_by('-date_paiement')]
     return Response(data)
+
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def annuler_paiement(request, pk):
+    from apps.notifications.models import Notification  # adapte le chemin d'import si besoin
+
     if not (request.user.role in ('admin', 'gestionnaire')):
         return Response({'error': 'Accès réservé aux admins/gestionnaires.'}, status=403)
     try:
-        paiement = Paiement.objects.select_related('loyer').get(pk=pk)
+        paiement = Paiement.objects.select_related('loyer', 'loyer__locataire').get(pk=pk)
     except Paiement.DoesNotExist:
         return Response({'error': 'Paiement introuvable.'}, status=404)
     if paiement.annule:
@@ -173,8 +176,19 @@ def annuler_paiement(request, pk):
 
     paiement.loyer.update_statut()
 
-    return Response({'message': 'Paiement annulé avec succès.'})
+    # ✅ Notifier le locataire
+    Notification.objects.create(
+        destinataire_locataire=paiement.loyer.locataire,
+        loyer=paiement.loyer,
+        titre='Paiement annulé',
+        message=f"Votre paiement de {paiement.montant} BIF du {paiement.date_paiement} pour le loyer "
+                f"« {paiement.loyer.libelle} » a été annulé"
+                f"{' — Motif : ' + paiement.motif_annulation if paiement.motif_annulation else ''}. "
+                f"Merci de soumettre un nouveau bordereau.",
+        type_notif='paiement',
+    )
 
+    return Response({'message': 'Paiement annulé avec succès.'})
 
 
 @api_view(['GET'])
