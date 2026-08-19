@@ -1022,11 +1022,12 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
           <button class="btn btn-success btn-sm" style="margin-left:auto" onclick="downloadHistoriquePdf()">📥 PDF</button>
         </div>
 
-        <div id="loca-historique" class="hidden" style="margin-top:10px;max-height:240px;overflow-y:auto"></div>
-      </div>
+               <div id="loca-historique" class="hidden" style="margin-top:10px;max-height:240px;overflow-y:auto"></div>
+      </div>            <!-- ferme #loca-sit -->
+    </div>              <!-- ✅ AJOUT : ferme .modal-body -->
     <div class="modal-footer-split">
       <button class="btn btn-danger btn-sm hidden" id="del-loca" onclick=""></button>
-      {% comment %} <button class="btn btn-danger btn-sm hidden" id="del-loca" onclick="delLoca()">🗑 Supprimer</button> {% endcomment %}
+      {% comment %} ... {% endcomment %}
       <div style="display:flex;gap:7px;margin-left:auto">
         <button class="btn" onclick="closeModal('m-loca')">Annuler</button>
         <button class="btn btn-primary" onclick="saveLoca()">💾 Enregistrer</button>
@@ -1034,7 +1035,6 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
   </div>
 </div>
-
 <!-- MODAL CONTRAT LOCATION -->
 <div class="modal-overlay" id="m-cont">
   <div class="modal modal-lg">
