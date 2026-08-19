@@ -563,7 +563,30 @@ def valider_bordereau(request, pk):
         b = Bordereau.objects.get(pk=pk)
     except Bordereau.DoesNotExist:
         return Response({'error': 'Introuvable.'}, status=404)
-    b.statut = request.data.get('statut', 'valide')
+
+    nouveau_statut = request.data.get('statut', 'valide')
+    b.statut = nouveau_statut
     b.commentaire_admin = request.data.get('commentaire', '')
     b.save()
+
+    if nouveau_statut == 'valide' and b.loyer_id:
+        loyer = b.loyer
+        ref = b.numero
+        # Évite de recréer le paiement si ce bordereau a déjà été validé une fois
+        deja_paye = Paiement.objects.filter(loyer=loyer, reference=ref, annule=False).exists()
+        if not deja_paye and loyer.solde_restant > 0:
+            Paiement.objects.create(
+                loyer=loyer,
+                montant=loyer.solde_restant,
+                date_paiement=timezone.now().date(),
+                mode_paiement='autre',
+                reference=ref,
+                statut_validation='valide',
+                date_validation=timezone.now(),
+                created_by=request.user,
+                validated_by=request.user,
+            )
+            # loyer.update_statut() est déjà appelé automatiquement
+            # par Paiement.save(), pas besoin de le refaire ici
+
     return Response(BordereauSerializer(b).data)
