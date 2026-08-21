@@ -74,7 +74,6 @@ def locataire_historique(request, pk):
 #     )
 #     return Response({'id': b.id, 'statut': b.statut}, status=201)
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_bordereau(request, pk):
@@ -83,7 +82,7 @@ def upload_bordereau(request, pk):
     photo_uuid = request.data.get('photo')
     if not photo_uuid:
         return Response({'error': 'Photo requise.'}, status=400)
-    
+
     # Extraire uniquement l'UUID si une URL complète est envoyée
     uuid_match = re.search(
         r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
@@ -91,23 +90,30 @@ def upload_bordereau(request, pk):
     )
     if uuid_match:
         photo_uuid = uuid_match.group(0)
-    
+
     b = Bordereau.objects.create(
         locataire_id=pk,
         loyer_id=request.data.get('loyer_id'),
         photo=photo_uuid,
         notes=request.data.get('notes', ''),
+        reference_client=request.data.get('reference_client', ''),  # ✅ nouveau
         statut='en_attente'
     )
-    return Response({'id': b.id, 'statut': b.statut}, status=201)
+    return Response({'id': b.id, 'numero': b.numero, 'statut': b.statut}, status=201)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_bordereaux(request, pk):
     from apps.loyers.models import Bordereau
     from apps.loyers.serializers import BordereauSerializer
-    bs = Bordereau.objects.filter(locataire_id=pk).order_by('-created_at')
-    return Response(BordereauSerializer(bs, many=True, context={'request':request}).data)
-
+    import traceback
+    try:
+        bs = Bordereau.objects.filter(locataire_id=pk).order_by('-created_at')
+        return Response(BordereauSerializer(bs, many=True, context={'request':request}).data)
+    except Exception as e:
+        traceback.print_exc()
+        return Response({'error': str(e)}, status=500)
 # ── PDF Historique locataire (ReportLab, non modifiable) ──
 from datetime import datetime, date as date_cls
 from io import BytesIO
@@ -119,6 +125,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (
     Image, SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 )
+from apps.loyers.models import Loyer, Paiement, Bordereau
 import os
 from django.conf import settings
 @api_view(['GET'])
@@ -248,9 +255,10 @@ def locataire_historique_pdf(request, pk):
                 for p in pays
             ) or '—'
 
-            # ── N° de bordereau (référence) : preuve de paiement, évite toute contestation ──
+            # ── N° de bordereau (référence saisie par le locataire) : cohérence avec les données réelles ──
+            bordereaux = Bordereau.objects.filter(loyer_id=loyer.id, locataire_id=pk)
             bordereaux_txt = '<br/>'.join(
-                (p.reference or '—') for p in pays
+                (b.reference_client or '—') for b in bordereaux
             ) or '—'
 
             # ── Statut de validation : un paiement "En attente" n'est pas encore confirmé ──

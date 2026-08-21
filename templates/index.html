@@ -2723,7 +2723,12 @@ function openBordVal(id, imgUrl, loca, loyer){
 async function validerBordereau(statut){
   var id=document.getElementById('bord-id').value;
   var commentaire=document.getElementById('bord-comment').value;
-  try{await api('/loyers/bordereaux/'+id+'/valider/',{method:'PATCH',body:JSON.stringify({statut,commentaire})});closeModal('m-bord-val');loadBordereaux();}
+  try{
+    await api('/loyers/bordereaux/'+id+'/valider/',{method:'PATCH',body:JSON.stringify({statut,commentaire})});
+    closeModal('m-bord-val');
+    loadBordereaux();
+    loadDash(); // ✅ rafraîchit le dashboard sans reload
+  }
   catch(e){alert('Erreur: '+e.message);}
 }
 

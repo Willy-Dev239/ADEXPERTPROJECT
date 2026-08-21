@@ -556,6 +556,9 @@ def envoyer_quittance(request, pk):
         return Response({'error': f'Erreur lors de la notification : {e}'}, status=500)
 
     return Response({'detail': 'Quittance envoyée au locataire.'})
+
+
+
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def valider_bordereau(request, pk):
@@ -572,7 +575,6 @@ def valider_bordereau(request, pk):
     if nouveau_statut == 'valide' and b.loyer_id:
         loyer = b.loyer
         ref = b.numero
-        # Évite de recréer le paiement si ce bordereau a déjà été validé une fois
         deja_paye = Paiement.objects.filter(loyer=loyer, reference=ref, annule=False).exists()
         if not deja_paye and loyer.solde_restant > 0:
             Paiement.objects.create(
@@ -581,12 +583,11 @@ def valider_bordereau(request, pk):
                 date_paiement=timezone.now().date(),
                 mode_paiement='autre',
                 reference=ref,
+                reference_transaction=b.reference_client,  # ✅ transmet la réf. saisie par le locataire
                 statut_validation='valide',
                 date_validation=timezone.now(),
                 created_by=request.user,
                 validated_by=request.user,
             )
-            # loyer.update_statut() est déjà appelé automatiquement
-            # par Paiement.save(), pas besoin de le refaire ici
 
     return Response(BordereauSerializer(b).data)

@@ -110,7 +110,6 @@ UUID_RE = re.compile(
     r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
     re.IGNORECASE
 )
-
 class Bordereau(models.Model):
     STATUT = [('en_attente','En attente'),('valide','Validé'),('rejete','Rejeté')]
     numero = models.CharField(max_length=30, unique=True, blank=True, null=True, editable=False)
@@ -118,6 +117,10 @@ class Bordereau(models.Model):
     loyer = models.ForeignKey(Loyer, on_delete=models.SET_NULL, null=True, blank=True, related_name='bordereaux')
     photo = ImageField(blank=True, null=True)
     notes = models.TextField(blank=True)
+    reference_client = models.CharField(
+        max_length=100, blank=True,
+        help_text="Référence de transaction saisie par le locataire (n° Mobile Money, virement, chèque, etc.)"
+    )
     statut = models.CharField(max_length=20, choices=STATUT, default='en_attente')
     commentaire_admin = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -880,12 +880,17 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
         <select id="bord-loyer-sel"><option value="">-- Sélectionner un loyer --</option></select>
       </div>
 
-      <!-- Notes -->
-      <div class="fg">
-        <label>Notes / Référence de paiement</label>
-        <input id="bord-notes" placeholder="Ex: Virement #REF-2026-001, paiement cash...">
-      </div>
+      <!-- Référence de transaction -->
+<div class="fg">
+  <label>Référence de la transaction</label>
+  <input id="bord-reference" placeholder="Ex: N° Lumicash, réf. virement bancaire...">
+</div>
 
+<!-- Notes -->
+<div class="fg">
+  <label>Notes (optionnel)</label>
+  <input id="bord-notes" placeholder="Ex: paiement en 2 fois, précision utile...">
+</div>
       <div id="bord-modal-alert"></div>
     </div>
     <div class="modal-footer">
@@ -1280,7 +1285,8 @@ async function loadMesLoyers(filtre){
   if(filtre==='retard')url='/loyers/en-retard/';
   else if(filtre==='attente')url='/loyers/impayes/';
   try{
-    var d=await api(url);if(!d)return;
+    var [d, pendingSet] = await Promise.all([api(url), getLoyersAvecBordereauEnAttente()]);
+    if(!d)return;
     var l=Array.isArray(d)?d:(d.results||[]);
     var nb=l.length,payes=l.filter(x=>x.statut==='paye').length,rets=l.filter(x=>x.statut==='retard').length;
     document.getElementById('kpi-loyers').innerHTML=
@@ -1294,7 +1300,13 @@ async function loadMesLoyers(filtre){
       var sp=parseFloat(x.solde_restant)||0;
       var acts='';
       if(x.quittance_envoyee)acts+=`<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Quittance"><i class="fas fa-file-invoice"></i></button> `;
-      if(x.statut!=='paye')acts+=`<button class="btn btn-sm btn-primary" onclick="openModalBordereau(${x.id},'${esc(x.libelle)}')" title="Envoyer bordereau"><i class="fas fa-upload"></i></button>`;
+      if(x.statut!=='paye'){
+        if(pendingSet.has(x.id)){
+          acts+=`<span class="bs bs-attente" title="En attente de validation admin"><i class="fas fa-clock"></i> Bordereau envoyé</span>`;
+        }else{
+          acts+=`<button class="btn btn-sm btn-primary" onclick="openModalBordereau(${x.id},'${esc(x.libelle)}')" title="Envoyer bordereau"><i class="fas fa-upload"></i></button>`;
+        }
+      }
       return`<tr>
         <td><strong style="color:var(--text)">${x.libelle}</strong></td>
         <td style="font-size:11px;color:var(--text3)">${fd(x.periode_debut)}${x.periode_fin?' → '+fd(x.periode_fin):''}</td>
@@ -1307,7 +1319,6 @@ async function loadMesLoyers(filtre){
       </tr>`;}).join('');
   }catch(e){document.getElementById('tb-loyers').innerHTML=`<tr><td colspan="8" style="color:var(--red);text-align:center;padding:20px">Erreur: ${e.message}</td></tr>`;}
 }
-
 // Quittance
 async function showQuit(id){
   document.getElementById('mc-quit').innerHTML='<div class="loader">Génération...</div>';
@@ -1401,35 +1412,40 @@ async function loadHistorique(){
 var _selectedFile=null;
 var _selectedPay=null;
 var _preselectedLoyerId=null;
-
 async function openModalBordereau(loyerId, libelle){
   _preselectedLoyerId = loyerId || null;
   resetBordForm();
 
-  // ✅ Charger les loyers non payés triés par échéance
   try{
-    var d = await api('/loyers/?page_size=200');
+    var [d, pendingSet] = await Promise.all([
+      api('/loyers/?page_size=200'),
+      getLoyersAvecBordereauEnAttente()
+    ]);
     var l = (d && (d.results || d)) || [];
 
-    // Loyers non payés triés du plus ancien au plus récent
+    // Loyers non payés ET sans bordereau déjà en attente, triés du plus ancien au plus récent
     var impayes = l
-      .filter(x => x.statut !== 'paye')
+      .filter(x => x.statut !== 'paye' && !pendingSet.has(x.id))
       .sort((a, b) => new Date(a.echeance) - new Date(b.echeance));
 
-    // ✅ Si un loyer spécifique est sélectionné, vérifier qu'il est le plus ancien
-    if(loyerId && impayes.length > 0 && String(impayes[0].id) !== String(loyerId)){
+    if(loyerId && pendingSet.has(Number(loyerId))){
+      document.getElementById('bord-modal-alert').innerHTML =
+        `<div class="info-box info-warn">
+          <i class="fas fa-clock"></i>
+          Un bordereau est déjà en cours de vérification pour ce loyer. Attendez la validation avant d'en envoyer un nouveau.
+        </div>`;
+    } else if(loyerId && impayes.length > 0 && String(impayes[0].id) !== String(loyerId)){
       document.getElementById('bord-modal-alert').innerHTML =
         `<div class="info-box info-err">
           <i class="fas fa-exclamation-triangle"></i>
-          Vous devez d'abord payer le loyer le plus ancien : 
-          <strong>${impayes[0].libelle}</strong> 
+          Vous devez d'abord payer le loyer le plus ancien :
+          <strong>${impayes[0].libelle}</strong>
           (échéance: ${fd(impayes[0].echeance)}, solde: ${f(impayes[0].solde_restant)} BIF).
         </div>`;
-      // Forcer la sélection du plus ancien
       _preselectedLoyerId = impayes[0].id;
     }
 
-    // Remplir le select avec seulement les loyers impayés
+    // Remplir le select avec seulement les loyers impayés et sans bordereau en attente
     var sel = document.getElementById('bord-loyer-sel');
     sel.innerHTML = '<option value="">-- Sélectionner un loyer --</option>' +
       impayes.map(x =>
@@ -1442,6 +1458,16 @@ async function openModalBordereau(loyerId, libelle){
 
   openModal('m-bordereau');
 }
+
+async function getLoyersAvecBordereauEnAttente(){
+  try{
+    var d = await api('/locataires/'+S.locataireId+'/bordereaux/');
+    var l = Array.isArray(d)?d:(d&&(d.results||d))||[];
+    return new Set(l.filter(b=>b.statut==='en_attente' && b.loyer).map(b=>b.loyer));
+  }catch(e){return new Set();}
+}
+
+
 function handleFileBord(e){
   var file=e.target.files[0];if(!file)return;
   _selectedFile=file;
@@ -1465,17 +1491,31 @@ function selectPay(el){
   _selectedPay==='autre'?autreWrap.classList.remove('hidden'):autreWrap.classList.add('hidden');
 }
 
-function resetBordForm(){
-  _selectedFile=null;_selectedPay=null;
-  document.getElementById('file-input').value='';
-  document.getElementById('file-badge').classList.add('hidden');
-  document.getElementById('bord-upload-zone').classList.remove('hidden');
-  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('autre-wrap').classList.add('hidden');
-  document.getElementById('autre-input').value='';
-  document.getElementById('bord-notes').value='';
-  document.getElementById('bord-loyer-sel').innerHTML='<option value="">-- Sélectionner un loyer --</option>';
-  document.getElementById('bord-modal-alert').innerHTML='';
+async function uploadToUploadcare(file, maxRetries = 2) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const ucForm = new FormData();
+      ucForm.append('UPLOADCARE_PUB_KEY', '3be5391c9201b1716150');
+      ucForm.append('UPLOADCARE_STORE', 'auto');
+      ucForm.append('file', file);
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 60000); // 60s
+      const resp = await fetch('https://upload.uploadcare.com/base/', {
+        method: 'POST', body: ucForm, signal: controller.signal
+      });
+      clearTimeout(timeout);
+
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const data = await resp.json();
+      if (!data.file) throw new Error('UUID manquant');
+      return data.file;
+
+    } catch(e) {
+      if (attempt === maxRetries) throw new Error('Échec après ' + maxRetries + ' tentative(s) : ' + e.message);
+      // sinon on boucle et on retente
+    }
+  }
 }
 
 async function submitBordereau(){
@@ -1489,48 +1529,43 @@ async function submitBordereau(){
 
   var btn = document.getElementById('btn-submit-bord');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Upload en cours...';
+  alertBox.innerHTML = '';
 
   try {
-    // ── ÉTAPE 1 : Upload vers Uploadcare ──
-    const ucForm = new FormData();
-    ucForm.append('UPLOADCARE_PUB_KEY', '3be5391c9201b1716150');
-  
-    ucForm.append('UPLOADCARE_STORE', 'auto');
-    ucForm.append('file', _selectedFile);
-
-    const ucResp = await fetch('https://upload.uploadcare.com/base/', {
-      method: 'POST',
-      body: ucForm
-    });
-    if(!ucResp.ok) throw new Error('Échec upload Uploadcare.');
-    const ucData = await ucResp.json();
-    const uuid = ucData.file;
-    if(!uuid) throw new Error('UUID Uploadcare non reçu.');
+    // ── ÉTAPE 1 : Upload vers Uploadcare (avec retry + timeout 60s) ──
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Upload en cours (peut prendre jusqu\'à 1 min)...';
+    const uuid = await uploadToUploadcare(_selectedFile);
 
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
 
     // ── ÉTAPE 2 : Envoyer l'UUID à ton API ──
-    const loyerId = document.getElementById('bord-loyer-sel').value;
-    const notes   = document.getElementById('bord-notes').value;
+    const loyerId   = document.getElementById('bord-loyer-sel').value;
+    const notes     = document.getElementById('bord-notes').value;
+    const reference = document.getElementById('bord-reference').value;
 
     const payload = {
       photo: uuid,
       mode_paiement: mode,
       notes: notes || '',
+      reference_client: reference || '',
     };
     if(loyerId) payload.loyer_id = loyerId;
 
-    const r = await fetch(BASE + '/locataires/' + S.locataireId + '/upload-bordereau/', {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Token ' + S.token,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
+    let r;
+    try {
+      r = await fetch(BASE + '/locataires/' + S.locataireId + '/upload-bordereau/', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Token ' + S.token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+    } catch(netErr) {
+      throw new Error('Échec de connexion à votre serveur (étape 2/2) : ' + netErr.message);
+    }
 
-    if(!r.ok){ const e = await r.json().catch(()=>({})); throw new Error(JSON.stringify(e)); }
+    if(!r.ok){ const e = await r.json().catch(()=>({})); throw new Error('Serveur a refusé (étape 2/2) : ' + JSON.stringify(e)); }
 
     closeModal('m-bordereau');
     _selectedFile = null;
@@ -1545,11 +1580,24 @@ async function submitBordereau(){
     }
 
   } catch(e){
-    alertBox.innerHTML = err('Erreur envoi: ' + e.message);
+    alertBox.innerHTML = err('Erreur : ' + e.message);
   } finally {
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer le bordereau';
   }
+}
+function resetBordForm(){
+  _selectedFile=null;_selectedPay=null;
+  document.getElementById('file-input').value='';
+  document.getElementById('file-badge').classList.add('hidden');
+  document.getElementById('bord-upload-zone').classList.remove('hidden');
+  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('autre-wrap').classList.add('hidden');
+  document.getElementById('autre-input').value='';
+  document.getElementById('bord-reference').value='';   // ✅ nouveau
+  document.getElementById('bord-notes').value='';
+  document.getElementById('bord-loyer-sel').innerHTML='<option value="">-- Sélectionner un loyer --</option>';
+  document.getElementById('bord-modal-alert').innerHTML='';
 }
 async function loadBordereaux(){
   if(!S.locataireId){document.getElementById('bord-grid').innerHTML='<div class="info-box info-warn">Profil locataire non lié.</div>';return;}
