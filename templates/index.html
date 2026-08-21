@@ -406,13 +406,13 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </select>
     <button class="btn btn-primary" id="btn-add" onclick="handleAdd()" data-i18n="topbar.add">+ Ajouter</button>
   </div>
-</div><!-- ← cette ligne manquait -->
+</div>
 
 <div class="content">
 <!-- ═══════ DASHBOARD ═══════ -->
 <div class="section active" id="s-dashboard">
 
-  <!-- ─── BARRE DE FILTRES ─────────────────────────────────────────────── -->
+  <!-- ─── BARRE DE FILTRES ──-->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap">🔍 Filtrer par</span>
 
@@ -839,7 +839,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     <div class="modal-body">
       <div id="al-prop"></div><input type="hidden" id="prop-id">
 
-      <!-- ✅ NOUVEAU : Lier à un compte utilisateur existant -->
+      <!-- NOUVEAU : Lier à un compte utilisateur existant -->
       <div class="fg" id="prop-user-group">
         <label>Lier à un compte utilisateur</label>
         <select id="prop-user-sel">
@@ -959,7 +959,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     <div class="modal-body">
       <div id="al-loca"></div><input type="hidden" id="loca-id">
 
-      <!-- ✅ NOUVEAU : Lier à un compte utilisateur -->
+      <!--  NOUVEAU : Lier à un compte utilisateur -->
       <div class="fg" id="loca-user-group">
         <label>Lier à un compte utilisateur</label>
         <select id="loca-user-sel">
@@ -1023,8 +1023,8 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
         </div>
 
                <div id="loca-historique" class="hidden" style="margin-top:10px;max-height:240px;overflow-y:auto"></div>
-      </div>            <!-- ferme #loca-sit -->
-    </div>              <!-- ✅ AJOUT : ferme .modal-body -->
+      </div>            
+    </div>              
     <div class="modal-footer-split">
       <button class="btn btn-danger btn-sm hidden" id="del-loca" onclick=""></button>
       {% comment %} ... {% endcomment %}
@@ -1237,7 +1237,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
         <div class="fg"><label>Rôle *</label>
           <select id="u-role"><option value="lecteur">👁 Lecteur</option><option value="gestionnaire">✏️ Gestionnaire</option><option value="admin">👑 Administrateur</option><option value="locataire">🏠 Locataire</option><option value="proprietaire">🤝 Propriétaire</option></select>
         </div>
-        <!-- ✅ NOUVEAU : Liaison profil -->
+        <!--  NOUVEAU : Liaison profil -->
 <div class="fg" id="u-profil-group" style="display:none">
   <label id="u-profil-label">Lier à un profil</label>
   <select id="u-profil-sel">
@@ -1854,7 +1854,7 @@ async function openModalLoca(id){
   ['loca-nom','loca-tel','loca-email','loca-adr','loca-info'].forEach(x=>document.getElementById(x).value='');
   _currentLocaId=id||null;
 
-  // ✅ Charger seulement les users role=locataire sans profil lié
+  //  Charger seulement les users role=locataire sans profil lié
   try{
     var users=await api('/auth/users/?role=locataire');
     var l=Array.isArray(users)?users:(users.results||[]);
@@ -2189,8 +2189,6 @@ async function saveCS(){
     if(id) await api('/contrats/societe/'+id+'/', {method:'PUT', body:JSON.stringify(data)});
     else await api('/contrats/societe/', {method:'POST', body:JSON.stringify(data)});
     closeModal('m-cs'); loadCS();
-
-    // ✅ Le taux de commission a peut-être changé : on rafraîchit tout ce qui l'affiche
     loadDash();
     loadPortf();
   } catch(e){
@@ -2347,7 +2345,7 @@ async function loadLoyers(filtre) {
   _loyerFiltre = filtre;
 
   var tb = document.getElementById('tb-loyers');
-  if (!tb) return; // ✅ sécurité si la section n'est pas visible
+  if (!tb) return; 
 
   var propId = document.getElementById('loyer-prop-filter')?.value || '';
   var immId  = document.getElementById('loyer-imm-filter')?.value || '';
@@ -2416,11 +2414,11 @@ async function onLoyerPropChange() {
     } catch(e) {}
   }
 
-  loadLoyers(_loyerFiltre || 'tous'); // ✅ déjà là
-
-  // ✅ NOUVEAU : déclencher aussi quand on change l'immeuble manuellement
+  loadLoyers(_loyerFiltre || 'tous'); 
   immSel.onchange = () => loadLoyers(_loyerFiltre || 'tous');
 }
+
+
 // Réinitialiser filtres loyers
 function resetLoyerFilters() {
   document.getElementById('loyer-prop-filter').value = '';
@@ -2727,7 +2725,7 @@ async function validerBordereau(statut){
     await api('/loyers/bordereaux/'+id+'/valider/',{method:'PATCH',body:JSON.stringify({statut,commentaire})});
     closeModal('m-bord-val');
     loadBordereaux();
-    loadDash(); // ✅ rafraîchit le dashboard sans reload
+    loadDash();
   }
   catch(e){alert('Erreur: '+e.message);}
 }
@@ -2869,8 +2867,7 @@ async function rapCharge(){
     document.getElementById('ms-rap').textContent=sousTitre;
     _rapportHTML=buildRapportHTML(titre,sousTitre,contenu);
     _rapportFilename='rapport_charges_'+d.getFullYear()+'_'+(d.getMonth()+1)+'.pdf';
-
-    // ✅ Données PDF
+     Données PDF
     _rapportData={
       titre,sousTitre,
       kpis:[
@@ -2914,7 +2911,7 @@ async function rapJour(){
     _rapportHTML=buildRapportHTML(titre,sousTitre,contenu);
     _rapportFilename='rapport_journalier_'+d+'.pdf';
 
-    // ✅ Données PDF
+    //  Données PDF
     _rapportData={
       titre,sousTitre,
       kpis:[
@@ -2937,7 +2934,7 @@ async function rapJour(){
 // ══════════════════════════════════════════
 var _rapportHTML = '';
 var _rapportFilename = '';
-var _rapportData = null; // ✅ stocke les données brutes pour le PDF
+var _rapportData = null; //  stocke les données brutes pour le PDF
 
 function downloadRapport() {
   if (!_rapportData) return;
@@ -2989,7 +2986,7 @@ function downloadRapport() {
       doc.setFont('helvetica', 'bold');
       doc.text(kpi.label.toUpperCase(), x + 4, y + 7);
 
-      // ✅ CORRECTION : couleur RGB au lieu de hex
+      //  CORRECTION : couleur RGB au lieu de hex
       if (Array.isArray(kpi.color)) {
         doc.setTextColor(kpi.color[0], kpi.color[1], kpi.color[2]);
       } else {
