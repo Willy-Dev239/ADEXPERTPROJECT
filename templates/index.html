@@ -2842,7 +2842,6 @@ async function rapLoyer(){
     openModal('m-rap');
   }catch(e){alert('Erreur rapport loyers');}
 }
-
 async function rapCharge(){
   var d=new Date();
   try{
@@ -2867,7 +2866,7 @@ async function rapCharge(){
     document.getElementById('ms-rap').textContent=sousTitre;
     _rapportHTML=buildRapportHTML(titre,sousTitre,contenu);
     _rapportFilename='rapport_charges_'+d.getFullYear()+'_'+(d.getMonth()+1)+'.pdf';
-     Données PDF
+    // ✅ Données PDF
     _rapportData={
       titre,sousTitre,
       kpis:[
