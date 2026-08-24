@@ -175,6 +175,22 @@ def locataire_historique_pdf(request, pk):
     if not loyers.exists():
         return Response({'error': 'Aucun loyer sur cette période.'}, status=404)
 
+    # ── Local(s) et immeuble(s) loués par ce locataire (déduit des loyers de la période) ──
+    # NB : on dédoublonne en Python avec set() plutôt qu'avec .distinct() côté SQL,
+    # car .distinct() combiné à l'.order_by('echeance') déjà présent sur `loyers`
+    # inclut la colonne de tri dans le SELECT DISTINCT et empêche la déduplication.
+    locaux_pairs = sorted(set(
+        loyers.exclude(local__isnull=True)
+        .values_list('local__reference', 'local__immeuble__nom')
+    ))
+    if locaux_pairs:
+        local_txt = ', '.join(
+            f"{ref} ({imm})" if imm else ref
+            for ref, imm in locaux_pairs
+        )
+    else:
+        local_txt = '—'
+
     # ── Construction du PDF ──
     buffer = BytesIO()
     doc = SimpleDocTemplate(
@@ -203,6 +219,7 @@ def locataire_historique_pdf(request, pk):
     titre_central = [
         Paragraph("ADEXPERT — Historique de paiements", title_style),
         Paragraph(f"Locataire : <b>{locataire.nom_prenom}</b>", sub_style),
+        Paragraph(f"Local : <b>{local_txt}</b>", sub_style),
         Paragraph(f"Période : {periode_label}", sub_style),
         Paragraph(f"Généré le {date_cls.today().strftime('%d/%m/%Y')}", sub_style),
     ]

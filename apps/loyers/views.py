@@ -191,6 +191,7 @@ def annuler_paiement(request, pk):
     return Response({'message': 'Paiement annulé avec succès.'})
 
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def quittance_html(request, pk):
