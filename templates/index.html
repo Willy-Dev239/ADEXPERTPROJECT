@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ADEXPER | Administration</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
@@ -61,14 +62,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--surface);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100;border-right:1px solid var(--border);overflow-y:auto}
 .sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 .logo-area{padding:18px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 4px 16px rgba(59,130,246,.35)}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 4px 16px rgba(59,130,246,.35);color:#fff}
 .logo-name{font-size:14px;font-weight:800;letter-spacing:-.3px;color:var(--text)}
 .logo-sub{font-size:10px;color:var(--text3);margin-top:1px;font-family:'DM Mono',monospace}
 .nav-group{font-size:9.5px;font-weight:700;color:var(--text3);padding:16px 16px 5px;letter-spacing:1.5px;text-transform:uppercase}
 .nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:12.5px;color:var(--text2);cursor:pointer;border-left:2.5px solid transparent;transition:all .15s;user-select:none;position:relative}
 .nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
 .nav-item.active{background:rgba(59,130,246,.12);color:var(--accent);border-left-color:var(--accent);font-weight:600}
-.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
 .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:800;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center}
 .nav-hidden{display:none}
 .sb-footer{padding:12px 14px;border-top:1px solid var(--border);margin-top:auto}
@@ -76,7 +77,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:800;flex-shrink:0}
 .sb-name{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-role{font-size:10px;color:var(--text3);margin-top:1px}
-.sb-logout{background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:3px;margin-left:auto;flex-shrink:0;transition:color .2s;border-radius:6px}
+.sb-logout{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;padding:3px;margin-left:auto;flex-shrink:0;transition:color .2s;border-radius:6px}
 .sb-logout:hover{color:var(--red);background:rgba(239,68,68,.1)}
 
 /* MAIN */
@@ -135,7 +136,7 @@ tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 
 /* BADGES */
-.bs{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.bs{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap;gap:4px}
 .bs-paye{background:rgba(16,185,129,.15);color:#6ee7b7;border:1px solid rgba(16,185,129,.2)}
 .bs-retard{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
 .bs-attente{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
@@ -196,6 +197,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 .mh-purple{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.2)}
 .mh-orange{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.2)}
 .mh-red{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.2)}
+.mh-icon i{font-size:18px;color:var(--text)}
 .modal-title{font-size:15.5px;font-weight:800;color:var(--text);letter-spacing:-.3px}
 .modal-subtitle{font-size:11px;color:var(--text3);margin-top:2px}
 .modal-close{background:none;border:none;cursor:pointer;color:var(--text3);font-size:20px;line-height:1;padding:4px;border-radius:7px;transition:all .15s;margin-left:auto;flex-shrink:0}
@@ -326,7 +328,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="logo-area">
-    <div class="logo-icon">&#127962;</div>
+    <div class="logo-icon"><i class="bi bi-building"></i></div>
     <div>
       <div class="logo-name">ADEXPER</div>
       <div class="logo-sub">ADMIN PANEL</div>
@@ -334,41 +336,40 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
   </div>
   <div style="flex:1">
     <div class="nav-group" data-i18n="nav.principal" >Principal</div>
-    <!-- APRÈS -->
-<div class="nav-item active" onclick="goSection('dashboard',this)"><span class="nav-icon">📊</span><span data-i18n="nav.dashboard">Tableau de bord</span></div>
+    <div class="nav-item active" onclick="goSection('dashboard',this)"><span class="nav-icon"><i class="bi bi-grid-1x2-fill"></i></span><span data-i18n="nav.dashboard">Tableau de bord</span></div>
     <div class="nav-group" data-i18n="nav.gestion" >Gestion</div>
-    <div class="nav-item" onclick="goSection('proprietaires',this)"><span class="nav-icon">🤝</span><span data-i18n="nav.proprietaires">Propriétaires</span></div>
-    <div class="nav-item" onclick="goSection('immeubles',this)"><span class="nav-icon">🏗️</span><span data-i18n="nav.immeubles">Immeubles</span></div>
-    <div class="nav-item" onclick="goSection('locaux',this)"><span class="nav-icon">🏠</span><span data-i18n="nav.locaux">Locaux</span></div>
-    <div class="nav-item" onclick="goSection('locataires',this)"><span class="nav-icon">👤</span><span data-i18n="nav.locataires">Locataires</span></div>
-    <div class="nav-item" onclick="goSection('contrats',this)"><span class="nav-icon">📄</span><span data-i18n="nav.contrats">Contrats Location</span></div>
-    <div class="nav-item" onclick="goSection('contrats_societe',this)"><span class="nav-icon">🤝</span><span data-i18n="nav.contrats_societe">Contrats Société</span></div>
+    <div class="nav-item" onclick="goSection('proprietaires',this)"><span class="nav-icon"><i class="bi bi-people-fill"></i></span><span data-i18n="nav.proprietaires">Propriétaires</span></div>
+    <div class="nav-item" onclick="goSection('immeubles',this)"><span class="nav-icon"><i class="bi bi-building-fill"></i></span><span data-i18n="nav.immeubles">Immeubles</span></div>
+    <div class="nav-item" onclick="goSection('locaux',this)"><span class="nav-icon"><i class="bi bi-house-fill"></i></span><span data-i18n="nav.locaux">Locaux</span></div>
+    <div class="nav-item" onclick="goSection('locataires',this)"><span class="nav-icon"><i class="bi bi-person-fill"></i></span><span data-i18n="nav.locataires">Locataires</span></div>
+    <div class="nav-item" onclick="goSection('contrats',this)"><span class="nav-icon"><i class="bi bi-file-earmark-text-fill"></i></span><span data-i18n="nav.contrats">Contrats Location</span></div>
+    <div class="nav-item" onclick="goSection('contrats_societe',this)"><span class="nav-icon"><i class="bi bi-handshake-fill"></i></span><span data-i18n="nav.contrats_societe">Contrats Société</span></div>
     <div class="nav-item" onclick="goSection('loyers',this)">
-      <span class="nav-icon">💰</span>Loyers & Paiements
+      <span class="nav-icon"><i class="bi bi-coin-fill"></i></span>Loyers & Paiements
       <span class="nav-badge" id="badge-retard">0</span>
     </div>
    <div class="nav-item" onclick="goSection('bordereaux',this)">
-      <span class="nav-icon">📸</span>Bordereaux
+      <span class="nav-icon"><i class="bi bi-image-fill"></i></span>Bordereaux
       <span class="nav-badge" id="badge-bord">0</span>
     </div>
     <div class="nav-item" onclick="goSection('virements',this)">
-      <span class="nav-icon">🏦</span>Virements Propriétaires
+      <span class="nav-icon"><i class="bi bi-bank-fill"></i></span>Virements Propriétaires
       <span class="nav-badge" id="badge-vir">0</span>
     </div>
 
     <div class="nav-group" data-i18n="nav.analyse" >Analyse</div>
-    <div class="nav-item" onclick="goSection('rapports',this)"><span class="nav-icon">📈</span>Rapports</div>
-    <div class="nav-item" onclick="goSection('portefeuille',this)"><span class="nav-icon">💼</span>Portefeuille</div>
+    <div class="nav-item" onclick="goSection('rapports',this)"><span class="nav-icon"><i class="bi bi-bar-chart-fill"></i></span>Rapports</div>
+    <div class="nav-item" onclick="goSection('portefeuille',this)"><span class="nav-icon"><i class="bi bi-briefcase-fill"></i></span>Portefeuille</div>
 
     <div class="nav-group" data-i18n="nav.communication" >Communication</div>
-    <div class="nav-item" onclick="goSection('chat',this)"><span class="nav-icon">💬</span>Chat Immeubles</div>
+    <div class="nav-item" onclick="goSection('chat',this)"><span class="nav-icon"><i class="bi bi-chat-fill"></i></span>Chat Immeubles</div>
     <div class="nav-item" onclick="goSection('notifications',this)">
-      <span class="nav-icon">🔔</span>Notifications
+      <span class="nav-icon"><i class="bi bi-bell-fill"></i></span>Notifications
       <span class="nav-badge" id="badge-notif" style="display:none">!</span>
     </div>
 
     <div class="nav-group nav-hidden" id="nav-sec-admin" data-i18n="nav.administration" >Administration</div>
-    <div class="nav-item nav-hidden" id="nav-users" onclick="goSection('utilisateurs',this)"><span class="nav-icon">👥</span>Gestion des Utilisateurs</div>
+    <div class="nav-item nav-hidden" id="nav-users" onclick="goSection('utilisateurs',this)"><span class="nav-icon"><i class="bi bi-person-gear"></i></span>Gestion des Utilisateurs</div>
   </div>
   <div class="sb-footer">
     <div class="sb-user">
@@ -377,7 +378,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
         <div class="sb-name" id="sb-name">…</div>
         <div class="sb-role" id="sb-role"></div>
       </div>
-      <button class="sb-logout" title="Déconnexion" onclick="confirmLogout()">⏻</button>
+      <button class="sb-logout" title="Déconnexion" onclick="confirmLogout()"><i class="bi bi-box-arrow-right"></i></button>
     </div>
   </div>
 </nav>
@@ -389,10 +390,10 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
   <div class="topbar-right">
     <span class="role-pill" id="role-pill"></span>
     <button class="btn btn-ghost" onclick="openModal('m-rappels')" style="position:relative">
-      🔔 <span id="nb-rappels">0</span>
+      <i class="bi bi-bell"></i> <span id="nb-rappels">0</span>
     </button>
     <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
-      <span id="theme-icon">🌙</span>
+      <span id="theme-icon"><i class="bi bi-moon-fill"></i></span>
     </button>
     <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
       <option value="fr">🇫🇷 Français</option>
@@ -404,7 +405,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <option value="es">🇪🇸 Español</option>
       <option value="zh">🇨🇳 中文</option>
     </select>
-    <button class="btn btn-primary" id="btn-add" onclick="handleAdd()" data-i18n="topbar.add">+ Ajouter</button>
+    <button class="btn btn-primary" id="btn-add" onclick="handleAdd()" data-i18n="topbar.add"><i class="bi bi-plus-lg"></i> Ajouter</button>
   </div>
 </div>
 
@@ -414,7 +415,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 
   <!-- ─── BARRE DE FILTRES ──-->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap">🔍 Filtrer par</span>
+    <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap"><i class="bi bi-funnel-fill"></i> Filtrer par</span>
 
     <select id="dash-prop-filter" onchange="onDashPropChange()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:180px">
       <option value="">— Tous les propriétaires —</option>
@@ -424,7 +425,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <option value="">— Tous les immeubles —</option>
     </select>
 
-    <button class="btn btn-ghost btn-sm" onclick="resetDashFilters()" title="Réinitialiser les filtres">✕ Réinitialiser</button>
+    <button class="btn btn-ghost btn-sm" onclick="resetDashFilters()" title="Réinitialiser les filtres"><i class="bi bi-x-lg"></i> Réinitialiser</button>
 
     <div id="dash-filter-label" style="margin-left:auto;font-size:11.5px;color:var(--accent);font-weight:600;display:none"></div>
   </div>
@@ -435,17 +436,17 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div class="stat-label">Locaux gérés</div>
       <div class="stat-value" id="d-locaux">—</div>
       <div class="stat-sub stat-up" id="d-locaux-sub">—</div>
-      <div class="stat-icon">🏠</div>
+      <div class="stat-icon"><i class="bi bi-house-fill"></i></div>
     </div>
     <div class="stat-card" style="--c:linear-gradient(90deg,var(--green),#059669)">
       <div class="stat-label">Revenus du mois</div>
       <div class="stat-value" id="d-revenus">—</div>
       <div class="stat-sub">BIF encaissés</div>
-      <div class="stat-icon">💵</div>
+      <div class="stat-icon"><i class="bi bi-cash-coin"></i></div>
     </div>
 
     <div class="card">
-  <div class="card-title">📅 Revenu annuel</div>
+  <div class="card-title"><i class="bi bi-calendar2-month"></i> Revenu annuel</div>
   <div style="font-size:11px;color:var(--text3);margin-bottom:5px">encaissé cette année</div>
   <div style="font-size:26px;font-weight:800;color:var(--accent);font-family:'DM Mono',monospace" id="d-revenu-annuel">—</div>
   <div style="font-size:11.5px;color:var(--text3);margin-top:4px" id="d-revenu-annuel-sub"></div>
@@ -454,18 +455,18 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div class="stat-label">Charges du mois</div>
       <div class="stat-value" id="d-charges">—</div>
       <div class="stat-sub stat-dn">Total dépenses</div>
-      <div class="stat-icon">📉</div>
+      <div class="stat-icon"><i class="bi bi-graph-down-arrow"></i></div>
     </div>
     <div class="stat-card" style="--c:linear-gradient(90deg,var(--accent2),#7c3aed)">
       <div class="stat-label">Bénéfice</div>
       <div class="stat-value" id="d-benefice">—</div>
       <div class="stat-sub stat-up" id="d-taux-occ">—</div>
-      <div class="stat-icon">📊</div>
+      <div class="stat-icon"><i class="bi bi-graph-up-arrow"></i></div>
     </div>
   </div>
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Encaissements 12 mois
+      <div class="card-title"><i class="bi bi-bar-chart-steps"></i> Encaissements 12 mois
         <div style="display:flex;gap:10px;font-size:11px;color:var(--text3)">
           <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;background:var(--accent);border-radius:2px;display:inline-block"></span>Revenus</span>
           <span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;background:var(--red);border-radius:2px;display:inline-block"></span>Charges</span>
@@ -475,19 +476,19 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div class="chart-labels" id="chart-labels"></div>
     </div>
     <div class="card">
-      <div class="card-title">🔔 Rappels urgents</div>
+      <div class="card-title"><i class="bi bi-exclamation-triangle-fill"></i> Rappels urgents</div>
       <div id="rappels-list"><div class="loader">Chargement…</div></div>
     </div>
   </div>
   <div class="two-col">
     <div class="card">
-      <div class="card-title">Taux de paiement</div>
+      <div class="card-title"><i class="bi bi-percent"></i> Taux de paiement</div>
       <div style="font-size:26px;font-weight:800;color:var(--text);margin-bottom:4px;font-family:'DM Mono',monospace" id="d-taux-pct">—%</div>
       <div class="prog-wrap"><div class="prog-fill" id="d-taux-bar" style="width:0%"></div></div>
       <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text3);margin-top:4px" id="d-taux-det"></div>
     </div>
     <div class="card">
-      <div class="card-title">💼 Commission cabinet</div>
+      <div class="card-title"><i class="bi bi-piggy-bank-fill"></i> Commission cabinet</div>
       <div style="font-size:11px;color:var(--text3);margin-bottom:5px">sur revenus bruts</div>
       <div style="font-size:26px;font-weight:800;color:var(--accent2);font-family:'DM Mono',monospace" id="d-commission">—</div>
       <div style="font-size:11.5px;color:var(--text3);margin-top:4px" id="d-commission-sub"></div>
@@ -497,10 +498,10 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- ═══════ PROPRIÉTAIRES ═══════ -->
 <div class="section" id="s-proprietaires">
   <div class="card">
-    <div class="card-title">Propriétaires
+    <div class="card-title"><i class="bi bi-people-fill"></i> Propriétaires
       <div class="card-actions">
         <input class="search-input" id="s-prop" placeholder="🔍 Rechercher…" oninput="filtProp()" style="width:190px">
-        <button class="btn btn-primary btn-sm writer" onclick="openModalProp()">+ Nouveau</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalProp()"><i class="bi bi-plus-lg"></i> Nouveau</button>
       </div>
     </div>
     <div class="table-wrap"><table>
@@ -513,10 +514,10 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- ═══════ IMMEUBLES ═══════ -->
 <div class="section" id="s-immeubles">
   <div class="card">
-    <div class="card-title">Immeubles
+    <div class="card-title"><i class="bi bi-building-fill"></i> Immeubles
       <div class="card-actions">
         <input class="search-input" id="s-imm" placeholder="🔍 Rechercher…" oninput="filtImm()" style="width:190px">
-        <button class="btn btn-primary btn-sm writer" onclick="openModalImm()">+ Nouveau</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalImm()"><i class="bi bi-plus-lg"></i> Nouveau</button>
       </div>
     </div>
     <div class="table-wrap"><table>
@@ -530,7 +531,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <div class="section" id="s-locaux">
   <div class="kpi-row" id="kpi-locaux"></div>
   <div class="card">
-    <div class="card-title">Locaux
+    <div class="card-title"><i class="bi bi-house-fill"></i> Locaux
       <div class="card-actions">
         <input class="search-input" id="s-loc" placeholder="🔍 Rechercher…" oninput="filtLoc()" style="width:160px">
         <select class="filter-select" id="f-type-loc" onchange="filtLoc()">
@@ -542,7 +543,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
           <option value="garage">Garage</option>
           <option value="autre">Autre</option>
         </select>
-        <button class="btn btn-primary btn-sm writer" onclick="openModalLoc()">+ Nouveau</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalLoc()"><i class="bi bi-plus-lg"></i> Nouveau</button>
       </div>
     </div>
     <div class="table-wrap"><table>
@@ -555,10 +556,10 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- ═══════ LOCATAIRES ═══════ -->
 <div class="section" id="s-locataires">
   <div class="card">
-    <div class="card-title">Locataires
+    <div class="card-title"><i class="bi bi-person-fill"></i> Locataires
       <div class="card-actions">
         <input class="search-input" id="s-loca" placeholder="🔍 Rechercher…" oninput="filtLoca()" style="width:190px">
-        <button class="btn btn-primary btn-sm writer" onclick="openModalLoca()">+ Nouveau</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalLoca()"><i class="bi bi-plus-lg"></i> Nouveau</button>
       </div>
     </div>
     <div class="table-wrap"><table>
@@ -571,13 +572,13 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- ═══════ CONTRATS LOCATION ═══════ -->
 <div class="section" id="s-contrats">
   <div class="card">
-    <div class="card-title">Contrats Location
+    <div class="card-title"><i class="bi bi-file-earmark-text-fill"></i> Contrats Location
       <div class="card-actions">
         <select class="filter-select" id="f-st-cont" onchange="loadCont()">
           <option value="">Tous statuts</option><option value="actif">Actif</option>
           <option value="resilie">Résilié</option><option value="expire">Expiré</option>
         </select>
-        <button class="btn btn-primary btn-sm writer" onclick="openModalCont()">+ Nouveau</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalCont()"><i class="bi bi-plus-lg"></i> Nouveau</button>
       </div>
     </div>
     <div class="table-wrap"><table>
@@ -591,13 +592,13 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <div class="section" id="s-contrats_societe">
   <div class="kpi-row" id="kpi-cs"></div>
   <div class="card">
-    <div class="card-title">Contrats Propriétaire ↔ Société
+    <div class="card-title"><i class="bi bi-handshake-fill"></i> Contrats Propriétaire ↔ Société
       <div class="card-actions">
         <select class="filter-select" id="f-st-cs" onchange="loadCS()">
           <option value="">Tous statuts</option><option value="actif">Actif</option>
           <option value="expire">Expiré</option><option value="resilie">Résilié</option>
         </select>
-        <button class="btn btn-primary btn-sm writer" onclick="openModalCS()">+ Nouveau contrat</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalCS()"><i class="bi bi-plus-lg"></i> Nouveau contrat</button>
       </div>
     </div>
     <div id="cs-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-top:4px">
@@ -612,24 +613,24 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 
   <!-- Barre de filtres loyers -->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap">🔍 Filtrer par</span>
+    <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap"><i class="bi bi-funnel-fill"></i> Filtrer par</span>
     <select id="loyer-prop-filter" onchange="onLoyerPropChange()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:180px">
       <option value="">— Tous les propriétaires —</option>
     </select>
     <select id="loyer-imm-filter" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:180px">
       <option value="">— Tous les immeubles —</option>
     </select>
-    <button class="btn btn-ghost btn-sm" onclick="resetLoyerFilters()">✕ Réinitialiser</button>
+    <button class="btn btn-ghost btn-sm" onclick="resetLoyerFilters()"><i class="bi bi-x-lg"></i> Réinitialiser</button>
   </div>
 
   <div class="card">
-    <div class="card-title">Loyers & Paiements
+    <div class="card-title"><i class="bi bi-coin-fill"></i> Loyers & Paiements
       <div class="card-actions">
         <button class="btn btn-sm" onclick="loadLoyers('tous')">Tous</button>
         <button class="btn btn-sm" style="color:var(--red);border-color:rgba(239,68,68,.3)" onclick="loadLoyers('retard')">En retard</button>
         <button class="btn btn-sm" style="color:var(--amber);border-color:rgba(245,158,11,.3)" onclick="loadLoyers('attente')">Impayés</button>
         <button class="btn btn-sm" style="color:var(--text3);border-color:rgba(148,163,184,.3)" onclick="loadLoyers('annules')">Annulés</button>
-        <button class="btn btn-primary btn-sm writer" onclick="openModalLoyerNew()">+ Nouveau loyer</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalLoyerNew()"><i class="bi bi-plus-lg"></i> Nouveau loyer</button>
       </div>
     </div>
     <div class="table-wrap"><table>
@@ -644,7 +645,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- ═══════ CHARGES ═══════ -->
 <div class="section" id="s-charges">
   <div class="card">
-    <div class="card-title">Charges & Frais
+    <div class="card-title"><i class="bi bi-receipt-cutoff"></i> Charges & Frais
       <div class="card-actions">
         <select class="filter-select" id="f-type-ch" onchange="loadCh()">
           <option value="">Tous types</option>
@@ -653,7 +654,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
           <option value="assurance">Assurance</option><option value="eau_electricite">Eau/Élec.</option>
           <option value="autre">Autre</option>
         </select>
-        <button class="btn btn-primary btn-sm writer" onclick="openModalCh()">+ Nouvelle charge</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalCh()"><i class="bi bi-plus-lg"></i> Nouvelle charge</button>
       </div>
     </div>
     <div class="table-wrap"><table>
@@ -666,7 +667,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- ═══════ BORDEREAUX ═══════ -->
 <div class="section" id="s-bordereaux">
   <div class="card">
-    <div class="card-title">📸 Bordereaux de paiement
+    <div class="card-title"><i class="bi bi-image-fill"></i> Bordereaux de paiement
       <div class="card-actions">
         <select class="filter-select" id="f-bord-statut" onchange="loadBordereaux()">
           <option value="">Tous</option>
@@ -687,7 +688,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <div class="section" id="s-virements">
   <div class="kpi-row" id="kpi-vir"></div>
   <div class="card">
-    <div class="card-title">🏦 Bordereaux de virement propriétaires
+    <div class="card-title"><i class="bi bi-bank-fill"></i> Bordereaux de virement propriétaires
       <div class="card-actions">
         <select class="filter-select" id="f-vir-statut" onchange="loadVirements()">
           <option value="">Tous</option>
@@ -709,17 +710,17 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <div class="section" id="s-rapports">
   <div class="three-col" style="margin-bottom:14px">
     <div class="card" style="cursor:pointer;text-align:center;padding:22px;transition:transform .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''" onclick="rapLoyer()">
-      <div style="font-size:34px;margin-bottom:8px">📋</div>
+      <div style="font-size:34px;margin-bottom:8px"><i class="bi bi-file-spreadsheet-fill"></i></div>
       <div style="font-size:13px;font-weight:700;color:var(--text)">Rapport mensuel loyers</div>
       <div style="font-size:11.5px;color:var(--text3);margin-top:4px">Taux paiement, impayés</div>
     </div>
     <div class="card" style="cursor:pointer;text-align:center;padding:22px;transition:transform .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''" onclick="rapCharge()">
-      <div style="font-size:34px;margin-bottom:8px">🧾</div>
+      <div style="font-size:34px;margin-bottom:8px"><i class="bi bi-receipt-fill"></i></div>
       <div style="font-size:13px;font-weight:700;color:var(--text)">Rapport mensuel charges</div>
       <div style="font-size:11.5px;color:var(--text3);margin-top:4px">Répartition par type</div>
     </div>
     <div class="card" style="cursor:pointer;text-align:center;padding:22px;transition:transform .2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''" onclick="rapJour()">
-      <div style="font-size:34px;margin-bottom:8px">📊</div>
+      <div style="font-size:34px;margin-bottom:8px"><i class="bi bi-bar-chart-fill"></i></div>
       <div style="font-size:13px;font-weight:700;color:var(--text)">Rapport journalier</div>
       <div style="font-size:11.5px;color:var(--text3);margin-top:4px">Encaissements du jour</div>
     </div>
@@ -735,10 +736,10 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     <div class="stat-card" style="--c:linear-gradient(90deg,var(--red),#dc2626)"><div class="stat-label">Créances</div><div class="stat-value" id="p-cr">—</div><div class="stat-sub stat-dn">Arriérés</div></div>
   </div>
   <div class="two-col">
-    <div class="card"><div class="card-title">Stats par propriétaire</div>
+    <div class="card"><div class="card-title"><i class="bi bi-person-fill"></i> Stats par propriétaire</div>
       <div class="table-wrap"><table><thead><tr><th>Propriétaire</th><th>Locaux</th><th>Revenu brut</th><th>Commission</th><th>Net versé</th></tr></thead><tbody id="tb-portf"><tr><td colspan="5" class="loader"></td></tr></tbody></table></div>
     </div>
-    <div class="card"><div class="card-title">Créances & Arriérés</div>
+    <div class="card"><div class="card-title"><i class="bi bi-exclamation-circle-fill"></i> Créances & Arriérés</div>
       <div class="table-wrap"><table><thead><tr><th>Locataire</th><th>Local</th><th>Solde</th><th>Statut</th></tr></thead><tbody id="tb-cr"><tr><td colspan="4" class="loader"></td></tr></tbody></table></div>
     </div>
   </div>
@@ -749,7 +750,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
   <div class="two-col">
     <!-- Left: group selection -->
     <div class="card">
-      <div class="card-title">💬 Groupes par immeuble</div>
+      <div class="card-title"><i class="bi bi-chat-fill"></i> Groupes par immeuble</div>
       <div class="fg">
         <label>Propriétaire</label>
         <select class="filter-select" id="chat-prop-sel" onchange="loadChatImmeubles()" style="width:100%">
@@ -764,7 +765,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       </div>
       <div id="chat-group-info" class="hidden">
         <div class="info-box info-blue" id="chat-group-label"></div>
-        <button class="btn btn-primary btn-sm" onclick="openChatWindow()" style="width:100%">💬 Ouvrir le chat</button>
+        <button class="btn btn-primary btn-sm" onclick="openChatWindow()" style="width:100%"><i class="bi bi-chat-fill"></i> Ouvrir le chat</button>
       </div>
       <div style="margin-top:12px">
         <div class="card-title" style="font-size:12.5px;margin-bottom:10px">Tous les groupes</div>
@@ -773,14 +774,14 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
     <!-- Right: chat window -->
     <div class="card">
-      <div class="card-title" id="chat-window-title">💬 Sélectionnez un groupe</div>
+      <div class="card-title" id="chat-window-title"><i class="bi bi-chat-fill"></i> Sélectionnez un groupe</div>
       <div class="chat-container" id="chat-container">
         <div class="chat-messages" id="chat-messages">
           <div class="loader">Sélectionnez un groupe pour voir les messages</div>
         </div>
         <div class="chat-input-row">
           <input class="chat-input" id="chat-input" placeholder="Écrire un message…" onkeydown="if(event.key==='Enter')sendChatMsg()">
-          <button class="btn btn-primary btn-sm" onclick="sendChatMsg()">➤</button>
+          <button class="btn btn-primary btn-sm" onclick="sendChatMsg()"><i class="bi bi-send-fill"></i></button>
         </div>
       </div>
     </div>
@@ -790,9 +791,9 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- ═══════ NOTIFICATIONS ═══════ -->
 <div class="section" id="s-notifications">
   <div class="card">
-    <div class="card-title">🔔 Notifications & Alertes locataires
+    <div class="card-title"><i class="bi bi-bell-fill"></i> Notifications & Alertes locataires
       <div class="card-actions">
-        <button class="btn btn-primary btn-sm writer" onclick="openModalNotif()">+ Envoyer alerte</button>
+        <button class="btn btn-primary btn-sm writer" onclick="openModalNotif()"><i class="bi bi-plus-lg"></i> Envoyer alerte</button>
       </div>
     </div>
     <div id="notif-list"><div class="loader">Chargement…</div></div>
@@ -802,14 +803,14 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- ═══════ UTILISATEURS ═══════ -->
 <div class="section" id="s-utilisateurs">
   <div id="users-denied" class="hidden">
-    <div class="access-denied"><div class="icon">🔒</div><h3>Accès refusé</h3><p>Réservé aux Administrateurs.</p></div>
+    <div class="access-denied"><div class="icon"><i class="bi bi-lock-fill"></i></div><h3>Accès refusé</h3><p>Réservé aux Administrateurs.</p></div>
   </div>
   <div id="users-content">
     <div class="card">
-      <div class="card-title">Gestion des utilisateurs
-        <button class="btn btn-primary btn-sm" onclick="openModalUser()">+ Nouvel utilisateur</button>
+      <div class="card-title"><i class="bi bi-person-gear"></i> Gestion des utilisateurs
+        <button class="btn btn-primary btn-sm" onclick="openModalUser()"><i class="bi bi-plus-lg"></i> Nouvel utilisateur</button>
       </div>
-      <div class="info-box info-blue">ℹ️ Tout nouvel inscrit reçoit le rôle <strong>Lecteur</strong> par défaut.</div>
+      <div class="info-box info-blue"><i class="bi bi-info-circle-fill"></i> ℹ️ Tout nouvel inscrit reçoit le rôle <strong>Lecteur</strong> par défaut.</div>
       <div class="table-wrap"><table>
         <thead><tr><th>Utilisateur</th><th>Nom complet</th><th>Email</th><th>Rôle</th><th>Actif</th><th>Inscription</th><th>Actions</th></tr></thead>
         <tbody id="tb-users"><tr><td colspan="7" class="loader"></td></tr></tbody>
@@ -826,7 +827,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL RAPPELS -->
 <div class="modal-overlay" id="m-rappels">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-orange">🔔</div><div><div class="modal-title">Rappels urgents</div><div class="modal-subtitle">Actions requises</div></div><button class="modal-close" onclick="closeModal('m-rappels')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-orange"><i class="bi bi-bell-fill"></i></div><div><div class="modal-title">Rappels urgents</div><div class="modal-subtitle">Actions requises</div></div><button class="modal-close" onclick="closeModal('m-rappels')">×</button></div>
     <div class="modal-body"><div id="mr-content"><div class="loader"></div></div></div>
     <div class="modal-footer"><button class="btn" onclick="closeModal('m-rappels')">Fermer</button></div>
   </div>
@@ -835,18 +836,17 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL PROPRIÉTAIRE -->
 <div class="modal-overlay" id="m-prop">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-blue">🧑‍💼</div><div><div class="modal-title" id="mt-prop">Nouveau propriétaire</div><div class="modal-subtitle">Informations du propriétaire</div></div><button class="modal-close" onclick="closeModal('m-prop')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-blue"><i class="bi bi-person-badge-fill"></i></div><div><div class="modal-title" id="mt-prop">Nouveau propriétaire</div><div class="modal-subtitle">Informations du propriétaire</div></div><button class="modal-close" onclick="closeModal('m-prop')">×</button></div>
     <div class="modal-body">
       <div id="al-prop"></div><input type="hidden" id="prop-id">
 
-      <!-- NOUVEAU : Lier à un compte utilisateur existant -->
       <div class="fg" id="prop-user-group">
         <label>Lier à un compte utilisateur</label>
         <select id="prop-user-sel">
           <option value="">— Sélectionner un utilisateur (optionnel) —</option>
         </select>
         <div style="font-size:11px;color:var(--text3);margin-top:3px">
-          ℹ️ Choisir un utilisateur créera automatiquement la liaison avec ce propriétaire.
+          <i class="bi bi-info-circle-fill"></i> Choisir un utilisateur créera automatiquement la liaison avec ce propriétaire.
         </div>
       </div>
 
@@ -870,10 +870,9 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
     <div class="modal-footer-split">
       <button class="btn btn-danger btn-sm hidden" id="del-prop" onclick=""></button>
-       {% comment %} <button class="btn btn-danger btn-sm hidden" id="del-prop" onclick="delProp()">🗑 Supprimer</button> {% endcomment %}
       <div style="display:flex;gap:7px;margin-left:auto">
         <button class="btn" onclick="closeModal('m-prop')">Annuler</button>
-        <button class="btn btn-primary" onclick="saveProp()">💾 Enregistrer</button>
+        <button class="btn btn-primary" onclick="saveProp()"><i class="bi bi-save-fill"></i> Enregistrer</button>
       </div>
     </div>
   </div>
@@ -882,7 +881,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL IMMEUBLE -->
 <div class="modal-overlay" id="m-imm">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-purple">🏗️</div><div><div class="modal-title" id="mt-imm">Nouvel immeuble</div><div class="modal-subtitle">Informations sur l'immeuble</div></div><button class="modal-close" onclick="closeModal('m-imm')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-purple"><i class="bi bi-building-fill"></i></div><div><div class="modal-title" id="mt-imm">Nouvel immeuble</div><div class="modal-subtitle">Informations sur l'immeuble</div></div><button class="modal-close" onclick="closeModal('m-imm')">×</button></div>
     <div class="modal-body">
       <div id="al-imm"></div><input type="hidden" id="imm-id">
       <div class="form-grid">
@@ -900,10 +899,9 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
     <div class="modal-footer-split">
       <button class="btn btn-danger btn-sm hidden" id="del-imm" onclick=""></button>
-      {% comment %} <button class="btn btn-danger btn-sm hidden" id="del-imm" onclick="delImm()">🗑 Supprimer</button> {% endcomment %}
       <div style="display:flex;gap:7px;margin-left:auto">
         <button class="btn" onclick="closeModal('m-imm')">Annuler</button>
-        <button class="btn btn-primary" onclick="saveImm()">💾 Enregistrer</button>
+        <button class="btn btn-primary" onclick="saveImm()"><i class="bi bi-save-fill"></i> Enregistrer</button>
       </div>
     </div>
   </div>
@@ -912,7 +910,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL LOCAL -->
 <div class="modal-overlay" id="m-loc">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-green">🏠</div><div><div class="modal-title" id="mt-loc">Nouveau local</div><div class="modal-subtitle">Bien immobilier</div></div><button class="modal-close" onclick="closeModal('m-loc')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-green"><i class="bi bi-house-fill"></i></div><div><div class="modal-title" id="mt-loc">Nouveau local</div><div class="modal-subtitle">Bien immobilier</div></div><button class="modal-close" onclick="closeModal('m-loc')">×</button></div>
     <div class="modal-body">
       <div id="al-loc"></div><input type="hidden" id="loc-id">
       <div class="form-grid">
@@ -943,10 +941,9 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
     <div class="modal-footer-split">
       <button class="btn btn-danger btn-sm hidden" id="del-loc" onclick=""></button>
-      {% comment %} <button class="btn btn-danger btn-sm hidden" id="del-loc" onclick="delLoc()">🗑 Supprimer</button> {% endcomment %}
       <div style="display:flex;gap:7px;margin-left:auto">
         <button class="btn" onclick="closeModal('m-loc')">Annuler</button>
-        <button class="btn btn-primary" onclick="saveLoc()">💾 Enregistrer</button>
+        <button class="btn btn-primary" onclick="saveLoc()"><i class="bi bi-save-fill"></i> Enregistrer</button>
       </div>
     </div>
   </div>
@@ -955,18 +952,17 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL LOCATAIRE -->
 <div class="modal-overlay" id="m-loca">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="mh-icon mh-blue">👤</div><div><div class="modal-title" id="mt-loca">Nouveau locataire</div><div class="modal-subtitle">Informations du locataire</div></div><button class="modal-close" onclick="closeModal('m-loca')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-blue"><i class="bi bi-person-fill"></i></div><div><div class="modal-title" id="mt-loca">Nouveau locataire</div><div class="modal-subtitle">Informations du locataire</div></div><button class="modal-close" onclick="closeModal('m-loca')">×</button></div>
     <div class="modal-body">
       <div id="al-loca"></div><input type="hidden" id="loca-id">
 
-      <!--  NOUVEAU : Lier à un compte utilisateur -->
       <div class="fg" id="loca-user-group">
         <label>Lier à un compte utilisateur</label>
         <select id="loca-user-sel">
           <option value="">— Sélectionner un utilisateur (optionnel) —</option>
         </select>
         <div style="font-size:11px;color:var(--text3);margin-top:3px">
-          ℹ️ Choisir un utilisateur créera automatiquement la liaison avec ce locataire.
+          <i class="bi bi-info-circle-fill"></i> Choisir un utilisateur créera automatiquement la liaison avec ce locataire.
         </div>
       </div>
 
@@ -983,7 +979,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <!-- Feature 3: Situation financière & Historique -->
      <div id="loca-sit" class="hidden">
         <div class="sep"></div>
-        <div style="font-size:12.5px;font-weight:700;margin-bottom:10px;color:var(--text)">📊 Situation financière</div>
+        <div style="font-size:12.5px;font-weight:700;margin-bottom:10px;color:var(--text)"><i class="bi bi-graph-up-arrow"></i> Situation financière</div>
         <div class="kpi-row">
           <div class="kpi"><div class="kpi-label">Total loyers</div><div class="kpi-val" id="ls-tot">—</div></div>
           <div class="kpi"><div class="kpi-label">Payé</div><div class="kpi-val" style="color:var(--green)" id="ls-pay">—</div></div>
@@ -992,7 +988,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
         </div>
 
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
-          <button class="btn btn-ghost btn-sm" onclick="showHistoriqueLocataire()" id="btn-hist">📋 Voir l'historique complet</button>
+          <button class="btn btn-ghost btn-sm" onclick="showHistoriqueLocataire()" id="btn-hist"><i class="bi bi-clock-history"></i> Voir l'historique complet</button>
         </div>
 
         <!-- ── Téléchargement PDF ── -->
@@ -1019,7 +1015,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
             <input type="date" id="hist-date-fin" style="padding:6px 8px;border:1px solid var(--border2);border-radius:8px;background:var(--surface);color:var(--text);font-size:12px">
           </div>
 
-          <button class="btn btn-success btn-sm" style="margin-left:auto" onclick="downloadHistoriquePdf()">📥 PDF</button>
+          <button class="btn btn-success btn-sm" style="margin-left:auto" onclick="downloadHistoriquePdf()"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</button>
         </div>
 
                <div id="loca-historique" class="hidden" style="margin-top:10px;max-height:240px;overflow-y:auto"></div>
@@ -1027,10 +1023,9 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>              
     <div class="modal-footer-split">
       <button class="btn btn-danger btn-sm hidden" id="del-loca" onclick=""></button>
-      {% comment %} ... {% endcomment %}
       <div style="display:flex;gap:7px;margin-left:auto">
         <button class="btn" onclick="closeModal('m-loca')">Annuler</button>
-        <button class="btn btn-primary" onclick="saveLoca()">💾 Enregistrer</button>
+        <button class="btn btn-primary" onclick="saveLoca()"><i class="bi bi-save-fill"></i> Enregistrer</button>
       </div>
     </div>
   </div>
@@ -1038,7 +1033,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL CONTRAT LOCATION -->
 <div class="modal-overlay" id="m-cont">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="mh-icon mh-orange">📄</div><div><div class="modal-title" id="mt-cont">Nouveau contrat</div><div class="modal-subtitle">Contrat de location</div></div><button class="modal-close" onclick="closeModal('m-cont')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-orange"><i class="bi bi-file-earmark-text-fill"></i></div><div><div class="modal-title" id="mt-cont">Nouveau contrat</div><div class="modal-subtitle">Contrat de location</div></div><button class="modal-close" onclick="closeModal('m-cont')">×</button></div>
     <div class="modal-body">
       <div id="al-cont"></div><input type="hidden" id="cont-id">
       <div class="form-grid">
@@ -1064,11 +1059,11 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div class="fg"><label>Informations complémentaires</label><textarea id="cont-info" rows="2"></textarea></div>
     </div>
     <div class="modal-footer-split">
-      <button class="btn btn-sm hidden" style="color:var(--red);border-color:rgba(239,68,68,.3)" id="res-cont" onclick="resilier()">⚠️ Résilier</button>
+      <button class="btn btn-sm hidden" style="color:var(--red);border-color:rgba(239,68,68,.3)" id="res-cont" onclick="resilier()"><i class="bi bi-exclamation-triangle-fill"></i> Résilier</button>
       <div style="display:flex;gap:7px;margin-left:auto">
-        <button class="btn btn-purple btn-sm hidden" id="gen-btn" onclick="openGenLoyers()">⚡ Générer loyers</button>
+        <button class="btn btn-purple btn-sm hidden" id="gen-btn" onclick="openGenLoyers()"><i class="bi bi-lightning-fill"></i> Générer loyers</button>
         <button class="btn" onclick="closeModal('m-cont')">Annuler</button>
-        <button class="btn btn-primary" onclick="saveCont()">💾 Enregistrer</button>
+        <button class="btn btn-primary" onclick="saveCont()"><i class="bi bi-save-fill"></i> Enregistrer</button>
       </div>
     </div>
   </div>
@@ -1077,18 +1072,18 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL GÉNÉRER LOYERS -->
 <div class="modal-overlay" id="m-gen">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-purple">⚡</div><div><div class="modal-title">Générer les loyers</div><div class="modal-subtitle">Génération automatique</div></div><button class="modal-close" onclick="closeModal('m-gen')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-purple"><i class="bi bi-lightning-fill"></i></div><div><div class="modal-title">Générer les loyers</div><div class="modal-subtitle">Génération automatique</div></div><button class="modal-close" onclick="closeModal('m-gen')">×</button></div>
     <div class="modal-body">
       <input type="hidden" id="gen-cid">
       <div class="form-grid">
         <div class="fg"><label>Nombre de mois</label><input id="gen-nb" type="number" value="12" min="1" max="60"></div>
         <div class="fg"><label>À partir du</label><input id="gen-date" type="date"></div>
       </div>
-      <div class="info-box info-blue">ℹ️ Les loyers existants ne seront pas dupliqués.</div>
+      <div class="info-box info-blue"><i class="bi bi-info-circle-fill"></i> Les loyers existants ne seront pas dupliqués.</div>
     </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-gen')">Annuler</button>
-      <button class="btn btn-primary" onclick="doGen()">⚡ Générer</button>
+      <button class="btn btn-primary" onclick="doGen()"><i class="bi bi-lightning-fill"></i> Générer</button>
     </div>
   </div>
 </div>
@@ -1096,7 +1091,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL NOUVEAU LOYER -->
 <div class="modal-overlay" id="m-loyer-new">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="mh-icon mh-green">💰</div><div><div class="modal-title">Nouveau loyer</div><div class="modal-subtitle">Saisie manuelle</div></div><button class="modal-close" onclick="closeModal('m-loyer-new')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-green"><i class="bi bi-coin-fill"></i></div><div><div class="modal-title">Nouveau loyer</div><div class="modal-subtitle">Saisie manuelle</div></div><button class="modal-close" onclick="closeModal('m-loyer-new')">×</button></div>
     <div class="modal-body">
       <div id="al-lnew"></div>
       <div class="form-grid">
@@ -1122,7 +1117,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-loyer-new')">Annuler</button>
-      <button class="btn btn-primary" onclick="saveLoyer()">💾 Enregistrer</button>
+      <button class="btn btn-primary" onclick="saveLoyer()"><i class="bi bi-save-fill"></i> Enregistrer</button>
     </div>
   </div>
 </div>
@@ -1130,7 +1125,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL PAIEMENT -->
 <div class="modal-overlay" id="m-pay">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-green">💳</div><div><div class="modal-title">Enregistrer un paiement</div><div class="modal-subtitle">Saisir le règlement du locataire</div></div><button class="modal-close" onclick="closeModal('m-pay')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-green"><i class="bi bi-credit-card-fill"></i></div><div><div class="modal-title">Enregistrer un paiement</div><div class="modal-subtitle">Saisir le règlement du locataire</div></div><button class="modal-close" onclick="closeModal('m-pay')">×</button></div>
     <div class="modal-body">
       <div id="al-pay"></div><input type="hidden" id="pay-lid">
       <div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);border-radius:10px;padding:12px 14px;margin-bottom:14px">
@@ -1150,7 +1145,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-pay')">Annuler</button>
-      <button class="btn btn-success" onclick="savePay()">✅ Valider le paiement</button>
+      <button class="btn btn-success" onclick="savePay()"><i class="bi bi-check-circle-fill"></i> Valider le paiement</button>
     </div>
   </div>
 </div>
@@ -1158,11 +1153,11 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL QUITTANCE -->
 <div class="modal-overlay" id="m-quit">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="mh-icon mh-green">🧾</div><div><div class="modal-title">Quittance de loyer</div><div class="modal-subtitle">Document officiel</div></div><button class="modal-close" onclick="closeModal('m-quit')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-green"><i class="bi bi-receipt-fill"></i></div><div><div class="modal-title">Quittance de loyer</div><div class="modal-subtitle">Document officiel</div></div><button class="modal-close" onclick="closeModal('m-quit')">×</button></div>
     <div class="modal-body"><div id="mc-quit"><div class="loader"></div></div></div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-quit')">Fermer</button>
-      <button class="btn btn-success" id="btn-print" onclick="">🖨️ Imprimer / PDF</button>
+      <button class="btn btn-success" id="btn-print" onclick=""><i class="bi bi-printer-fill"></i> Imprimer / PDF</button>
     </div>
   </div>
 </div>
@@ -1170,7 +1165,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL CHARGE -->
 <div class="modal-overlay" id="m-ch">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-red">🧾</div><div><div class="modal-title" id="mt-ch">Nouvelle charge</div><div class="modal-subtitle">Dépense liée à un bien</div></div><button class="modal-close" onclick="closeModal('m-ch')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-red"><i class="bi bi-receipt-cutoff"></i></div><div><div class="modal-title" id="mt-ch">Nouvelle charge</div><div class="modal-subtitle">Dépense liée à un bien</div></div><button class="modal-close" onclick="closeModal('m-ch')">×</button></div>
     <div class="modal-body">
       <div id="al-ch"></div><input type="hidden" id="ch-id">
       <div class="form-grid">
@@ -1190,14 +1185,14 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div class="fg"><label>Notes</label><input id="ch-notes" placeholder="Optionnel"></div>
     </div>
    <div class="modal-footer-split">
-  <button class="btn btn-danger btn-sm hidden" id="del-ch" onclick="delCh()">🗑 Supprimer</button>
+  <button class="btn btn-danger btn-sm hidden" id="del-ch" onclick="delCh()"><i class="bi bi-trash-fill"></i> Supprimer</button>
   <div style="display:flex;gap:7px;margin-left:auto">
     <button class="btn btn-sm hidden" id="dl-ch" onclick="downloadCharge()" 
       style="color:var(--green);border-color:rgba(16,185,129,.3)">
-      ⬇️ Télécharger
+      <i class="bi bi-download-fill"></i> Télécharger
     </button>
     <button class="btn" onclick="closeModal('m-ch')">Annuler</button>
-    <button class="btn btn-primary" onclick="saveCh()">💾 Enregistrer</button>
+    <button class="btn btn-primary" onclick="saveCh()"><i class="bi bi-save-fill"></i> Enregistrer</button>
   </div>
 </div>
   </div>
@@ -1206,13 +1201,13 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL RAPPORT -->
 <div class="modal-overlay" id="m-rap">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="mh-icon mh-blue">📊</div><div><div class="modal-title" id="mt-rap">Rapport</div><div class="modal-subtitle" id="ms-rap">Statistiques</div></div><button class="modal-close" onclick="closeModal('m-rap')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-blue"><i class="bi bi-bar-chart-fill"></i></div><div><div class="modal-title" id="mt-rap">Rapport</div><div class="modal-subtitle" id="ms-rap">Statistiques</div></div><button class="modal-close" onclick="closeModal('m-rap')">×</button></div>
     <div class="modal-body"><div id="mc-rap"></div></div>
     <div class="modal-footer">
   <button class="btn" onclick="closeModal('m-rap')">Fermer</button>
   <button class="btn btn-sm" id="dl-rap" onclick="downloadRapport()" 
     style="color:var(--green);border-color:rgba(16,185,129,.3)">
-    ⬇️ Télécharger
+    <i class="bi bi-download-fill"></i> Télécharger
   </button>
 </div>
   </div>
@@ -1221,10 +1216,10 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL UTILISATEUR -->
 <div class="modal-overlay" id="m-user">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-purple">👥</div><div><div class="modal-title" id="mt-user">Nouvel utilisateur</div><div class="modal-subtitle">Gestion des accès</div></div><button class="modal-close" onclick="closeModal('m-user')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-purple"><i class="bi bi-person-gear"></i></div><div><div class="modal-title" id="mt-user">Nouvel utilisateur</div><div class="modal-subtitle">Gestion des accès</div></div><button class="modal-close" onclick="closeModal('m-user')">×</button></div>
     <div class="modal-body">
       <div id="al-user"></div><input type="hidden" id="user-id">
-      <div class="info-box info-blue">ℹ️ <strong>Admin</strong> = accès total | <strong>Gestionnaire</strong> = lecture+écriture | <strong>Lecteur</strong> = consultation</div>
+      <div class="info-box info-blue"><i class="bi bi-info-circle-fill"></i> <strong>Admin</strong> = accès total | <strong>Gestionnaire</strong> = lecture+écriture | <strong>Lecteur</strong> = consultation</div>
       <div class="form-grid">
         <div class="fg"><label>Prénom</label><input id="u-fn" placeholder="Jean"></div>
         <div class="fg"><label>Nom</label><input id="u-ln" placeholder="DUPOND"></div>
@@ -1237,8 +1232,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
         <div class="fg"><label>Rôle *</label>
           <select id="u-role"><option value="lecteur">👁 Lecteur</option><option value="gestionnaire">✏️ Gestionnaire</option><option value="admin">👑 Administrateur</option><option value="locataire">🏠 Locataire</option><option value="proprietaire">🤝 Propriétaire</option></select>
         </div>
-        <!--  NOUVEAU : Liaison profil -->
-<div class="fg" id="u-profil-group" style="display:none">
+        <div class="fg" id="u-profil-group" style="display:none">
   <label id="u-profil-label">Lier à un profil</label>
   <select id="u-profil-sel">
     <option value="">— Sélectionner —</option>
@@ -1249,10 +1243,10 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div class="fg"><label id="u-pwd-lbl">Mot de passe *</label><input id="u-pwd" type="password" placeholder="Min. 6 caractères"></div>
     </div>
     <div class="modal-footer-split">
-      <button class="btn btn-danger btn-sm hidden" id="del-user" onclick="delUser()">🗑 Supprimer</button>
+      <button class="btn btn-danger btn-sm hidden" id="del-user" onclick="delUser()"><i class="bi bi-trash-fill"></i> Supprimer</button>
       <div style="display:flex;gap:7px;margin-left:auto">
         <button class="btn" onclick="closeModal('m-user')">Annuler</button>
-        <button class="btn btn-primary" onclick="saveUser()">💾 Enregistrer</button>
+        <button class="btn btn-primary" onclick="saveUser()"><i class="bi bi-save-fill"></i> Enregistrer</button>
       </div>
     </div>
   </div>
@@ -1261,12 +1255,12 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL NOTIFICATION ADMIN → LOCATAIRE (Feature 8) -->
 <div class="modal-overlay" id="m-notif">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-orange">🔔</div><div><div class="modal-title">Envoyer une alerte locataire</div><div class="modal-subtitle">Notification vers un ou tous les locataires</div></div><button class="modal-close" onclick="closeModal('m-notif')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-orange"><i class="bi bi-bell-fill"></i></div><div><div class="modal-title">Envoyer une alerte locataire</div><div class="modal-subtitle">Notification vers un ou tous les locataires</div></div><button class="modal-close" onclick="closeModal('m-notif')">×</button></div>
     <div class="modal-body">
       <div id="al-notif"></div>
       <div class="fg"><label>Destinataire</label>
         <select id="notif-dest">
-          <option value="all">📢 Tous les locataires</option>
+          <option value="all"><i class="bi bi-megaphone-fill"></i> Tous les locataires</option>
         </select>
       </div>
       <div class="form-grid">
@@ -1284,7 +1278,7 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     </div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-notif')">Annuler</button>
-      <button class="btn btn-primary" onclick="sendNotif()">📤 Envoyer</button>
+      <button class="btn btn-primary" onclick="sendNotif()"><i class="bi bi-send-fill"></i> Envoyer</button>
     </div>
   </div>
 </div>
@@ -1292,20 +1286,20 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL BORDEREAU VALIDATION -->
 <div class="modal-overlay" id="m-bord-val">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-blue">📸</div><div><div class="modal-title">Valider le bordereau</div><div class="modal-subtitle">Vérification du justificatif de paiement</div></div><button class="modal-close" onclick="closeModal('m-bord-val')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-blue"><i class="bi bi-image-fill"></i></div><div><div class="modal-title">Valider le bordereau</div><div class="modal-subtitle">Vérification du justificatif de paiement</div></div><button class="modal-close" onclick="closeModal('m-bord-val')">×</button></div>
     <div class="modal-body">
       <input type="hidden" id="bord-id">
       <div style="text-align:center;margin-bottom:14px">
         <img id="bord-img" src="" 
           style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)" 
-          onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center>📄 Image non disponible</div>'">
+          onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center><i class=\'bi bi-image-fill\'></i> Image non disponible</div>'">
       </div>
       <div id="bord-info" style="margin-bottom:12px;font-size:12.5px;color:var(--text2)"></div>
       <div class="fg"><label>Commentaire (optionnel)</label><textarea id="bord-comment" rows="2" placeholder="Motif de rejet ou remarque…"></textarea></div>
     </div>
    <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" onclick="validerBordereau('rejete')">❌ Rejeter</button>
-      <button class="btn btn-success" onclick="validerBordereau('valide')">✅ Valider</button>
+      <button class="btn btn-danger btn-sm" onclick="validerBordereau('rejete')"><i class="bi bi-x-circle-fill"></i> Rejeter</button>
+      <button class="btn btn-success" onclick="validerBordereau('valide')"><i class="bi bi-check-circle-fill"></i> Valider</button>
     </div>
   </div>
 </div>
@@ -1313,30 +1307,28 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL VIREMENT VALIDATION -->
 <div class="modal-overlay" id="m-vir-val">
   <div class="modal">
-    <div class="modal-header"><div class="mh-icon mh-blue">🏦</div><div><div class="modal-title">Valider le virement</div><div class="modal-subtitle">Vérification du justificatif bancaire</div></div><button class="modal-close" onclick="closeModal('m-vir-val')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-blue"><i class="bi bi-bank-fill"></i></div><div><div class="modal-title">Valider le virement</div><div class="modal-subtitle">Vérification du justificatif bancaire</div></div><button class="modal-close" onclick="closeModal('m-vir-val')">×</button></div>
     <div class="modal-body">
       <input type="hidden" id="vir-val-id">
       <div style="text-align:center;margin-bottom:14px">
         <img id="vir-val-img" src=""
           style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)"
-          onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center>📄 Fichier non disponible</div>'">
+          onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center><i class=\'bi bi-file-pdf-fill\'></i> Fichier non disponible</div>'">
       </div>
       <div id="vir-val-info" style="margin-bottom:12px;font-size:12.5px;color:var(--text2)"></div>
       <div class="fg"><label>Commentaire (optionnel)</label><textarea id="vir-val-comment" rows="2" placeholder="Motif de rejet ou remarque…"></textarea></div>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-danger btn-sm" onclick="validerVirement('rejeter')">❌ Rejeter</button>
-      <button class="btn btn-success" onclick="validerVirement('valider')">✅ Valider</button>
+      <button class="btn btn-danger btn-sm" onclick="validerVirement('rejeter')"><i class="bi bi-x-circle-fill"></i> Rejeter</button>
+      <button class="btn btn-success" onclick="validerVirement('valider')"><i class="bi bi-check-circle-fill"></i> Valider</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL CONTRAT SOCIÉTÉ -->
-
-<!-- MODAL CONTRAT SOCIÉTÉ -->
 <div class="modal-overlay" id="m-cs">
   <div class="modal modal-xl">
-    <div class="modal-header"><div class="mh-icon mh-blue">🤝</div><div><div class="modal-title" id="mt-cs">Nouveau contrat société</div><div class="modal-subtitle">Convention de gestion locative — ADEXPER</div></div><button class="modal-close" onclick="closeModal('m-cs')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-blue"><i class="bi bi-handshake-fill"></i></div><div><div class="modal-title" id="mt-cs">Nouveau contrat société</div><div class="modal-subtitle">Convention de gestion locative — ADEXPER</div></div><button class="modal-close" onclick="closeModal('m-cs')">×</button></div>
     <div class="modal-body">
       <div id="al-cs"></div><input type="hidden" id="cs-id">
       <div class="form-grid">
@@ -1352,14 +1344,14 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
         <div class="fg"><label>Statut</label><select id="cs-statut"><option value="actif">✅ Actif</option><option value="expire">⏰ Expiré</option><option value="resilie">❌ Résilié</option></select></div>
       </div>
       <div class="sep"></div>
-      <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">📋 Conditions financières</div>
+      <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px"><i class="bi bi-cash-coin"></i> Conditions financières</div>
       <div class="form-grid">
         <div class="fg"><label>Taux de commission (%) *</label><input id="cs-taux" type="number" step="0.5" value="9"></div>
         <div class="fg"><label>Périodicité de reversement</label><select id="cs-period"><option value="mensuel">Mensuel</option><option value="trimestriel">Trimestriel</option><option value="semestriel">Semestriel</option></select></div>
       </div>
       <div class="fg"><label>Frais d'entrée (BIF)</label><input id="cs-entree" type="number" placeholder="0"></div>
       <div class="sep"></div>
-      <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">📜 Services inclus</div>
+      <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px"><i class="bi bi-list-check"></i> Services inclus</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px" id="cs-services-grid">
         <!-- services rendered by JS -->
       </div>
@@ -1367,11 +1359,11 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
       <div class="fg"><label>Notes internes</label><textarea id="cs-notes" rows="2" placeholder="Notes internes (non imprimées)…"></textarea></div>
     </div>
     <div class="modal-footer-split">
-      <button class="btn btn-danger btn-sm hidden" id="del-cs" onclick="delCS()">🗑 Supprimer</button>
+      <button class="btn btn-danger btn-sm hidden" id="del-cs" onclick="delCS()"><i class="bi bi-trash-fill"></i> Supprimer</button>
       <div style="display:flex;gap:7px;margin-left:auto;flex-wrap:wrap">
-        <button class="btn btn-sm hidden" id="print-cs" onclick="printCS()" style="color:var(--accent2);border-color:rgba(139,92,246,.3)">🖨️ Aperçu contrat</button>
+        <button class="btn btn-sm hidden" id="print-cs" onclick="printCS()" style="color:var(--accent2);border-color:rgba(139,92,246,.3)"><i class="bi bi-printer-fill"></i> Aperçu contrat</button>
         <button class="btn" onclick="closeModal('m-cs')">Annuler</button>
-        <button class="btn btn-primary" onclick="saveCS()">💾 Enregistrer</button>
+        <button class="btn btn-primary" onclick="saveCS()"><i class="bi bi-save-fill"></i> Enregistrer</button>
       </div>
     </div>
   </div>
@@ -1380,18 +1372,18 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 <!-- MODAL APERÇU CONTRAT IMPRIMABLE -->
 <div class="modal-overlay" id="m-cs-print">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="mh-icon mh-green">🖨️</div><div><div class="modal-title">Aperçu du contrat</div><div class="modal-subtitle">Contrat de gestion locative — ADEXPER</div></div><button class="modal-close" onclick="closeModal('m-cs-print')">×</button></div>
+    <div class="modal-header"><div class="mh-icon mh-green"><i class="bi bi-printer-fill"></i></div><div><div class="modal-title">Aperçu du contrat</div><div class="modal-subtitle">Contrat de gestion locative — ADEXPER</div></div><button class="modal-close" onclick="closeModal('m-cs-print')">×</button></div>
     <div class="modal-body"><div id="mc-cs-print"></div></div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-cs-print')">Fermer</button>
-      <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimer / PDF</button>
+      <button class="btn btn-primary" onclick="window.print()"><i class="bi bi-printer-fill"></i> Imprimer / PDF</button>
     </div>
   </div>
 </div>
 <!-- MODAL LISTE PAIEMENTS / ANNULATION -->
 <div class="modal-overlay" id="m-paiements">
   <div class="modal modal-lg">
-    <div class="modal-header"><div class="mh-red">💳</div><div><div class="modal-title">Paiements du loyer</div><div class="modal-subtitle" id="pmt-loyer-lib"></div></div><button class="modal-close" onclick="closeModal('m-paiements')">×</button></div>
+    <div class="modal-header"><div class="mh-red"><i class="bi bi-credit-card-fill"></i></div><div><div class="modal-title">Paiements du loyer</div><div class="modal-subtitle" id="pmt-loyer-lib"></div></div><button class="modal-close" onclick="closeModal('m-paiements')">×</button></div>
     <div class="modal-body"><div id="pmt-list"><div class="loader">Chargement…</div></div></div>
     <div class="modal-footer"><button class="btn" onclick="closeModal('m-paiements')">Fermer</button></div>
   </div>
@@ -1632,7 +1624,7 @@ async function loadProp(){
 function renderProp(l){
   var tb=document.getElementById('tb-prop');
   if(!l.length){tb.innerHTML='<tr><td colspan="8" class="loader">Aucun propriétaire</td></tr>';return;}
-  tb.innerHTML=l.map(p=>`<tr><td><strong style="color:var(--text)">${p.nom}</strong></td><td>${p.telephone||'—'}</td><td>${p.email||'—'}</td><td>${p.adresse_province||'—'}</td><td>${p.adresse_commune||'—'}</td><td>${p.adresse_quartier||'—'}</td><td><span class="bs bs-actif">${p.nb_locaux} local(s)</span></td><td>${S.write?`<button class="btn btn-sm" onclick="openModalProp(${p.id})">✏️</button>`:'—'}</td></tr>`).join('');
+  tb.innerHTML=l.map(p=>`<tr><td><strong style="color:var(--text)">${p.nom}</strong></td><td>${p.telephone||'—'}</td><td>${p.email||'—'}</td><td>${p.adresse_province||'—'}</td><td>${p.adresse_commune||'—'}</td><td>${p.adresse_quartier||'—'}</td><td><span class="bs bs-actif">${p.nb_locaux} local(s)</span></td><td>${S.write?`<button class="btn btn-sm" onclick="openModalProp(${p.id})"><i class="bi bi-pencil-fill"></i></button>`:'—'}</td></tr>`).join('');
 }
 function filtProp(){var q=document.getElementById('s-prop').value.toLowerCase();renderProp(_props.filter(p=>(p.nom+(p.telephone||'')+(p.email||'')).toLowerCase().includes(q)));}
 
@@ -1688,7 +1680,7 @@ async function loadImm(){
 function renderImm(l){
   var tb=document.getElementById('tb-imm');
   if(!l.length){tb.innerHTML='<tr><td colspan="7" class="loader">Aucun immeuble</td></tr>';return;}
-  tb.innerHTML=l.map(i=>`<tr><td><strong style="color:var(--text)">${i.nom}</strong></td><td>${i.adresse_province||'—'}</td><td>${i.adresse_commune||'—'}</td><td>${i.adresse_quartier||'—'}</td><td>${i.annee_construction||'—'}</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.informations_complementaires||'—'}</td><td>${S.write?`<button class="btn btn-sm" onclick="openModalImm(${i.id})">✏️</button>`:'—'}</td></tr>`).join('');
+  tb.innerHTML=l.map(i=>`<tr><td><strong style="color:var(--text)">${i.nom}</strong></td><td>${i.adresse_province||'—'}</td><td>${i.adresse_commune||'—'}</td><td>${i.adresse_quartier||'—'}</td><td>${i.annee_construction||'—'}</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.informations_complementaires||'—'}</td><td>${S.write?`<button class="btn btn-sm" onclick="openModalImm(${i.id})"><i class="bi bi-pencil-fill"></i></button>`:'—'}</td></tr>`).join('');
 }
 function filtImm(){var q=document.getElementById('s-imm').value.toLowerCase();renderImm(_imms.filter(i=>(i.nom+(i.adresse_commune||'')).toLowerCase().includes(q)));}
 
@@ -1748,7 +1740,7 @@ function filtLoc(){
   var fl=_locs.filter(l=>((l.reference||'')+(l.proprietaire_nom||'')+(l.adresse_complete||'')).toLowerCase().includes(q)&&(!t||l.type_local===t));
   var tb=document.getElementById('tb-loc');
   if(!fl.length){tb.innerHTML='<tr><td colspan="9" class="loader">Aucun local trouvé</td></tr>';return;}
-  tb.innerHTML=fl.map(l=>`<tr><td><strong style="color:var(--text)">${l.reference}</strong></td><td>${l.proprietaire_nom||'—'}</td><td>${l.immeuble?'<span class="bs bs-actif">Imm.</span>':'—'}</td><td>${l.type_local_display}</td><td>${l.adresse_complete||'—'}</td><td>${l.superficie?l.superficie+' m²':'—'}</td><td>${l.meuble?'✅':'—'}</td><td><span class="bs ${l.est_occupe?'bs-actif':'bs-libre'}">${l.est_occupe?'Occupé':'Libre'}</span></td><td>${S.write?`<button class="btn btn-sm" onclick="openModalLoc(${l.id})">✏️</button>`:'—'}</td></tr>`).join('');
+  tb.innerHTML=fl.map(l=>`<tr><td><strong style="color:var(--text)">${l.reference}</strong></td><td>${l.proprietaire_nom||'—'}</td><td>${l.immeuble?'<span class="bs bs-actif">Imm.</span>':'—'}</td><td>${l.type_local_display}</td><td>${l.adresse_complete||'—'}</td><td>${l.superficie?l.superficie+' m²':'—'}</td><td>${l.meuble?'<i class="bi bi-check-circle-fill" style="color:var(--green)"></i>':'—'}</td><td><span class="bs ${l.est_occupe?'bs-actif':'bs-libre'}">${l.est_occupe?'Occupé':'Libre'}</span></td><td>${S.write?`<button class="btn btn-sm" onclick="openModalLoc(${l.id})"><i class="bi bi-pencil-fill"></i></button>`:'—'}</td></tr>`).join('');
 }
 async function openModalLoc(id){
   document.getElementById('mt-loc').textContent=id?'Modifier le local':'Nouveau local';
@@ -1840,8 +1832,8 @@ function renderLocas(l){
   if(!l.length){tb.innerHTML='<tr><td colspan="6" class="loader">Aucun locataire</td></tr>';return;}
   tb.innerHTML=l.map(t=>{
     var s=t.situation_financiere||{};
-    var b=s.loyers_en_retard>0?'<span class="bs bs-retard">⚠️ En retard</span>':'<span class="bs bs-paye">✅ À jour</span>';
-    return `<tr><td><strong style="color:var(--text)">${t.nom_prenom}</strong></td><td>${t.telephone||'—'}</td><td>${t.email||'—'}</td><td>${t.local_actuel?`<span class="bs bs-actif">${t.local_actuel.reference}</span>`:'—'}</td><td>${b}</td><td><button class="btn btn-sm" onclick="openModalLoca(${t.id})">👁 Voir</button></td></tr>`;
+    var b=s.loyers_en_retard>0?'<span class="bs bs-retard"><i class="bi bi-exclamation-triangle-fill"></i> En retard</span>':'<span class="bs bs-paye"><i class="bi bi-check-circle-fill"></i> À jour</span>';
+    return `<tr><td><strong style="color:var(--text)">${t.nom_prenom}</strong></td><td>${t.telephone||'—'}</td><td>${t.email||'—'}</td><td>${t.local_actuel?`<span class="bs bs-actif">${t.local_actuel.reference}</span>`:'—'}</td><td>${b}</td><td><button class="btn btn-sm" onclick="openModalLoca(${t.id})"><i class="bi bi-eye-fill"></i> Voir</button></td></tr>`;
   }).join('');
 }
 function filtLoca(){var q=document.getElementById('s-loca').value.toLowerCase();renderLocas(_locas.filter(t=>(t.nom_prenom+(t.telephone||'')+(t.email||'')).toLowerCase().includes(q)));}
@@ -1890,7 +1882,7 @@ async function showHistoriqueLocataire(){
     var h=await api('/locataires/'+id+'/historique/');
     if(!h||!h.historique.length){hDiv.innerHTML='<div class="loader">Aucun historique</div>';return;}
     var html=`<div class="info-box info-blue" style="margin-bottom:10px">
-      💰 Total dû: <strong>${f(h.montant_total_du)} BIF</strong> &nbsp;|&nbsp;
+      <i class="bi bi-info-circle-fill"></i> Total dû: <strong>${f(h.montant_total_du)} BIF</strong> &nbsp;|&nbsp;
       ✅ Payé: <strong>${f(h.montant_total_paye)} BIF</strong> &nbsp;|&nbsp;
       ⚠️ Restant: <strong style="color:var(--red)">${f(h.montant_total_restant)} BIF</strong>
     </div>`;
@@ -1994,7 +1986,7 @@ async function loadCont(){
     var l=d.results||d;
     if(!l.length){tb.innerHTML='<tr><td colspan="9" class="loader">Aucun contrat</td></tr>';return;}
     var bm={actif:'bs-actif',resilie:'bs-resilie',expire:'bs-retard'};
-    tb.innerHTML=l.map(c=>`<tr><td><strong style="color:var(--text)">${c.numero}</strong></td><td>${c.locataire_nom}</td><td>${c.local_reference}</td><td>${fd(c.date_entree)}</td><td>${f(c.loyer_hors_charges)} BIF</td><td>${f(c.provisions_charges)} BIF</td><td>${c.periodicite_display}</td><td><span class="bs ${bm[c.statut]||'bs-attente'}">${c.statut_display}</span></td><td><button class="btn btn-sm" onclick="openModalCont(${c.id})">✏️ Détail</button></td></tr>`).join('');
+    tb.innerHTML=l.map(c=>`<tr><td><strong style="color:var(--text)">${c.numero}</strong></td><td>${c.locataire_nom}</td><td>${c.local_reference}</td><td>${fd(c.date_entree)}</td><td>${f(c.loyer_hors_charges)} BIF</td><td>${f(c.provisions_charges)} BIF</td><td>${c.periodicite_display}</td><td><span class="bs ${bm[c.statut]||'bs-attente'}">${c.statut_display}</span></td><td><button class="btn btn-sm" onclick="openModalCont(${c.id})"><i class="bi bi-pencil-fill"></i> Détail</button></td></tr>`).join('');
   }catch(e){tb.innerHTML='<tr><td colspan="9" style="color:var(--red);text-align:center;padding:20px">Erreur</td></tr>';}
 }
 async function openModalCont(id){
@@ -2101,7 +2093,7 @@ async function loadCS(){
     var l=d.results||d;
     var actifs=l.filter(c=>c.statut==='actif').length,expires=l.filter(c=>c.statut==='expire').length;
     document.getElementById('kpi-cs').innerHTML=`<div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${l.length}</div></div><div class="kpi"><div class="kpi-label">Actifs</div><div class="kpi-val" style="color:var(--green)">${actifs}</div></div><div class="kpi"><div class="kpi-label">Expirés</div><div class="kpi-val" style="color:var(--red)">${expires}</div></div><div class="kpi"><div class="kpi-label">Commission moy.</div><div class="kpi-val">${l.length?Math.round(l.reduce((a,c)=>a+parseFloat(c.taux_commission||9),0)/l.length):9}%</div></div>`;
-    if(!l.length){grid.innerHTML='<div class="info-box info-blue" style="grid-column:1/-1">ℹ️ Aucun contrat société. Cliquez sur <strong>+ Nouveau contrat</strong>.</div>';return;}
+    if(!l.length){grid.innerHTML='<div class="info-box info-blue" style="grid-column:1/-1"><i class="bi bi-info-circle-fill"></i> Aucun contrat société. Cliquez sur <strong>+ Nouveau contrat</strong>.</div>';return;}
     var sm={actif:{cls:'bs-paye',label:'✅ Actif',color:'linear-gradient(90deg,var(--green),#059669)'},expire:{cls:'bs-retard',label:'⏰ Expiré',color:'linear-gradient(90deg,var(--red),#dc2626)'},resilie:{cls:'bs-resilie',label:'❌ Résilié',color:'linear-gradient(90deg,var(--text3),#475569)'}};
     grid.innerHTML=l.map(c=>{
       var s=sm[c.statut]||sm.actif;
@@ -2117,7 +2109,7 @@ async function loadCS(){
           <div><span style="color:var(--text3)">Signé le</span><br><strong>${fd(c.date_signature)}</strong></div>
           <div><span style="color:var(--text3)">Expire le</span><br><strong>${c.date_expiration?fd(c.date_expiration):'Indéterminée'}</strong></div>
         </div>
-        ${svcs.length?`<div style="display:flex;flex-wrap:wrap;gap:4px">${svcs.map(sv=>`<span style="background:rgba(59,130,246,.1);color:var(--accent);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700">${sv}</span>`).join('')}</div>`:''}
+        ${svcs.length?`<div style="display:flex;flex-wrap:wrap;gap:4px">${svcs.map(sv=>`<span style="background:rgba(59,130,246,.1);color:var(--accent);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700"><i class="bi bi-check-circle-fill"></i> ${sv}</span>`).join('')}</div>`:''}
       </div>`;
     }).join('');
   }catch(e){grid.innerHTML='<div class="info-box info-err">Erreur de chargement</div>';}
@@ -2257,10 +2249,10 @@ body{font-family:Arial,sans-serif;font-size:12px;color:#111;background:#fff;padd
 }
 </style></head><body>
 
-<button class="btn-print" onclick="document.title='';window.print();">🖨️ Imprimer / Télécharger PDF</button>
+<button class="btn-print" onclick="document.title='';window.print();"><i class="bi bi-printer-fill"></i> Imprimer / Télécharger PDF</button>
 
 <div class="hd">
-  <div class="logo"><div class="logo-icon">&#127962;</div> ADEXPERTRecouvrement</div>
+  <div class="logo"><i class="bi bi-building"></i> ADEXPERTRecouvrement</div>
   <div class="sub">Bujumbura, Burundi</div>
   <h2>Contrat de Gestion Locative</h2>
   <div class="ref">Convention entre le Propriétaire et ADEXPERTRecouvrement — N° ${c.numero}</div>
@@ -2371,14 +2363,14 @@ async function loadLoyers(filtre) {
     tb.innerHTML = l.map(x => {
       var sp = parseFloat(x.solde_restant) || 0;
       var acts = '';
-      if (S.write && x.statut !== 'paye') acts += `<button class="btn btn-primary btn-sm" onclick="openPay(${x.id},'${esc(x.locataire_nom)}','${esc(x.libelle)}',${x.montant_total})">💳</button> `;
+      if (S.write && x.statut !== 'paye') acts += `<button class="btn btn-primary btn-sm" onclick="openPay(${x.id},'${esc(x.locataire_nom)}','${esc(x.libelle)}',${x.montant_total})"><i class="bi bi-credit-card-fill"></i></button> `;
       if (parseFloat(x.montant_paye) > 0) {
-        acts += `<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Voir la quittance">🧾</button> `;
+        acts += `<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Voir la quittance"><i class="bi bi-receipt-fill"></i></button> `;
         acts += x.quittance_envoyee
-          ? `<button class="btn btn-sm" disabled title="Déjà envoyée" style="opacity:.5">✅</button>`
-          : `<button class="btn btn-sm" onclick="envoyerQuittance(${x.id}, this)" title="Envoyer au locataire">📤</button>`;
+          ? `<button class="btn btn-sm" disabled title="Déjà envoyée" style="opacity:.5"><i class="bi bi-check-circle-fill"></i></button>`
+          : `<button class="btn btn-sm" onclick="envoyerQuittance(${x.id}, this)" title="Envoyer au locataire"><i class="bi bi-send-fill"></i></button>`;
         if (S.write) {
-          acts += ` <button class="btn btn-sm" onclick="openPaiementsModal(${x.id},'${esc(x.libelle)}')" title="Gérer les paiements">💳📋</button>`;
+          acts += ` <button class="btn btn-sm" onclick="openPaiementsModal(${x.id},'${esc(x.libelle)}')" title="Gérer les paiements"><i class="bi bi-credit-card-fill"></i></button>`;
         }
       }
       return `<tr><td>${x.locataire_nom}</td><td>${x.local_reference}</td><td>${x.libelle}</td><td><strong>${f(x.montant_total)}</strong></td><td style="color:var(--green)">${f(x.montant_paye)}</td><td style="color:${sp > 0 ? 'var(--red)' : 'var(--green)'}"><strong>${sp < 0 ? '+' + f(Math.abs(sp)) : f(sp)}</strong></td><td>${fd(x.echeance)}</td><td><span class="bs ${bm[x.statut] || 'bs-attente'}">${x.statut_display}</span></td><td style="white-space:nowrap">${acts}</td></tr>`;
@@ -2432,11 +2424,11 @@ async function envoyerQuittance(id, btn) {
   if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
   try {
     await api('/loyers/' + id + '/envoyer-quittance/', { method: 'POST' });
-    if (btn) { btn.textContent = '✅'; }
-    setTimeout(() => { if (btn) { btn.textContent = '📤'; btn.disabled = false; } }, 2000);
+    if (btn) { btn.innerHTML = '<i class="bi bi-check-circle-fill"></i>'; }
+    setTimeout(() => { if (btn) { btn.innerHTML = '<i class="bi bi-send-fill"></i>'; btn.disabled = false; } }, 2000);
   } catch (e) {
     alert('Erreur : ' + e.message);
-    if (btn) { btn.disabled = false; btn.textContent = '📤'; }
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="bi bi-send-fill"></i>'; }
   }
 }
 async function openModalLoyerNew(){
@@ -2495,7 +2487,7 @@ async function showQuit(id){
     var paye=parseFloat(l.montant_paye)||0, tot=parseFloat(l.montant_total)||0, sol=tot-paye;
     var complet=paye>=tot;
     document.getElementById('mc-quit').innerHTML=`
-      <div class="info-box ${complet?'info-ok':'info-warn'}">${complet?'✅ Loyer soldé — Quittance valide':'⚠️ Paiement partiel — Solde: '+f(sol)+' BIF'}</div>
+      <div class="info-box ${complet?'info-ok':'info-warn'}">${complet?'<i class="bi bi-check-circle-fill"></i> Loyer soldé — Quittance valide':'<i class="bi bi-exclamation-triangle-fill"></i> Paiement partiel — Solde: '+f(sol)+' BIF'}</div>
       <div class="two-col" style="margin-bottom:12px">
         <div class="kpi"><div class="kpi-label">Locataire</div><div style="font-size:13px;font-weight:700;margin-top:3px">${l.locataire_nom}</div></div>
         <div class="kpi"><div class="kpi-label">Local</div><div style="font-size:13px;font-weight:700;margin-top:3px">${l.local_reference}</div></div>
@@ -2506,7 +2498,7 @@ async function showQuit(id){
         <div class="kpi"><div class="kpi-label">Payé</div><div class="kpi-val" style="color:var(--green)">${f(paye)} BIF</div></div>
         <div class="kpi"><div class="kpi-label">Solde</div><div class="kpi-val" style="color:${sol>0?'var(--red)':'var(--green)'}">${f(sol)} BIF</div></div>
       </div>
-      <div class="info-box info-blue" style="margin-top:10px">ℹ️ Cliquez sur <strong>🖨️ Imprimer / PDF</strong> pour la quittance officielle compacte (format A5).</div>`;
+      <div class="info-box info-blue" style="margin-top:10px"><i class="bi bi-info-circle-fill"></i> Cliquez sur <strong>🖨️ Imprimer / PDF</strong> pour la quittance officielle compacte (format A5).</div>`;
   }catch(e){
     document.getElementById('mc-quit').innerHTML='<div class="info-box info-err">Erreur: '+e.message+'</div>';
   }
@@ -2520,7 +2512,7 @@ async function loadCh(){
   try{
     var d=await api('/charges/?page_size=300'+(t?'&type_charge='+t:''));if(!d)return;var l=d.results||d;
     if(!l.length){tb.innerHTML='<tr><td colspan="8" class="loader">Aucune charge</td></tr>';return;}
-    tb.innerHTML=l.map(c=>`<tr><td>${fd(c.date_charge)}</td><td>${c.libelle}</td><td>${c.local_reference||'—'}</td><td>${c.immeuble_nom||'—'}</td><td>${c.type_display}</td><td><strong>${f(c.montant_ttc)} BIF</strong></td><td>${c.notes||'—'}</td><td>${S.write?`<button class="btn btn-sm" onclick="openModalCh(${c.id})">✏️</button>`:'—'}</td></tr>`).join('');
+    tb.innerHTML=l.map(c=>`<tr><td>${fd(c.date_charge)}</td><td>${c.libelle}</td><td>${c.local_reference||'—'}</td><td>${c.immeuble_nom||'—'}</td><td>${c.type_display}</td><td><strong>${f(c.montant_ttc)} BIF</strong></td><td>${c.notes||'—'}</td><td>${S.write?`<button class="btn btn-sm" onclick="openModalCh(${c.id})"><i class="bi bi-pencil-fill"></i></button>`:'—'}</td></tr>`).join('');
   }catch(e){tb.innerHTML='<tr><td colspan="8" style="color:var(--red);text-align:center;padding:20px">Erreur</td></tr>';}
 }
 async function openModalCh(id){
@@ -2682,14 +2674,14 @@ async function loadBordereaux(){
     tb.innerHTML=l.map(b=>{
       var photoUrl=b.photo_url||(b.photo?`https://2uw2o5rfke.ucarecd.net/${b.photo}/`:null);
       var photoHtml=photoUrl
-        ?`<a href="${photoUrl}" target="_blank" style="color:var(--accent)">📸 Voir photo</a>`
+        ?`<a href="${photoUrl}" target="_blank" style="color:var(--accent)"><i class="bi bi-image-fill"></i> Voir photo</a>`
         :`<span style="color:var(--text3)">—</span>`;
       var dateHtml=b.created_at
         ?new Date(b.created_at).toLocaleDateString('fr-FR')
         :'—';
       var acts='';
-      if(photoUrl) acts+=`<a href="${photoUrl}" target="_blank" class="btn btn-sm">📸 Photo</a> `;
-      if(S.write&&b.statut==='en_attente') acts+=`<button class="btn btn-sm" onclick="openBordVal(${b.id},'${esc(photoUrl||'')}','${esc(b.locataire_nom||'')}','${esc(b.loyer_libelle||'')}')">✅ Valider</button>`;
+      if(photoUrl) acts+=`<a href="${photoUrl}" target="_blank" class="btn btn-sm"><i class="bi bi-image-fill"></i></a> `;
+      if(S.write&&b.statut==='en_attente') acts+=`<button class="btn btn-sm" onclick="openBordVal(${b.id},'${esc(photoUrl||'')}','${esc(b.locataire_nom||'')}','${esc(b.loyer_libelle||'')}')"><i class="bi bi-check-circle-fill"></i> Valider</button>`;
       if(!acts) acts='—';
       return `<tr>
         <td>${b.locataire_nom||'—'}</td>
@@ -2713,8 +2705,8 @@ function openBordVal(id, imgUrl, loca, loyer){
   imgContainer.innerHTML = imgUrl
     ? `<img id="bord-img" src="${imgUrl}"
         style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)"
-        onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center>📄 Image non disponible</div>'">`
-    : `<div style="padding:40px;color:var(--text3);text-align:center">📄 Aucune image</div>`;
+        onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center><i class=\'bi bi-image-fill\'></i> Image non disponible</div>'">`
+    : `<div style="padding:40px;color:var(--text3);text-align:center"><i class="bi bi-image-fill"></i> Aucune image</div>`;
 
   openModal('m-bord-val');
 }
@@ -2749,11 +2741,11 @@ async function loadVirements(){
     var sc={'en_attente':'bs-attente','valide':'bs-paye','rejete':'bs-retard'};
     tb.innerHTML=l.map(v=>{
       var fichierHtml=v.fichier_url
-        ?`<a href="${v.fichier_url}" target="_blank" style="color:var(--accent)">📎 Voir</a>`
+        ?`<a href="${v.fichier_url}" target="_blank" style="color:var(--accent)"><i class="bi bi-paperclip"></i> Voir</a>`
         :`<span style="color:var(--text3)">—</span>`;
       var acts='';
-      if(v.fichier_url) acts+=`<a href="${v.fichier_url}" target="_blank" class="btn btn-sm">📎</a> `;
-      if(v.statut==='en_attente') acts+=`<button class="btn btn-sm" onclick="openVirementVal(${v.id},'${esc(v.fichier_url||'')}','${esc(v.proprietaire_nom||'')}','${esc(v.contrat_numero||'')}',${v.montant})">✅ Traiter</button>`;
+      if(v.fichier_url) acts+=`<a href="${v.fichier_url}" target="_blank" class="btn btn-sm"><i class="bi bi-paperclip"></i></a> `;
+      if(v.statut==='en_attente') acts+=`<button class="btn btn-sm" onclick="openVirementVal(${v.id},'${esc(v.fichier_url||'')}','${esc(v.proprietaire_nom||'')}','${esc(v.contrat_numero||'')}',${v.montant})"><i class="bi bi-check-circle-fill"></i> Traiter</button>`;
       if(!acts) acts='—';
       return `<tr>
         <td>${v.proprietaire_nom||'—'}</td>
@@ -2779,8 +2771,8 @@ function openVirementVal(id, fileUrl, propNom, contratNum, montant){
   imgContainer.innerHTML=fileUrl
     ?`<img id="vir-val-img" src="${fileUrl}"
         style="max-width:100%;max-height:280px;border-radius:10px;border:1px solid var(--border)"
-        onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center>📄 Fichier non disponible (peut-être un PDF)</div>'">`
-    :`<div style="padding:40px;color:var(--text3);text-align:center">📄 Aucun fichier</div>`;
+        onerror="this.outerHTML='<div style=padding:40px;color:var(--text3);text-align:center><i class=\'bi bi-file-pdf-fill\'></i> Fichier non disponible</div>'">`
+    :`<div style="padding:40px;color:var(--text3);text-align:center"><i class="bi bi-file-pdf-fill"></i> Aucun fichier</div>`;
 
   openModal('m-vir-val');
 }
@@ -2815,8 +2807,8 @@ async function rapLoyer(){
     </div>
     <div class="prog-wrap"><div class="prog-fill" style="width:${r.taux_paiement}%"></div></div>
     <div class="row-info">
-      <span class="green">✅ Encaissé : ${Math.round(r.montant_encaisse).toLocaleString('fr-FR')} BIF</span>
-      <span class="red">❌ Impayé : ${Math.round(r.montant_impaye).toLocaleString('fr-FR')} BIF</span>
+      <span class="green"><i class="bi bi-check-circle-fill"></i> Encaissé : ${Math.round(r.montant_encaisse).toLocaleString('fr-FR')} BIF</span>
+      <span class="red"><i class="bi bi-x-circle-fill"></i> Impayé : ${Math.round(r.montant_impaye).toLocaleString('fr-FR')} BIF</span>
     </div>`;
 
     document.getElementById('mc-rap').innerHTML=contenu;
@@ -3156,7 +3148,7 @@ async function loadGroupMessages(gid){
   _currentGroupId=gid;
   var messDiv=document.getElementById('chat-messages');
   messDiv.innerHTML='<div class="loader">Chargement…</div>';
-  document.getElementById('chat-window-title').textContent='💬 Chat groupe #'+gid;
+  document.getElementById('chat-window-title').textContent='<i class="bi bi-chat-fill"></i> Chat groupe #'+gid;
   try{
     var msgs=await api('/chat/groups/'+gid+'/messages/');if(!msgs)return;
     renderMessages(msgs);
@@ -3193,7 +3185,7 @@ async function loadAllGroups(){
   try{
     var d=await api('/chat/groups/');if(!d)return;var l=d.results||d;
     if(!l.length){list.innerHTML='<div class="loader">Aucun groupe créé</div>';return;}
-    list.innerHTML=l.map(g=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer" onclick="loadGroupMessages(${g.id})"><div><div style="font-size:12.5px;font-weight:600;color:var(--text)">${g.nom||g.immeuble_nom}</div><div style="font-size:11px;color:var(--text3)">${g.nb_messages} messages · ${g.proprietaire_nom}</div></div><button class="btn btn-sm">Ouvrir</button></div>`).join('');
+    list.innerHTML=l.map(g=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;cursor:pointer" onclick="loadGroupMessages(${g.id})"><div><div style="font-size:12.5px;font-weight:600;color:var(--text)">${g.nom||g.immeuble_nom}</div><div style="font-size:11px;color:var(--text3)">${g.nb_messages} messages · ${g.proprietaire_nom}</div></div><button class="btn btn-sm"><i class="bi bi-chat-fill"></i> Ouvrir</button></div>`).join('');
   }catch(e){list.innerHTML='<div class="loader">Erreur</div>';}
 }
 
@@ -3207,8 +3199,8 @@ async function loadNotifications(){
     var l=Array.isArray(d)?d:(d.results||[]);
     if(!l.length){div.innerHTML='<div class="loader">Aucune notification</div>';return;}
     div.innerHTML=l.map(n=>{
-      var icons={paiement:'💰',bordereau:'📸',alerte:'⚠️',maintenance:'🔧',info:'ℹ️'};
-      return `<div class="notif-item"><div class="notif-icon ${n.type_notif||'alerte'}">${icons[n.type_notif]||'🔔'}</div><div style="flex:1"><div class="notif-txt">${n.titre}</div><div class="notif-sub">${n.message}</div><div style="font-size:10.5px;color:var(--text3);margin-top:2px">${n.destinataire_locataire_nom||'Tous'} · ${fdt(n.created_at)}</div></div></div>`;
+      var icons={paiement:'<i class="bi bi-coin-fill"></i>',bordereau:'<i class="bi bi-image-fill"></i>',alerte:'<i class="bi bi-exclamation-triangle-fill"></i>',maintenance:'<i class="bi bi-tools"></i>',info:'<i class="bi bi-info-circle-fill"></i>'};
+      return `<div class="notif-item"><div class="notif-icon ${n.type_notif||'alerte'}">${icons[n.type_notif]||'<i class="bi bi-bell-fill"></i>'}</div><div style="flex:1"><div class="notif-txt">${n.titre}</div><div class="notif-sub">${n.message}</div><div style="font-size:10.5px;color:var(--text3);margin-top:2px">${n.destinataire_locataire_nom||'Tous'} · ${fdt(n.created_at)}</div></div></div>`;
     }).join('');
   }catch(e){div.innerHTML='<div class="info-box info-err">Erreur</div>';}
 }
@@ -3221,7 +3213,7 @@ async function openModalNotif(){
   try{
     var d=await api('/locataires/?page_size=300');if(!d)return;var l=d.results||d;
     var sel=document.getElementById('notif-dest');
-    sel.innerHTML='<option value="all">📢 Tous les locataires</option>'+l.map(lc=>`<option value="${lc.id}">${lc.nom_prenom}</option>`).join('');
+    sel.innerHTML='<option value="all"><i class="bi bi-megaphone-fill"></i> Tous les locataires</option>'+l.map(lc=>`<option value="${lc.id}">${lc.nom_prenom}</option>`).join('');
   }catch(e){}
   openModal('m-notif');
 }
@@ -3254,7 +3246,7 @@ async function sendNotif(){
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme', t);
   var icon = document.getElementById('theme-icon');
-  if(icon) icon.textContent = t === 'light' ? '☀️' : '🌙';
+  if(icon) icon.innerHTML = t === 'light' ? '<i class="bi bi-sun-fill"></i>' : '<i class="bi bi-moon-fill"></i>';
   localStorage.setItem('theme', t);
 }
 
@@ -3277,7 +3269,7 @@ async function loadUsers(){
   tb.innerHTML='<tr><td colspan="7" class="loader"></td></tr>';
   try{
     var d=await api('/auth/users/');if(!d)return;
-    var rl={admin:'👑 Admin',gestionnaire:'✏️ Gestionnaire',lecteur:'👁 Lecteur',locataire:'🏠 Locataire',proprietaire:'🤝 Propriétaire'};
+    var rl={admin:'<i class="bi bi-crown-fill"></i> Admin',gestionnaire:'<i class="bi bi-pencil-fill"></i> Gestionnaire',lecteur:'<i class="bi bi-eye-fill"></i> Lecteur',locataire:'<i class="bi bi-person-fill"></i> Locataire',proprietaire:'<i class="bi bi-people-fill"></i> Propriétaire'};
     var bl={admin:'bs-retard',gestionnaire:'bs-actif',lecteur:'bs-resilie',locataire:'bs-partiel',proprietaire:'bs-attente'};
     var rows=Array.isArray(d)?d:(d.results||[]);
     tb.innerHTML=rows.length
@@ -3286,9 +3278,9 @@ async function loadUsers(){
           <td>${u.full_name||'—'}</td>
           <td>${u.email||'—'}</td>
           <td><span class="bs ${bl[u.role]||'bs-resilie'}">${rl[u.role]||u.role}</span></td>
-          <td>${u.is_active!==false?'<span class="bs bs-paye">✅ Actif</span>':'<span class="bs bs-resilie">Inactif</span>'}</td>
+          <td>${u.is_active!==false?'<span class="bs bs-paye"><i class="bi bi-check-circle-fill"></i> Actif</span>':'<span class="bs bs-resilie">Inactif</span>'}</td>
           <td>${u.date_joined ? new Date(u.date_joined).toLocaleDateString('fr-FR') : '—'}</td>
-          <td><button class="btn btn-sm" onclick="openModalUser(${u.id})">✏️ Modifier</button></td>
+          <td><button class="btn btn-sm" onclick="openModalUser(${u.id})"><i class="bi bi-pencil-fill"></i> Modifier</button></td>
         </tr>`).join('')
       :'<tr><td colspan="7" class="loader">Aucun utilisateur</td></tr>';
   }catch(e){
@@ -3424,7 +3416,7 @@ async function saveUser(){
   }catch(e){
     alEl.innerHTML=err(parseApiErrors(e.message));
   }finally{
-    if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='💾 Enregistrer';}
+    if(saveBtn){saveBtn.disabled=false;saveBtn.textContent='<i class="bi bi-save-fill"></i> Enregistrer';}
   }
 }
 
@@ -3627,8 +3619,8 @@ async function loadDash() {
     document.getElementById('badge-retard').textContent = d.loyers_mois.retard;
 
     var rhtml = d.rappels.length
-      ? d.rappels.map(r => `<div class="rappel-item"><div class="rdot ${r.type === 'retard' ? 'rdot-red' : 'rdot-amber'}"></div><div><div class="rtxt">${r.message}</div><div class="rsub">${r.detail}</div></div></div>`).join('')
-      : '<div style="text-align:center;padding:24px;color:var(--text3)">✅ Aucun rappel urgent</div>';
+      ? d.rappels.map(r => `<div class="rappel-item"><div class="rdot ${r.type === 'retard' ? 'rdot-red' : 'rdot-amber'}"></div><div><div class="rtxt"><i class="bi bi-exclamation-triangle-fill"></i> ${r.message}</div><div class="rsub">${r.detail}</div></div></div>`).join('')
+      : '<div style="text-align:center;padding:24px;color:var(--text3)"><i class="bi bi-check-circle-fill"></i> Aucun rappel urgent</div>';
     document.getElementById('rappels-list').innerHTML = rhtml;
     document.getElementById('mr-content').innerHTML = rhtml;
 
@@ -3670,14 +3662,14 @@ function renderPaiementsList(paiements) {
   if (!paiements.length) { div.innerHTML = '<div class="loader">Aucun paiement</div>'; return; }
   div.innerHTML = paiements.map(p => {
     var badge = p.annule
-      ? `<span class="bs bs-resilie">❌ Annulé</span>`
-      : `<span class="bs bs-paye">✅ Actif</span>`;
+      ? `<span class="bs bs-resilie"><i class="bi bi-x-circle-fill"></i> Annulé</span>`
+      : `<span class="bs bs-paye"><i class="bi bi-check-circle-fill"></i> Actif</span>`;
     var dateAnnul = p.date_annulation
       ? new Date(p.date_annulation).toLocaleString('fr-FR', {dateStyle:'short', timeStyle:'short'})
       : '—';
     var actions = (!p.annule && S.write)
-      ? `<button class="btn btn-sm btn-danger" onclick="confirmAnnulerPaiement(${p.id})">Annuler ce paiement</button>`
-      : (p.annule ? `<span style="font-size:11px;color:var(--text3)">Par ${p.annule_par || '—'} le ${dateAnnul}${p.motif_annulation ? ' — ' + p.motif_annulation : ''}</span>` : '');
+      ? `<button class="btn btn-sm btn-danger" onclick="confirmAnnulerPaiement(${p.id})"><i class="bi bi-x-circle-fill"></i> Annuler ce paiement</button>`
+      : (p.annule ? `<span style="font-size:11px;color:var(--text3)"><i class="bi bi-info-circle-fill"></i> Par ${p.annule_par || '—'} le ${dateAnnul}${p.motif_annulation ? ' — ' + p.motif_annulation : ''}</span>` : '');
     return `<div class="hist-item">
       <div class="hist-header">
         <div>
@@ -3705,7 +3697,7 @@ async function confirmAnnulerPaiement(paiementId) {
 // ═══════════════════════════════════════════
 //  UTILS
 // ═══════════════════════════════════════════
-function err(msg){return `<div class="info-box info-err">⚠️ ${msg}</div>`;}
+function err(msg){return `<div class="info-box info-err"><i class="bi bi-exclamation-triangle-fill"></i> ${msg}</div>`;}
 function showAlert(elId,msg,isErr){if(elId)document.getElementById(elId).innerHTML=`<div class="info-box ${isErr?'info-err':'info-ok'}">${msg}</div>`;else console[isErr?'error':'log'](msg);}
 
 // ═══════════════════════════════════════════
@@ -3714,7 +3706,7 @@ function showAlert(elId,msg,isErr){if(elId)document.getElementById(elId).innerHT
 loadProvinces();
 loadMe();
 loadDashFilters();
-loadLoyerFilters(); // ✅ NOUVEAU
+loadLoyerFilters(); 
 loadDash();
 </script>
 </body>

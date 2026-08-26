@@ -127,6 +127,7 @@ body{
   display:flex;align-items:center;justify-content:center;
   font-size:18px;flex-shrink:0;
   box-shadow:0 4px 16px rgba(99,102,241,.4);
+  color:#fff;
 }
 .logo-name{font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px}
 .logo-sub{font-size:10px;color:var(--text3);margin-top:1px;letter-spacing:.3px}
@@ -562,7 +563,7 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
 <!-- ══════════════════ SIDEBAR ══════════════════ -->
 <nav class="sidebar">
   <div class="logo-area">
-    <div class="logo-icon">&#127962;</div>
+    <div class="logo-icon"><i class="fas fa-building"></i></div>
     <div>
       <div class="logo-name">ADEXPERT</div>
       <div class="logo-sub">Espace Locataire</div>
@@ -578,9 +579,6 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
       <span class="nav-icon"><i class="fas fa-wallet"></i></span>Mes Loyers
       <span class="nav-badge" id="badge-retard">0</span>
     </div>
-    {% comment %} <div class="nav-item" onclick="goSection('historique',this)">
-      <span class="nav-icon"><i class="fas fa-history"></i></span>Historique complet
-    </div> {% endcomment %}
     <div class="nav-item" onclick="goSection('bordereaux',this)">
       <span class="nav-icon"><i class="fas fa-receipt"></i></span>Mes Bordereaux
     </div>
@@ -595,6 +593,10 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
     <div class="nav-group">Mon Contrat</div>
     <div class="nav-item" onclick="goSection('mon-contrat',this)">
       <span class="nav-icon"><i class="fas fa-file-contract"></i></span>Mon Contrat
+    </div>
+    <div class="nav-group">Mon Compte</div>
+    <div class="nav-item" onclick="goSection('mon-compte',this)">
+      <span class="nav-icon"><i class="fas fa-lock"></i></span>Changer mot de passe
     </div>
   </div>
   <div class="sb-footer">
@@ -627,24 +629,24 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
   </div>
   <div class="topbar-right">
     <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
-      <span id="theme-icon">🌙</span>
+      <span id="theme-icon"><i class="fas fa-sun"></i></span>
     </button>
     <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
-      <option value="fr">🇫🇷 Français</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="rn">🇧🇮 Kirundi</option>
-      <option value="sw">🇹🇿 Kiswahili</option>
-      <option value="rw">🇷🇼 Kinyarwanda</option>
-      <option value="it">🇮🇹 Italiano</option>
-      <option value="es">🇪🇸 Español</option>
-      <option value="zh">🇨🇳 中文</option>
+      <option value="fr"><i class="fas fa-flag"></i> Français</option>
+      <option value="en"><i class="fas fa-flag"></i> English</option>
+      <option value="rn"><i class="fas fa-flag"></i> Kirundi</option>
+      <option value="sw"><i class="fas fa-flag"></i> Kiswahili</option>
+      <option value="rw"><i class="fas fa-flag"></i> Kinyarwanda</option>
+      <option value="it"><i class="fas fa-flag"></i> Italiano</option>
+      <option value="es"><i class="fas fa-flag"></i> Español</option>
+      <option value="zh"><i class="fas fa-flag"></i> 中文</option>
     </select>
     <!-- Notification bell -->
     <button class="notif-btn" onclick="goSection('notifications',document.querySelector('[onclick*=notifications]'))" title="Notifications">
       <i class="fas fa-bell"></i>
       <span class="dot" id="notif-dot" style="display:none"></span>
     </button>
-    <span class="role-pill">🏠 Locataire</span>
+    <span class="role-pill"><i class="fas fa-home"></i> Locataire</span>
     <button class="btn btn-sm btn-primary" onclick="openModalBordereau()">
       <i class="fas fa-upload"></i> Envoyer un bordereau
     </button>
@@ -686,19 +688,10 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
       <div id="dash-contrat"><div class="loader">Chargement...</div></div>
     </div>
   </div>
-  {% comment %} <div class="card">
-    <div class="card-title">
-      <span><i class="fas fa-wallet" style="color:var(--amber);margin-right:6px"></i>Loyers récents</span>
-      <button class="btn btn-sm btn-primary" onclick="openModalBordereau()">
-        <i class="fas fa-upload"></i> Envoyer bordereau
-      </button> 
-    </div>
-    <div id="dash-loyers"><div class="loader">Chargement...</div></div>
-  </div>{% endcomment %}
   <div class="card">
     <div class="card-title">
       <span><i class="fas fa-bell" style="color:var(--purple);margin-right:6px"></i>Notifications récentes</span>
-      <button class="btn btn-sm" onclick="goSection('notifications',document.querySelector('[onclick*=notifications]'))">Voir tout →</button>
+      <button class="btn btn-sm" onclick="goSection('notifications',document.querySelector('[onclick*=notifications]'))">Voir tout <i class="fas fa-arrow-right"></i></button>
     </div>
     <div id="dash-notifs"><div class="loader">Chargement...</div></div>
   </div>
@@ -722,15 +715,6 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
     </table></div>
   </div>
 </div>
-
-<!-- ════ HISTORIQUE ════ -->
-{% comment %} <div class="section" id="s-historique">
-  <div class="kpi-row" id="kpi-hist"></div>
-  <div class="card">
-    <div class="card-title"><i class="fas fa-history" style="color:var(--blue);margin-right:6px"></i>Historique complet des paiements</div>
-    <div id="hist-content"><div class="loader">Chargement...</div></div>
-  </div>
-</div> {% endcomment %}
 
 <!-- ════ BORDEREAUX ════ -->
 <div class="section" id="s-bordereaux">
@@ -758,7 +742,7 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
 <div class="section" id="s-chat">
   <div id="chat-no-group" class="hidden">
     <div class="card" style="text-align:center;padding:52px">
-      <div style="font-size:44px;margin-bottom:14px">💬</div>
+      <div style="font-size:44px;margin-bottom:14px"><i class="fas fa-comments"></i></div>
       <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px">Pas encore de groupe de chat</div>
       <div style="font-size:12.5px;color:var(--text3)">Vous serez automatiquement ajouté au groupe de votre immeuble dès que votre contrat est actif.</div>
     </div>
@@ -766,13 +750,13 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
   <div id="chat-panel" class="hidden">
     <div class="card" style="padding:0;overflow:hidden">
       <div style="padding:15px 19px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px">
-        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:17px">&#127962;</div>
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff"><i class="fas fa-building"></i></div>
         <div>
           <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--text)" id="chat-group-name">Groupe immeuble</div>
           <div style="font-size:11px;color:var(--text3)" id="chat-group-sub">Chat avec la gestion et les résidents</div>
         </div>
         <div style="margin-left:auto">
-          <span style="font-size:10px;color:var(--green);background:var(--green-bg);padding:3px 9px;border-radius:20px;font-weight:700;border:1px solid var(--green-border)">● En ligne</span>
+          <span style="font-size:10px;color:var(--green);background:var(--green-bg);padding:3px 9px;border-radius:20px;font-weight:700;border:1px solid var(--green-border)"><i class="fas fa-circle" style="font-size:6px;margin-right:4px"></i> En ligne</span>
         </div>
       </div>
       <div class="chat-container" style="border:none;border-radius:0">
@@ -804,10 +788,129 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
     <div id="contrat-detail"><div class="loader">Chargement...</div></div>
   </div>
 </div>
-<div class="nav-group">Mon Compte</div>
-<div class="nav-item" onclick="goSection('mon-compte',this)">
-  <span class="nav-icon"><i class="fas fa-lock"></i></span>Changer mot de passe
+
+<!-- ════ MON COMPTE ════ -->
+<div class="section" id="s-mon-compte">
+  <div class="two-col">
+
+    <!-- Changer mot de passe -->
+    <div class="card">
+      <div class="card-title">
+        <span><i class="fas fa-lock" style="color:var(--accent);margin-right:6px"></i>Changer mon mot de passe</span>
+      </div>
+
+      <div id="al-pwd"></div>
+
+      <div class="fg">
+        <label>Mot de passe actuel <span class="req">*</span></label>
+        <div style="position:relative">
+          <input type="password" id="pwd-ancien" placeholder="Votre mot de passe actuel" style="padding-right:42px">
+          <button type="button" onclick="toggleVis('pwd-ancien',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Nouveau mot de passe <span class="req">*</span></label>
+        <div style="position:relative">
+          <input type="password" id="pwd-nouveau" placeholder="Minimum 6 caractères"
+            oninput="checkPwdStrength(this.value)" style="padding-right:42px">
+          <button type="button" onclick="toggleVis('pwd-nouveau',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+        <!-- Barre de force -->
+        <div style="margin-top:6px">
+          <div style="background:var(--surface2);border-radius:6px;height:5px;overflow:hidden">
+            <div id="pwd-strength-bar" style="height:100%;border-radius:6px;width:0%;transition:all .3s"></div>
+          </div>
+          <div id="pwd-strength-txt" style="font-size:10.5px;color:var(--text3);margin-top:3px"></div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label>Confirmer le nouveau mot de passe <span class="req">*</span></label>
+        <div style="position:relative">
+          <input type="password" id="pwd-confirm" placeholder="Répéter le nouveau mot de passe" style="padding-right:42px">
+          <button type="button" onclick="toggleVis('pwd-confirm',this)"
+            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="btn btn-primary" onclick="savePwd()" id="btn-save-pwd" style="flex:1">
+          <i class="fas fa-key"></i> Mettre à jour le mot de passe
+        </button>
+        <button class="btn" onclick="resetPwdForm()">Annuler</button>
+      </div>
+    </div>
+
+    <!-- Infos du compte -->
+    <div class="card">
+      <div class="card-title">
+        <span><i class="fas fa-user-circle" style="color:var(--green);margin-right:6px"></i>Mes informations</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+        <div style="width:60px;height:60px;border-radius:50%;
+                    background:linear-gradient(135deg,#6366f1,#8b5cf6);
+                    display:flex;align-items:center;justify-content:center;
+                    color:#fff;font-size:22px;font-weight:800;flex-shrink:0;
+                    font-family:var(--font-head)"
+             id="profil-avatar">L</div>
+        <div>
+          <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--text)" id="profil-nom">—</div>
+          <div style="font-size:11.5px;color:var(--text3);margin-top:3px"><i class="fas fa-home"></i> Locataire</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:9px">
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+            <i class="fas fa-user" style="margin-right:6px"></i>USERNAME
+          </span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-username">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+            <i class="fas fa-envelope" style="margin-right:6px"></i>EMAIL
+          </span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-email">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+            <i class="fas fa-phone" style="margin-right:6px"></i>TÉLÉPHONE
+          </span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-tel">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;
+                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+            <i class="fas fa-home" style="margin-right:6px"></i>LOCAL
+          </span>
+          <span style="font-size:12.5px;font-weight:600;color:var(--accent)" id="profil-local">—</span>
+        </div>
+      </div>
+
+      <div class="info-box info-blue" style="margin-top:16px;margin-bottom:0">
+        <i class="fas fa-info-circle"></i>
+        Pour modifier vos informations personnelles, contactez votre gestionnaire.
+      </div>
+    </div>
+
+  </div>
 </div>
+
 </div><!-- /content -->
 </div><!-- /main -->
 
@@ -901,129 +1004,6 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
     </div>
   </div>
 </div>
-<!--==================MODIFY PASSWORD======================-->
-
-<!-- ════ MON COMPTE ════ -->
-<div class="section" id="s-mon-compte">
-  <div class="two-col">
-
-    <!-- Changer mot de passe -->
-    <div class="card">
-      <div class="card-title">
-        <span><i class="fas fa-lock" style="color:var(--accent);margin-right:6px"></i>Changer mon mot de passe</span>
-      </div>
-
-      <div id="al-pwd"></div>
-
-      <div class="fg">
-        <label>Mot de passe actuel <span class="req">*</span></label>
-        <div style="position:relative">
-          <input type="password" id="pwd-ancien" placeholder="Votre mot de passe actuel" style="padding-right:42px">
-          <button type="button" onclick="toggleVis('pwd-ancien',this)"
-            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="fg">
-        <label>Nouveau mot de passe <span class="req">*</span></label>
-        <div style="position:relative">
-          <input type="password" id="pwd-nouveau" placeholder="Minimum 6 caractères"
-            oninput="checkPwdStrength(this.value)" style="padding-right:42px">
-          <button type="button" onclick="toggleVis('pwd-nouveau',this)"
-            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-        <!-- Barre de force -->
-        <div style="margin-top:6px">
-          <div style="background:var(--surface2);border-radius:6px;height:5px;overflow:hidden">
-            <div id="pwd-strength-bar" style="height:100%;border-radius:6px;width:0%;transition:all .3s"></div>
-          </div>
-          <div id="pwd-strength-txt" style="font-size:10.5px;color:var(--text3);margin-top:3px"></div>
-        </div>
-      </div>
-
-      <div class="fg">
-        <label>Confirmer le nouveau mot de passe <span class="req">*</span></label>
-        <div style="position:relative">
-          <input type="password" id="pwd-confirm" placeholder="Répéter le nouveau mot de passe" style="padding-right:42px">
-          <button type="button" onclick="toggleVis('pwd-confirm',this)"
-            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:8px;margin-top:4px">
-        <button class="btn btn-primary" onclick="savePwd()" id="btn-save-pwd" style="flex:1">
-          <i class="fas fa-key"></i> Mettre à jour le mot de passe
-        </button>
-        <button class="btn" onclick="resetPwdForm()">Annuler</button>
-      </div>
-    </div>
-
-    <!-- Infos du compte -->
-    <div class="card">
-      <div class="card-title">
-        <span><i class="fas fa-user-circle" style="color:var(--green);margin-right:6px"></i>Mes informations</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-        <div style="width:60px;height:60px;border-radius:50%;
-                    background:linear-gradient(135deg,#6366f1,#8b5cf6);
-                    display:flex;align-items:center;justify-content:center;
-                    color:#fff;font-size:22px;font-weight:800;flex-shrink:0;
-                    font-family:var(--font-head)"
-             id="profil-avatar">L</div>
-        <div>
-          <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--text)" id="profil-nom">—</div>
-          <div style="font-size:11.5px;color:var(--text3);margin-top:3px">🏠 Locataire</div>
-        </div>
-      </div>
-
-      <div style="display:flex;flex-direction:column;gap:9px">
-        <div style="display:flex;justify-content:space-between;align-items:center;
-                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
-            <i class="fas fa-user" style="margin-right:6px"></i>USERNAME
-          </span>
-          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-username">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;
-                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
-            <i class="fas fa-envelope" style="margin-right:6px"></i>EMAIL
-          </span>
-          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-email">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;
-                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
-            <i class="fas fa-phone" style="margin-right:6px"></i>TÉLÉPHONE
-          </span>
-          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-tel">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;
-                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
-            <i class="fas fa-home" style="margin-right:6px"></i>LOCAL
-          </span>
-          <span style="font-size:12.5px;font-weight:600;color:var(--accent)" id="profil-local">—</span>
-        </div>
-      </div>
-
-      <div class="info-box info-blue" style="margin-top:16px;margin-bottom:0">
-        <i class="fas fa-info-circle"></i>
-        Pour modifier vos informations personnelles, contactez votre gestionnaire.
-      </div>
-    </div>
-
-  </div>
-</div>
 
 <!-- ══════════════════ MODAL: APERÇU BORDEREAU ══════════════════ -->
 <div class="modal-overlay" id="m-bord-view">
@@ -1097,7 +1077,7 @@ function toggleTheme(){
 function updateThemeIcon(theme){
   var icon=document.getElementById('theme-icon');
   if(icon){
-    icon.className=theme==='dark'?'fas fa-sun':'fas fa-moon';
+    icon.innerHTML=theme==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
   }
 }
 // Init theme icon
@@ -1234,34 +1214,13 @@ async function loadDashboard(){
   }catch(e){}
 
   try{
-    var ld=await api('/loyers/?page_size=5');
-    var ll=(ld&&(ld.results||ld))||[];
-    if(!ll.length){document.getElementById('dash-loyers').innerHTML='<div class="loader">Aucun loyer enregistré.</div>';return;}
-    var bm={paye:'bs-paye',retard:'bs-retard',attente:'bs-attente',partiel:'bs-partiel'};
-    document.getElementById('dash-loyers').innerHTML=`
-      <div class="table-wrap"><table>
-        <thead><tr><th>Libellé</th><th>Total</th><th>Payé</th><th>Solde</th><th>Statut</th><th>Actions</th></tr></thead>
-        <tbody>${ll.map(x=>{
-          var sp=parseFloat(x.solde_restant)||0;
-          return`<tr>
-            <td><strong style="color:var(--text)">${x.libelle}</strong></td>
-            <td>${f(x.montant_total)} BIF</td>
-            <td style="color:var(--green)">${f(x.montant_paye)} BIF</td>
-            <td style="color:${sp>0?'var(--red)':'var(--green)'}">${f(sp)} BIF</td>
-            <td><span class="bs ${bm[x.statut]||'bs-attente'}">${x.statut_display}</span></td>
-            <td>${parseFloat(x.montant_paye)>0?`<button class="btn btn-sm" onclick="showQuit(${x.id})"><i class="fas fa-file-invoice"></i></button>`:''}</td>
-          </tr>`;}).join('')}</tbody>
-      </table></div>`;
-  }catch(e){}
-
-  try{
     var nd=await api('/notifications/?page_size=3');
     var nl=(nd&&(nd.results||nd))||[];
-    var icons={paiement:'💰',bordereau:'📸',rappel:'⚠️',message:'💬',avertissement:'🔴'};
+    var icons={paiement:'<i class="fas fa-coin"></i>',bordereau:'<i class="fas fa-receipt"></i>',rappel:'<i class="fas fa-exclamation-triangle"></i>',message:'<i class="fas fa-comment"></i>',avertissement:'<i class="fas fa-exclamation-circle"></i>'};
     if(!nl.length){document.getElementById('dash-notifs').innerHTML='<div class="loader">Aucune notification.</div>';return;}
     document.getElementById('dash-notifs').innerHTML=nl.map(n=>`
       <div class="notif-item">
-        <div class="notif-dot ${n.type_notif} ${!n.lu?'unread':''}">${icons[n.type_notif]||'🔔'}</div>
+        <div class="notif-dot ${n.type_notif} ${!n.lu?'unread':''}">${icons[n.type_notif]||'<i class="fas fa-bell"></i>'}</div>
         <div style="flex:1">
           <div class="notif-title">${n.titre}</div>
           <div class="notif-msg">${n.message}</div>
@@ -1348,7 +1307,7 @@ async function showQuit(id){
       <span style="color:var(--text2)">${fd(p.date_paiement)} · ${p.mode_paiement||'—'}</span>
       <strong style="color:var(--green)">${f(p.montant)} BIF</strong></div>`).join('');
     document.getElementById('mc-quit').innerHTML=
-      `<div class="info-box ${ok?'info-ok':'info-warn'}">${ok?'✅ Loyer entièrement soldé':'⚠️ Paiement partiel — Solde restant: '+f(sol)+' BIF'}</div>`+
+      `<div class="info-box ${ok?'info-ok':'info-warn'}">${ok?'<i class="fas fa-check-circle"></i> Loyer entièrement soldé':'<i class="fas fa-exclamation-triangle"></i> Paiement partiel — Solde restant: '+f(sol)+' BIF'}</div>`+
       `<div class="two-col" style="margin-bottom:14px">
         <div class="kpi"><div class="kpi-label">Locataire</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${l.locataire_nom}</div></div>
         <div class="kpi"><div class="kpi-label">Local</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${l.local_reference}</div></div>
@@ -1359,7 +1318,7 @@ async function showQuit(id){
         <div class="kpi"><div class="kpi-label">Solde</div><div class="kpi-val" style="color:${sol>0?'var(--red)':'var(--green)'}">${f(sol)} BIF</div></div>
       </div>`+
       (paiements?`<div style="margin-bottom:11px"><div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:7px;letter-spacing:.8px;font-family:var(--font-head)">Paiements enregistrés</div>${paiements}</div>`:'')+ 
-      `<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Cliquez sur <strong>🖨️ Imprimer / PDF</strong> pour la quittance officielle compacte.</div>`;
+      `<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Cliquez sur <strong><i class="fas fa-print"></i> Imprimer / PDF</strong> pour la quittance officielle compacte.</div>`;
   }catch(e){document.getElementById('mc-quit').innerHTML=err('Erreur: '+e.message);}
 }
 // ══════════════════════════════════════════════
@@ -1383,7 +1342,7 @@ async function loadHistorique(){
       var soldé=h.solde_restant<=0;
       var couleur=soldé?'var(--green)':h.statut==='retard'?'var(--red)':'var(--amber)';
       var paysPuces=h.paiements.length
-        ?`<div class="pay-list">${h.paiements.map(p=>`<span class="pay-chip">💳 ${fd(p.date_paiement)} · ${f(p.montant)} BIF · ${p.mode_paiement||'—'}${p.reference?' · Réf: '+p.reference:''}</span>`).join('')}</div>`
+        ?`<div class="pay-list">${h.paiements.map(p=>`<span class="pay-chip"><i class="fas fa-credit-card"></i> ${fd(p.date_paiement)} · ${f(p.montant)} BIF · ${p.mode_paiement||'—'}${p.reference?' · Réf: '+p.reference:''}</span>`).join('')}</div>`
         :`<span style="font-size:11.5px;color:var(--text3)">Aucun paiement enregistré</span>`;
       return`<div class="hist-item">
         <div class="hist-header">
@@ -1607,15 +1566,15 @@ async function loadBordereaux(){
     var l=Array.isArray(d)?d:(d&&(d.results||d))||[];
     if(!l.length){document.getElementById('bord-grid').innerHTML='<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Aucun bordereau envoyé pour l\'instant.</div>';return;}
     var statusMap={
-      en_attente:{icon:'⏳',color:'var(--amber)',label:'En attente'},
-      valide:{icon:'✅',color:'var(--green)',label:'Validé'},
-      rejete:{icon:'❌',color:'var(--red)',label:'Rejeté'}
+      en_attente:{icon:'<i class="fas fa-clock"></i>',color:'var(--amber)',label:'En attente'},
+      valide:{icon:'<i class="fas fa-check-circle"></i>',color:'var(--green)',label:'Validé'},
+      rejete:{icon:'<i class="fas fa-times-circle"></i>',color:'var(--red)',label:'Rejeté'}
     };
     document.getElementById('bord-grid').innerHTML='<div class="bord-grid-wrap">'+l.map(b=>{
       var s=statusMap[b.statut]||statusMap.en_attente;
       var imgHtml=b.photo_url
-        ?`<img class="bord-img" src="${b.photo_url}" alt="Bordereau" loading="lazy" onerror="this.parentElement.innerHTML='<div class=bord-img-placeholder>📄</div>'">`
-        :`<div class="bord-img-placeholder">📄</div>`;
+        ?`<img class="bord-img" src="${b.photo_url}" alt="Bordereau" loading="lazy" onerror="this.parentElement.innerHTML='<div class=bord-img-placeholder><i class=\'fas fa-file-image\'></i></div>'">`
+        :`<div class="bord-img-placeholder"><i class="fas fa-file-image"></i></div>`;
       return`<div class="bord-card" onclick="viewBordereau('${b.photo_url||''}','${esc(b.loyer_libelle||'—')}','${b.statut}','${esc(b.commentaire_admin||'')}')">
         ${imgHtml}
         <div class="bord-info">
@@ -1630,7 +1589,7 @@ async function loadBordereaux(){
 }
 
 function viewBordereau(url,libelle,statut,commentaire){
-  var statusMap={en_attente:'⏳ En attente de validation',valide:'✅ Validé par l\'administration',rejete:'❌ Rejeté'};
+  var statusMap={en_attente:'<i class="fas fa-clock"></i> En attente de validation',valide:'<i class="fas fa-check-circle"></i> Validé par l\'administration',rejete:'<i class="fas fa-times-circle"></i> Rejeté'};
   var statusColors={en_attente:'info-warn',valide:'info-ok',rejete:'info-err'};
   document.getElementById('bv-subtitle').textContent=libelle;
   document.getElementById('bv-content').innerHTML=
@@ -1695,7 +1654,7 @@ async function loadNotifications(){
   try{
     var d=await api('/notifications/?page_size=50');
     var l=(d&&(d.results||d))||[];
-    var icons={paiement:'💰',bordereau:'📸',rappel:'⚠️',message:'💬',avertissement:'🔴'};
+    var icons={paiement:'<i class="fas fa-coin"></i>',bordereau:'<i class="fas fa-receipt"></i>',rappel:'<i class="fas fa-exclamation-triangle"></i>',message:'<i class="fas fa-comment"></i>',avertissement:'<i class="fas fa-exclamation-circle"></i>'};
     if(!l.length){document.getElementById('notif-list').innerHTML='<div class="loader">Aucune notification.</div>';return;}
     var unread=l.filter(n=>!n.lu).length;
     document.getElementById('badge-notif').textContent=unread||0;
@@ -1703,7 +1662,7 @@ async function loadNotifications(){
     if(unread>0)dot.style.display='';else dot.style.display='none';
     document.getElementById('notif-list').innerHTML=l.map(n=>`
       <div class="notif-item" id="notif-${n.id}">
-        <div class="notif-dot ${n.type_notif} ${!n.lu?'unread':''}">${icons[n.type_notif]||'🔔'}</div>
+        <div class="notif-dot ${n.type_notif} ${!n.lu?'unread':''}">${icons[n.type_notif]||'<i class="fas fa-bell"></i>'}</div>
         <div style="flex:1">
           <div class="notif-title" style="color:${!n.lu?'var(--text)':'var(--text2)'}">${n.titre}</div>
           <div class="notif-msg">${n.message}</div>

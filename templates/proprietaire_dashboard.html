@@ -113,7 +113,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 /* ── SIDEBAR ── */
 .sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--surface);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100;border-right:1px solid var(--border);overflow-y:auto}
 .logo-area{padding:18px 16px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--green),var(--green2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--green),var(--green2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:#fff}
 .logo-name{font-size:14px;font-weight:800;color:var(--text)}
 .logo-sub{font-size:10px;color:var(--text3);margin-top:1px}
 .nav-group{font-size:9px;font-weight:700;color:var(--text3);padding:16px 16px 5px;letter-spacing:1.5px;text-transform:uppercase}
@@ -166,7 +166,7 @@ tr:last-child td{border-bottom:none}
 tbody tr:hover td{background:rgba(255,255,255,.02)}
 
 /* ── BADGES ── */
-.bs{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.bs{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:10.5px;font-weight:700;white-space:nowrap}
 .bs-paye{background:rgba(16,185,129,.15);color:#6ee7b7}
 .bs-retard{background:rgba(239,68,68,.15);color:#fca5a5}
 .bs-attente{background:rgba(245,158,11,.15);color:#fcd34d}
@@ -248,7 +248,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 .chat-input-area{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:flex-end;background:var(--surface)}
 .chat-input{flex:1;padding:9px 13px;border:1px solid var(--border2);border-radius:10px;background:var(--bg);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;resize:none;line-height:1.5;max-height:100px;transition:border-color .2s}
 .chat-input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(16,185,129,.1)}
-.chat-send-btn{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--green),var(--green2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;flex-shrink:0}
+.chat-send-btn{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--green),var(--green2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s;flex-shrink:0;color:#fff}
 .chat-send-btn:hover{transform:scale(1.05)}
 .chat-send-btn:active{transform:scale(.96)}
 
@@ -312,7 +312,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
   <div class="logo-area">
-    <<div class="logo-icon">&#127962;</div>
+    <div class="logo-icon"><i class="fas fa-building"></i></div>
     <div>
       <div class="logo-name">ADEXPERT</div>
       <div class="logo-sub">Espace Propriétaire</div>
@@ -320,25 +320,27 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
   </div>
   <div style="flex:1">
     <div class="nav-group">Mon Espace</div>
-    <div class="nav-item active" data-section="dashboard"><span class="nav-icon">📊</span>Tableau de bord</div>
+    <div class="nav-item active" data-section="dashboard"><span class="nav-icon"><i class="fas fa-chart-pie"></i></span>Tableau de bord</div>
     <div class="nav-group">Mes Biens</div>
-    <div class="nav-item" data-section="mes-locaux"><span class="nav-icon">🏠</span>Mes Locaux</div>
-    <div class="nav-item" data-section="mes-locataires"><span class="nav-icon">👤</span>Mes Locataires</div>
-    <div class="nav-item" data-section="mes-contrats"><span class="nav-icon">📄</span>Mes Contrats</div>
+    <div class="nav-item" data-section="mes-locaux"><span class="nav-icon"><i class="fas fa-home"></i></span>Mes Locaux</div>
+    <div class="nav-item" data-section="mes-locataires"><span class="nav-icon"><i class="fas fa-user-friends"></i></span>Mes Locataires</div>
+    <div class="nav-item" data-section="mes-contrats"><span class="nav-icon"><i class="fas fa-file-contract"></i></span>Mes Contrats</div>
     <div class="nav-group">Finances</div>
-    <div class="nav-item" data-section="mes-virements"><span class="nav-icon">🏦</span>Mes Virements</div>
+    <div class="nav-item" data-section="mes-virements"><span class="nav-icon"><i class="fas fa-university"></i></span>Mes Virements</div>
     <div class="nav-item" data-section="mes-loyers">
-      <span class="nav-icon">💰</span>Loyers & Paiements
+      <span class="nav-icon"><i class="fas fa-coins"></i></span>Loyers & Paiements
       <span class="nav-badge" id="badge-retard">0</span>
     </div>
-    <div class="nav-item" data-section="mes-charges"><span class="nav-icon">🧾</span>Charges</div>
-    <div class="nav-item" data-section="mes-rapports"><span class="nav-icon">📈</span>Rapports</div>
+    <div class="nav-item" data-section="mes-charges"><span class="nav-icon"><i class="fas fa-receipt"></i></span>Charges</div>
+    <div class="nav-item" data-section="mes-rapports"><span class="nav-icon"><i class="fas fa-chart-line"></i></span>Rapports</div>
     <div class="nav-group">Communication</div>
     <div class="nav-item" data-section="chat">
-      <span class="nav-icon">💬</span>Chat de mon immeuble
+      <span class="nav-icon"><i class="fas fa-comments"></i></span>Chat de mon immeuble
       <span class="nav-badge hidden" id="badge-chat">0</span>
     </div>
-    <div class="nav-item" data-section="mes-conventions"><span class="nav-icon">🤝</span>Mes Conventions</div>
+    <div class="nav-item" data-section="mes-conventions"><span class="nav-icon"><i class="fas fa-handshake"></i></span>Mes Conventions</div>
+    <div class="nav-group">Mon Compte</div>
+    <div class="nav-item" data-section="mon-compte"><span class="nav-icon"><i class="fas fa-lock"></i></span>Changer mot de passe</div>
   </div>
   <div class="sb-footer">
     <div class="sb-user">
@@ -347,7 +349,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <div class="sb-name" id="sb-name">Chargement...</div>
         <div class="sb-role">Propriétaire</div>
       </div>
-      <button class="sb-logout" onclick="confirmLogout()" title="Déconnexion">⏻</button>
+      <button class="sb-logout" onclick="confirmLogout()" title="Déconnexion"><i class="fas fa-power-off"></i></button>
     </div>
   </div>
 </nav>
@@ -359,24 +361,24 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <div class="topbar-title" id="page-title">Tableau de bord</div>
   </div>
   <div class="topbar-right">
-    <span class="role-pill" id="role-pill"></span>
+    <span class="role-pill" id="role-pill"><i class="fas fa-home"></i> Propriétaire</span>
     <button class="btn btn-ghost" onclick="openModal('m-rappels')" style="position:relative">
-      🔔 <span id="nb-rappels">0</span>
+      <i class="fas fa-bell"></i> <span id="nb-rappels">0</span>
     </button>
     <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
-      <span id="theme-icon"></span>
+      <span id="theme-icon"><i class="fas fa-sun"></i></span>
     </button>
     <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
-      <option value="fr">🇫🇷 Français</option>
-      <option value="en">🇬🇧 English</option>
-      <option value="rn">🇧🇮 Kirundi</option>
-      <option value="sw">🇹🇿 Kiswahili</option>
-      <option value="rw">🇷🇼 Kinyarwanda</option>
-      <option value="it">🇮🇹 Italiano</option>
-      <option value="es">🇪🇸 Español</option>
-      <option value="zh">🇨🇳 中文</option>
+      <option value="fr"><i class="fas fa-flag"></i> Français</option>
+      <option value="en"><i class="fas fa-flag"></i> English</option>
+      <option value="rn"><i class="fas fa-flag"></i> Kirundi</option>
+      <option value="sw"><i class="fas fa-flag"></i> Kiswahili</option>
+      <option value="rw"><i class="fas fa-flag"></i> Kinyarwanda</option>
+      <option value="it"><i class="fas fa-flag"></i> Italiano</option>
+      <option value="es"><i class="fas fa-flag"></i> Español</option>
+      <option value="zh"><i class="fas fa-flag"></i> 中文</option>
     </select>
-    <button class="btn btn-primary" id="btn-add" onclick="handleAdd()" data-i18n="topbar.add">+ Ajouter</button>
+    <button class="btn btn-primary" id="btn-add" onclick="handleAdd()" data-i18n="topbar.add"><i class="fas fa-plus"></i> Ajouter</button>
   </div>
 </div>
 
@@ -387,11 +389,11 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
   <!-- ═══ FILTRE IMMEUBLE (visible si +1 immeuble) ═══ -->
 <div id="dash-imm-filter-bar" class="hidden" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-  <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap">🏢 Filtrer par immeuble</span>
+  <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap"><i class="fas fa-building"></i> Filtrer par immeuble</span>
   <select id="dash-imm-select" onchange="loadDash()" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:200px">
     <option value="">— Tous mes immeubles —</option>
   </select>
-  <button class="btn btn-sm" onclick="resetDashImmFilter()">✕ Réinitialiser</button>
+  <button class="btn btn-sm" onclick="resetDashImmFilter()"><i class="fas fa-times"></i> Réinitialiser</button>
 </div>
   <!-- Welcome bar -->
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;margin-bottom:18px;display:flex;align-items:center;gap:14px">
@@ -412,31 +414,31 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
       <div class="stat-label">Mes Locaux</div>
       <div class="stat-value" id="d-locaux">—</div>
       <div class="stat-sub" id="d-locaux-sub">Chargement...</div>
-      <div class="stat-icon">🏠</div>
+      <div class="stat-icon"><i class="fas fa-home"></i></div>
     </div>
     <div class="stat-card" style="--c:linear-gradient(90deg,#10b981,#059669)">
       <div class="stat-label">Revenus bruts</div>
       <div class="stat-value" id="d-revenus">—</div>
       <div class="stat-sub">BIF ce mois</div>
-      <div class="stat-icon">💵</div>
+      <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
     </div>
     <div class="stat-card" style="--c:linear-gradient(90deg,#ef4444,#dc2626)">
       <div class="stat-label">Charges du mois</div>
       <div class="stat-value" id="d-charges">—</div>
       <div class="stat-sub">Total dépenses</div>
-      <div class="stat-icon">📉</div>
+      <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
     </div>
     <div class="stat-card" style="--c:linear-gradient(90deg,#8b5cf6,#7c3aed)">
       <div class="stat-label">Revenus net</div>
       <div class="stat-value" id="d-benefice">—</div>
       <div class="stat-sub" id="d-taux-occ">—</div>
-      <div class="stat-icon">📊</div>
+      <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
     </div>
   </div>
 <div class="two-col">
   <div class="card">
     <div class="card-title">
-      📈 Évolution 12 mois
+      <i class="fas fa-chart-line"></i> Évolution 12 mois
       <div style="display:flex;gap:10px;font-size:11px;color:var(--text3)">
         <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--accent);border-radius:2px;display:inline-block"></span>Revenus</span>
         <span style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;background:var(--red);border-radius:2px;display:inline-block"></span>Charges</span>
@@ -446,13 +448,13 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <div class="chart-labels" id="chart-labels"></div>
   </div>
   <div class="card">
-    <div class="card-title">🔔 Loyers en retard</div>
+    <div class="card-title"><i class="fas fa-exclamation-triangle"></i> Loyers en retard</div>
     <div id="retard-list"><div class="loader">Chargement...</div></div>
   </div>
 </div>
 
 <div class="card">
-  <div class="card-title">🏠 Répartition de mes locaux</div>
+  <div class="card-title"><i class="fas fa-home"></i> Répartition de mes locaux</div>
   <div style="display:flex;align-items:center;gap:24px">
     <div id="donut-locaux" style="width:140px;height:140px;border-radius:50%;flex-shrink:0"></div>
     <div style="display:flex;flex-direction:column;gap:8px">
@@ -472,13 +474,13 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
 <div class="two-col">
   <div class="card">
-    <div class="card-title">📊 Taux de paiement du mois</div>
+    <div class="card-title"><i class="fas fa-percent"></i> Taux de paiement du mois</div>
     <div style="font-size:30px;font-weight:800;color:var(--text)" id="d-taux-pct">—%</div>
     <div class="prog-wrap"><div class="prog-fill" id="d-taux-bar" style="width:0%"></div></div>
     <div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--text3);margin-top:4px" id="d-taux-det"></div>
   </div>
   <div class="card">
-    <div class="card-title" id="d-comm-title">💼 Commission ADEXPERT (9%)</div>
+    <div class="card-title" id="d-comm-title"><i class="fas fa-hand-holding-usd"></i> Commission ADEXPERT (9%)</div>
     <div style="font-size:12px;color:var(--text3);margin-bottom:10px">Prélevée sur vos revenus bruts encaissés</div>
     <div class="kpi-row" style="margin-bottom:0">
       <div class="kpi"><div class="kpi-label">Commission</div><div class="kpi-val" style="color:#c4b5fd;font-size:17px" id="d-commission">—</div></div>
@@ -489,11 +491,10 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 </div>
 
 <!-- ═══ MES LOCAUX ═══ -->
-<!-- ═══ MES LOCAUX ═══ -->
 <div class="section" id="s-mes-locaux">
   <div class="kpi-row" id="kpi-locaux"></div>
   <div class="card">
-    <div class="card-title">🏠 Mes Locaux
+    <div class="card-title"><i class="fas fa-home"></i> Mes Locaux
       <input id="s-loc" placeholder="🔍 Rechercher..." style="width:200px;padding:7px 12px;border:1px solid var(--border2);border-radius:8px;font-size:12.5px;background:var(--surface2);color:var(--text)" oninput="filtLoc()">
     </div>
     <div class="table-wrap"><table>
@@ -506,10 +507,9 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <!-- ═══ MES LOCATAIRES ═══ -->
 <div class="section" id="s-mes-locataires">
   <div class="card">
-    <div class="card-title">👤 Mes Locataires
+    <div class="card-title"><i class="fas fa-user-friends"></i> Mes Locataires
       <input id="s-loca" placeholder="🔍 Rechercher..." style="width:200px;padding:7px 12px;border:1px solid var(--border2);border-radius:8px;font-size:12.5px;background:var(--surface2);color:var(--text)" oninput="filtLoca()">
     </div>
-<!-- après -->
     <div class="table-wrap"><table>
       <thead><tr><th>Nom Prénom</th><th>Téléphone</th><th>Local</th><th>Loyer total</th><th>Payé</th><th>Solde</th><th>Situation</th></tr></thead>
       <tbody id="tb-loca"><tr><td colspan="7" class="loader">Chargement...</td></tr></tbody>
@@ -520,7 +520,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <!-- ═══ MES CONTRATS ═══ -->
 <div class="section" id="s-mes-contrats">
   <div class="card">
-    <div class="card-title">📄 Mes Contrats
+    <div class="card-title"><i class="fas fa-file-contract"></i> Mes Contrats
       <select id="f-st-cont" onchange="loadMesContrats()" style="padding:7px 10px;border:1px solid var(--border2);border-radius:8px;font-size:12.5px;background:var(--surface2);color:var(--text)">
         <option value="">Tous statuts</option>
         <option value="actif">Actif</option>
@@ -538,15 +538,15 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <!-- ═══ MES LOYERS ═══ -->
 <div class="section" id="s-mes-loyers">
   <div id="loyers-imm-filter-bar" class="hidden" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-    <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap">🏢 Filtrer par immeuble</span>
+    <span style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap"><i class="fas fa-building"></i> Filtrer par immeuble</span>
     <select id="loyers-imm-select" onchange="loadMesLoyers(_loyersFiltreActuel)" style="padding:6px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12.5px;font-family:'DM Sans',sans-serif;min-width:200px">
       <option value="">— Tous mes immeubles —</option>
     </select>
-    <button class="btn btn-sm" onclick="resetLoyersImmFilter()">✕ Réinitialiser</button>
+    <button class="btn btn-sm" onclick="resetLoyersImmFilter()"><i class="fas fa-times"></i> Réinitialiser</button>
   </div>
   <div class="kpi-row" id="kpi-loyers"></div>
   <div class="card">
-    <div class="card-title">💰 Loyers & Paiements
+    <div class="card-title"><i class="fas fa-coins"></i> Loyers & Paiements
       <div class="card-actions">
         <button class="btn btn-sm" onclick="loadMesLoyers('tous')">Tous</button>
         <button class="btn btn-sm btn-danger" onclick="loadMesLoyers('retard')">En retard</button>
@@ -563,7 +563,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <!-- ═══ MES CHARGES ═══ -->
 <div class="section" id="s-mes-charges">
   <div class="card">
-    <div class="card-title">🧾 Mes Charges
+    <div class="card-title"><i class="fas fa-receipt"></i> Mes Charges
       <select id="f-type-ch" onchange="loadMesCharges()" style="padding:7px 10px;border:1px solid var(--border2);border-radius:8px;font-size:12.5px;background:var(--surface2);color:var(--text)">
         <option value="">Tous types</option>
         <option value="travaux">Travaux</option>
@@ -585,17 +585,17 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <div class="section" id="s-mes-rapports">
   <div class="three-col" style="margin-bottom:16px">
     <div class="card" style="cursor:pointer;text-align:center;padding:28px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 30px rgba(0,0,0,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''" onclick="rapLoyer()">
-      <div style="font-size:38px;margin-bottom:10px">📋</div>
+      <div style="font-size:38px;margin-bottom:10px"><i class="fas fa-file-invoice"></i></div>
       <div style="font-size:13px;font-weight:700;color:var(--text)">Rapport Loyers</div>
       <div style="font-size:11.5px;color:var(--text3);margin-top:4px">Taux paiement, impayés</div>
     </div>
     <div class="card" style="cursor:pointer;text-align:center;padding:28px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 30px rgba(0,0,0,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''" onclick="rapCharge()">
-      <div style="font-size:38px;margin-bottom:10px">🧾</div>
+      <div style="font-size:38px;margin-bottom:10px"><i class="fas fa-receipt"></i></div>
       <div style="font-size:13px;font-weight:700;color:var(--text)">Rapport Charges</div>
       <div style="font-size:11.5px;color:var(--text3);margin-top:4px">Répartition par type</div>
     </div>
     <div class="card" style="cursor:pointer;text-align:center;padding:28px;transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 30px rgba(0,0,0,.3)'" onmouseout="this.style.transform='';this.style.boxShadow=''" onclick="rapPortf()">
-      <div style="font-size:38px;margin-bottom:10px">💼</div>
+      <div style="font-size:38px;margin-bottom:10px"><i class="fas fa-briefcase"></i></div>
       <div style="font-size:13px;font-weight:700;color:var(--text)">Mon Portefeuille</div>
       <div style="font-size:11.5px;color:var(--text3);margin-top:4px">Revenus, commissions</div>
     </div>
@@ -606,13 +606,13 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <!-- ═══ CHAT DE MON IMMEUBLE ═══ -->
 <div class="section" id="s-chat">
   <div class="info-box info-blue" style="margin-bottom:14px">
-    💬 Vous pouvez communiquer avec les locataires et le gestionnaire de chacun de vos immeubles.
+    <i class="fas fa-info-circle"></i> Vous pouvez communiquer avec les locataires et le gestionnaire de chacun de vos immeubles.
   </div>
   <div class="chat-layout" id="chat-layout">
     <!-- Panneau gauche : liste des groupes -->
     <div class="chat-rooms">
       <div class="chat-rooms-header">
-        🏢 Mes Immeubles
+        <i class="fas fa-building"></i> Mes Immeubles
         <span style="margin-left:auto;font-size:10px;color:var(--text3)" id="chat-nb-groups">—</span>
       </div>
       <div class="chat-rooms-list" id="chat-groups-list">
@@ -622,13 +622,13 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <!-- Panneau droit : messages -->
     <div class="chat-panel" id="chat-panel-wrap">
       <div id="chat-empty-state" class="chat-empty-state">
-        <div class="icon">💬</div>
+        <div class="icon"><i class="fas fa-comments"></i></div>
         <div style="font-size:14px;font-weight:600;color:var(--text2)">Sélectionnez un immeuble</div>
         <div style="font-size:12px;color:var(--text3)">Choisissez un groupe pour démarrer la conversation</div>
       </div>
       <div id="chat-active-panel" style="display:none;flex:1;display:none;flex-direction:column;height:100%">
         <div class="chat-panel-header" id="chat-panel-header">
-          <div class="chat-panel-avatar" id="chat-panel-icon">🏢</div>
+          <div class="chat-panel-avatar" id="chat-panel-icon"><i class="fas fa-building"></i></div>
           <div>
             <div class="chat-panel-name" id="chat-panel-name">—</div>
             <div class="chat-panel-sub" id="chat-panel-sub">—</div>
@@ -640,15 +640,17 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
           <textarea class="chat-input" id="chat-input" placeholder="Écrire un message..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"
             oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px'"></textarea>
-          <button class="chat-send-btn" onclick="sendMsg()" title="Envoyer">➤</button>
+          <button class="chat-send-btn" onclick="sendMsg()" title="Envoyer"><i class="fas fa-paper-plane"></i></button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- ═══ MES VIREMENTS ═══ -->
 <div class="section" id="s-mes-virements">
   <div class="card">
-    <div class="card-title">🏦 Envoyer un bordereau de virement</div>
+    <div class="card-title"><i class="fas fa-university"></i> Envoyer un bordereau de virement</div>
     <div id="al-virement"></div>
     <div class="form-grid">
       <div class="fg">
@@ -676,27 +678,26 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
         <input type="file" id="vir-fichier" accept="image/*,.pdf">
       </div>
     </div>
-    <button class="btn btn-success" onclick="envoyerVirement()">📤 Envoyer le bordereau</button>
+    <button class="btn btn-success" onclick="envoyerVirement()"><i class="fas fa-paper-plane"></i> Envoyer le bordereau</button>
   </div>
 
   <div class="card">
-    <div class="card-title">📋 Historique de mes bordereaux</div>
+    <div class="card-title"><i class="fas fa-history"></i> Historique de mes bordereaux</div>
     <div class="table-wrap"><table>
       <thead><tr><th>Date</th><th>Convention</th><th>Montant</th><th>Référence</th><th>Statut</th><th>Fichier</th></tr></thead>
       <tbody id="tb-virements"><tr><td colspan="6" class="loader">Chargement...</td></tr></tbody>
     </table></div>
   </div>
 </div>
+
 <!-- ═══ MES CONVENTIONS ═══ -->
 <div class="section" id="s-mes-conventions">
   <div class="card">
-    <div class="card-title">🤝 Mes Conventions avec ADEXPERT</div>
+    <div class="card-title"><i class="fas fa-handshake"></i> Mes Conventions avec ADEXPERT</div>
     <div id="cs-list"><div class="loader">Chargement...</div></div>
   </div>
 </div>
 
-<div class="nav-group">Mon Compte</div>
-<div class="nav-item" data-section="mon-compte"><span class="nav-icon">🔐</span>Changer mot de passe</div>
 </div><!-- /content -->
 </div><!-- /main -->
 
@@ -704,12 +705,12 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <div class="modal-overlay" id="m-hist">
   <div class="modal modal-lg">
     <div class="modal-header">
-      <div class="modal-icon" style="background:rgba(59,130,246,.15)">📊</div>
+      <div class="modal-icon" style="background:rgba(59,130,246,.15)"><i class="fas fa-chart-bar"></i></div>
       <div style="flex:1">
         <div class="modal-title" id="hist-title">Historique des paiements</div>
         <div class="modal-subtitle" id="hist-subtitle">Détail des loyers</div>
       </div>
-      <button class="modal-close" onclick="closeModal('m-hist')">×</button>
+      <button class="modal-close" onclick="closeModal('m-hist')"><i class="fas fa-times"></i></button>
     </div>
     <div class="modal-body">
       <div id="hist-kpi" class="kpi-row"></div>
@@ -718,13 +719,14 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
     <div class="modal-footer"><button class="btn" onclick="closeModal('m-hist')">Fermer</button></div>
   </div>
 </div>
+
 <!-- ═══ MON COMPTE ═══ -->
 <div class="section" id="s-mon-compte">
   <div class="two-col">
 
     <!-- Changer mot de passe -->
     <div class="card">
-      <div class="card-title">🔐 Changer mon mot de passe</div>
+      <div class="card-title"><i class="fas fa-lock"></i> Changer mon mot de passe</div>
 
       <div id="al-pwd"></div>
 
@@ -735,7 +737,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
             style="padding-right:40px">
           <button onclick="toggleVis('pwd-ancien',this)"
             style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">👁</button>
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px"><i class="fas fa-eye"></i></button>
         </div>
       </div>
 
@@ -746,7 +748,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
             oninput="checkPwdStrength(this.value)" style="padding-right:40px">
           <button onclick="toggleVis('pwd-nouveau',this)"
             style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">👁</button>
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px"><i class="fas fa-eye"></i></button>
         </div>
         <!-- Barre de force -->
         <div style="margin-top:6px">
@@ -764,14 +766,14 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
             style="padding-right:40px">
           <button onclick="toggleVis('pwd-confirm',this)"
             style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">👁</button>
+                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px"><i class="fas fa-eye"></i></button>
         </div>
       </div>
 
       <div style="display:flex;gap:8px;margin-top:4px">
         <button class="btn btn-success" onclick="savePwd()" id="btn-save-pwd"
           style="flex:1">
-          🔑 Mettre à jour le mot de passe
+          <i class="fas fa-key"></i> Mettre à jour le mot de passe
         </button>
         <button class="btn" onclick="resetPwdForm()">Annuler</button>
       </div>
@@ -779,7 +781,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 
     <!-- Infos du compte -->
     <div class="card">
-      <div class="card-title">👤 Mes informations</div>
+      <div class="card-title"><i class="fas fa-user-circle"></i> Mes informations</div>
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
         <div style="width:60px;height:60px;border-radius:50%;
                     background:linear-gradient(135deg,var(--green),var(--green2));
@@ -788,47 +790,48 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
              id="profil-avatar">P</div>
         <div>
           <div style="font-size:16px;font-weight:800;color:var(--text)" id="profil-nom">—</div>
-          <div style="font-size:11.5px;color:var(--text3);margin-top:3px" id="profil-role">Propriétaire</div>
+          <div style="font-size:11.5px;color:var(--text3);margin-top:3px" id="profil-role"><i class="fas fa-home"></i> Propriétaire</div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;justify-content:space-between;padding:10px 14px;
                     background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11.5px;color:var(--text3);font-weight:700">👤 Username</span>
+          <span style="font-size:11.5px;color:var(--text3);font-weight:700"><i class="fas fa-user"></i> Username</span>
           <span style="font-size:12.5px;font-weight:600;color:var(--text);
                        font-family:'DM Mono',monospace" id="profil-username">—</span>
         </div>
         <div style="display:flex;justify-content:space-between;padding:10px 14px;
                     background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11.5px;color:var(--text3);font-weight:700">📧 Email</span>
+          <span style="font-size:11.5px;color:var(--text3);font-weight:700"><i class="fas fa-envelope"></i> Email</span>
           <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-email">—</span>
         </div>
         <div style="display:flex;justify-content:space-between;padding:10px 14px;
                     background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11.5px;color:var(--text3);font-weight:700">📱 Téléphone</span>
+          <span style="font-size:11.5px;color:var(--text3);font-weight:700"><i class="fas fa-phone"></i> Téléphone</span>
           <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-tel">—</span>
         </div>
       </div>
 
       <div class="info-box info-blue" style="margin-top:16px;margin-bottom:0">
-        ℹ️ Pour modifier vos informations personnelles, contactez votre administrateur.
+        <i class="fas fa-info-circle"></i> Pour modifier vos informations personnelles, contactez votre administrateur.
       </div>
     </div>
 
   </div>
 </div>
+
 <!-- ═══ MODAL : QUITTANCE ═══ -->
 <div class="modal-overlay" id="m-quit">
   <div class="modal modal-lg">
     <div class="modal-header">
-      <div class="modal-icon" style="background:rgba(16,185,129,.15)">🧾</div>
+      <div class="modal-icon" style="background:rgba(16,185,129,.15)"><i class="fas fa-file-invoice"></i></div>
       <div style="flex:1"><div class="modal-title">Quittance de loyer</div><div class="modal-subtitle">Document officiel de paiement</div></div>
-      <button class="modal-close" onclick="closeModal('m-quit')">×</button>
+      <button class="modal-close" onclick="closeModal('m-quit')"><i class="fas fa-times"></i></button>
     </div>
     <div class="modal-body"><div id="mc-quit"><div class="loader"></div></div></div>
     <div class="modal-footer">
       <button class="btn" onclick="closeModal('m-quit')">Fermer</button>
-      <button class="btn btn-success" id="btn-print">🖨️ Imprimer PDF</button>
+      <button class="btn btn-success" id="btn-print"><i class="fas fa-print"></i> Imprimer PDF</button>
     </div>
   </div>
 </div>
@@ -837,12 +840,12 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <div class="modal-overlay" id="m-rap">
   <div class="modal modal-lg">
     <div class="modal-header">
-      <div class="modal-icon" style="background:rgba(59,130,246,.15)">📊</div>
+      <div class="modal-icon" style="background:rgba(59,130,246,.15)"><i class="fas fa-chart-bar"></i></div>
       <div style="flex:1">
         <div class="modal-title" id="mt-rap">Rapport</div>
         <div class="modal-subtitle" id="ms-rap">Statistiques</div>
       </div>
-      <button class="modal-close" onclick="closeModal('m-rap')">×</button>
+      <button class="modal-close" onclick="closeModal('m-rap')"><i class="fas fa-times"></i></button>
     </div>
     <div class="modal-body"><div id="mc-rap"></div></div>
     <div class="modal-footer"><button class="btn" onclick="closeModal('m-rap')">Fermer</button></div>
@@ -1036,7 +1039,7 @@ renderDonutLocaux(d.locaux.occupes, d.locaux.libres); // ✅ ajouté
           </div>
         </div>`)
         .join('')
-      : '<div style="text-align:center;padding:30px;color:var(--text3)">✅ Aucun retard ce mois</div>';
+      : '<div style="text-align:center;padding:30px;color:var(--text3)"><i class="fas fa-check-circle"></i> Aucun retard ce mois</div>';
     document.getElementById('retard-list').innerHTML = rhtml;
 
     var ev = d.evolution_12_mois || [];
@@ -1128,7 +1131,7 @@ function updateThemeIcon(theme){
   var icon = document.getElementById('theme-icon');
   var btn = document.getElementById('theme-btn');
   if(icon){
-    icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    icon.innerHTML = theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
   }
   if(btn){
     btn.title = theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre';
@@ -1173,9 +1176,9 @@ function filtLoc() {
     <td>${l.immeuble_nom || '—'}</td>
     <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.adresse_complete || '—'}</td>
     <td>${l.superficie ? l.superficie + ' m²' : '—'}</td>
-    <td>${l.meuble ? '<span class="bs bs-paye">✅ Oui</span>' : '<span style="color:var(--text3)">—</span>'}</td>
+    <td>${l.meuble ? '<span class="bs bs-paye"><i class="fas fa-check-circle"></i> Oui</span>' : '<span style="color:var(--text3)">—</span>'}</td>
     <td><strong style="color:var(--text)">${f(l.loyer_hors_charges)} BIF</strong></td>
-    <td><span class="bs ${l.est_occupe ? 'bs-occupe' : 'bs-libre'}">${l.est_occupe ? '🔴 Occupé' : '🟢 Libre'}</span></td>
+    <td><span class="bs ${l.est_occupe ? 'bs-occupe' : 'bs-libre'}">${l.est_occupe ? '<i class="fas fa-circle" style="color:var(--red);font-size:8px"></i> Occupé' : '<i class="fas fa-circle" style="color:var(--green);font-size:8px"></i> Libre'}</span></td>
   </tr>`).join('');
 }
 
@@ -1207,7 +1210,7 @@ function renderLocas(list) {
       <td>${f(s.total_loyers)} BIF</td>
       <td style="color:var(--green)">${f(s.montant_paye)} BIF</td>
       <td style="color:${s.solde_restant > 0 ? 'var(--red)' : 'var(--green)'}">${f(s.solde_restant)} BIF</td>
-      <td>${ok ? '<span class="bs bs-paye">✅ À jour</span>' : '<span class="bs bs-retard">⚠️ En retard</span>'}</td>
+      <td>${ok ? '<span class="bs bs-paye"><i class="fas fa-check-circle"></i> À jour</span>' : '<span class="bs bs-retard"><i class="fas fa-exclamation-triangle"></i> En retard</span>'}</td>
     </tr>`;
   }).join('');
 }
@@ -1238,7 +1241,7 @@ async function showHistorique(id, nom) {
     }
     document.getElementById('hist-content').innerHTML = d.historique.map(h => {
       var pays = (h.paiements || []).map(p =>
-        `<span class="pay-chip">💳 ${fd(p.date_paiement)} — ${f(p.montant)} BIF (${p.mode_paiement || '—'})</span>`
+        `<span class="pay-chip"><i class="fas fa-credit-card"></i> ${fd(p.date_paiement)} — ${f(p.montant)} BIF (${p.mode_paiement || '—'})</span>`
       ).join('');
       var c = h.solde_restant <= 0 ? 'var(--green)' : h.statut === 'retard' ? 'var(--red)' : 'var(--amber)';
       return `<div class="hist-item">
@@ -1349,7 +1352,7 @@ async function showQuit(id) {
     var paye = parseFloat(l.montant_paye) || 0, tot = parseFloat(l.montant_total) || 0, sol = tot - paye;
     var ok = paye >= tot;
     document.getElementById('mc-quit').innerHTML =
-      `<div class="info-box ${ok ? 'info-ok' : 'info-warn'}">${ok ? '✅ Loyer soldé' : '⚠️ Paiement partiel — Solde : ' + f(sol) + ' BIF'}</div>` +
+      `<div class="info-box ${ok ? 'info-ok' : 'info-warn'}">${ok ? '<i class="fas fa-check-circle"></i> Loyer soldé' : '<i class="fas fa-exclamation-triangle"></i> Paiement partiel — Solde : ' + f(sol) + ' BIF'}</div>` +
       `<div class="two-col" style="margin-bottom:14px">
         <div class="card"><div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:5px">Locataire</div><div style="font-size:15px;font-weight:700">${l.locataire_nom}</div></div>
         <div class="card"><div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:5px">Local</div><div style="font-size:15px;font-weight:700">${l.local_reference}</div></div>
@@ -1359,7 +1362,7 @@ async function showQuit(id) {
         <div class="kpi"><div class="kpi-label">Payé</div><div class="kpi-val" style="color:var(--green)">${f(paye)} BIF</div></div>
         <div class="kpi"><div class="kpi-label">Solde</div><div class="kpi-val" style="color:${sol > 0 ? 'var(--red)' : 'var(--green)'}">${f(sol)} BIF</div></div>
       </div>` +
-      `<div class="info-box info-blue">ℹ️ Cliquez sur <strong>🖨️ Imprimer PDF</strong> pour la quittance officielle.</div>`;
+      `<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Cliquez sur <strong><i class="fas fa-print"></i> Imprimer PDF</strong> pour la quittance officielle.</div>`;
   } catch (e) {
     document.getElementById('mc-quit').innerHTML = `<div class="info-box info-err">Erreur : ${e.message}</div>`;
   }
@@ -1408,8 +1411,8 @@ async function rapLoyer() {
       </div>
       <div class="prog-wrap" style="margin:12px 0"><div class="prog-fill" style="width:${r.taux_paiement}%"></div></div>
       <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text2)">
-        <span>✅ Encaissé : <strong style="color:var(--green)">${f(r.montant_encaisse)} BIF</strong></span>
-        <span>❌ Impayé : <strong style="color:var(--red)">${f(r.montant_impaye)} BIF</strong></span>
+        <span><i class="fas fa-check-circle" style="color:var(--green)"></i> Encaissé : <strong style="color:var(--green)">${f(r.montant_encaisse)} BIF</strong></span>
+        <span><i class="fas fa-times-circle" style="color:var(--red)"></i> Impayé : <strong style="color:var(--red)">${f(r.montant_impaye)} BIF</strong></span>
       </div>`;
     openModal('m-rap');
   } catch (e) { alert('Erreur rapport loyers'); }
@@ -1473,13 +1476,13 @@ async function loadChatGroups() {
     document.getElementById('chat-nb-groups').textContent = l.length + ' groupe(s)';
     if (!l.length) {
       document.getElementById('chat-groups-list').innerHTML =
-        '<div class="info-box info-blue" style="margin:8px">ℹ️ Aucun groupe de chat disponible pour vos immeubles.</div>';
+        '<div class="info-box info-blue" style="margin:8px"><i class="fas fa-info-circle"></i> Aucun groupe de chat disponible pour vos immeubles.</div>';
       return;
     }
     document.getElementById('chat-groups-list').innerHTML = l.map(g => {
       var isActive = _currentGroupId === g.id;
       return `<div class="room-item ${isActive ? 'active' : ''}" onclick="openChatGroup(${g.id},'${(g.immeuble_nom || g.nom || 'Immeuble').replace(/'/g, "\\'")}','${(g.adresse || '').replace(/'/g, "\\'")}',${g.nb_membres || 0})">
-        <div class="room-avatar">🏢</div>
+        <div class="room-avatar"><i class="fas fa-building"></i></div>
         <div style="flex:1;min-width:0">
           <div class="room-name">${g.immeuble_nom || g.nom || 'Immeuble'}</div>
           <div class="room-last">${g.dernier_message ? g.dernier_message.auteur + ' : ' + g.dernier_message.contenu : 'Aucun message'}</div>
@@ -1533,7 +1536,7 @@ async function refreshChatMsgs(scrollBottom) {
 
     if (!msgs.length) {
       box.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--text3)">
-        <div style="font-size:30px;opacity:.4">💬</div>
+        <div style="font-size:30px;opacity:.4"><i class="fas fa-comments"></i></div>
         <div style="font-size:12.5px">Aucun message — soyez le premier à écrire !</div>
       </div>`;
       return;
@@ -1614,7 +1617,7 @@ async function envoyerVirement() {
   var fichierInput = document.getElementById('vir-fichier');
 
   if (!contrat || !montant || !date || !fichierInput.files.length) {
-    alEl.innerHTML = `<div class="info-box info-err">⚠️ Convention, montant, date et fichier sont obligatoires.</div>`;
+    alEl.innerHTML = `<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Convention, montant, date et fichier sont obligatoires.</div>`;
     return;
   }
 
@@ -1641,14 +1644,14 @@ async function envoyerVirement() {
       })
     });
 
-    alEl.innerHTML = `<div class="info-box info-ok">✅ Bordereau envoyé, en attente de validation.</div>`;
+    alEl.innerHTML = `<div class="info-box info-ok"><i class="fas fa-check-circle"></i> Bordereau envoyé, en attente de validation.</div>`;
     document.getElementById('vir-montant').value = '';
     document.getElementById('vir-ref').value = '';
     document.getElementById('vir-banque').value = '';
     fichierInput.value = '';
     loadMesVirements();
   } catch (e) {
-    alEl.innerHTML = `<div class="info-box info-err">❌ Erreur : ${e.message}</div>`;
+    alEl.innerHTML = `<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Erreur : ${e.message}</div>`;
   }
 }
 async function loadMesVirements() {
@@ -1662,7 +1665,7 @@ async function loadMesVirements() {
     <td><strong>${f(v.montant)} BIF</strong></td>
     <td>${v.reference_virement || '—'}</td>
     <td><span class="bs ${bm[v.statut]}">${v.statut_display}</span></td>
-    <td><a href="${v.fichier_url}" target="_blank" class="btn btn-sm">📎 Voir</a></td>
+    <td><a href="${v.fichier_url}" target="_blank" class="btn btn-sm"><i class="fas fa-paperclip"></i> Voir</a></td>
   </tr>`).join('') : '<tr><td colspan="6" class="loader">Aucun bordereau envoyé</td></tr>';
 }
 
@@ -1677,13 +1680,13 @@ async function loadMesConventions() {
     if (!d) return;
     var l = d.results || d;
     if (!l.length) {
-      document.getElementById('cs-list').innerHTML = '<div class="info-box info-blue">ℹ️ Aucune convention enregistrée.</div>';
+      document.getElementById('cs-list').innerHTML = '<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Aucune convention enregistrée.</div>';
       return;
     }
     var sm = {
-      actif: { cls: 'bs-paye', label: '✅ Actif' },
-      expire: { cls: 'bs-retard', label: '⏰ Expiré' },
-      resilie: { cls: 'bs-resilie', label: '❌ Résilié' }
+      actif: { cls: 'bs-paye', label: '<i class="fas fa-check-circle"></i> Actif' },
+      expire: { cls: 'bs-retard', label: '<i class="fas fa-clock"></i> Expiré' },
+      resilie: { cls: 'bs-resilie', label: '<i class="fas fa-times-circle"></i> Résilié' }
     };
     var services_map = {
       service_gestion_loyers: 'Gestion loyers', service_quittances: 'Quittances',
@@ -1751,10 +1754,10 @@ function toggleVis(inputId, btn) {
   var inp = document.getElementById(inputId);
   if (inp.type === 'password') {
     inp.type = 'text';
-    btn.textContent = '🙈';
+    btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
   } else {
     inp.type = 'password';
-    btn.textContent = '👁';
+    btn.innerHTML = '<i class="fas fa-eye"></i>';
   }
 }
 
@@ -1804,26 +1807,26 @@ async function savePwd() {
 
   // Validations
   if (!ancien || !nouveau || !confirm) {
-    alEl.innerHTML = `<div class="info-box info-err">⚠️ Tous les champs sont obligatoires.</div>`;
+    alEl.innerHTML = `<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Tous les champs sont obligatoires.</div>`;
     return;
   }
   if (nouveau.length < 6) {
-    alEl.innerHTML = `<div class="info-box info-err">⚠️ Le nouveau mot de passe doit faire au moins 6 caractères.</div>`;
+    alEl.innerHTML = `<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Le nouveau mot de passe doit faire au moins 6 caractères.</div>`;
     return;
   }
   if (nouveau !== confirm) {
-    alEl.innerHTML = `<div class="info-box info-err">⚠️ Les deux mots de passe ne correspondent pas.</div>`;
+    alEl.innerHTML = `<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Les deux mots de passe ne correspondent pas.</div>`;
     document.getElementById('pwd-confirm').focus();
     return;
   }
   if (ancien === nouveau) {
-    alEl.innerHTML = `<div class="info-box info-warn">⚠️ Le nouveau mot de passe doit être différent de l'ancien.</div>`;
+    alEl.innerHTML = `<div class="info-box info-warn"><i class="fas fa-exclamation-triangle"></i> Le nouveau mot de passe doit être différent de l'ancien.</div>`;
     return;
   }
 
   var btn = document.getElementById('btn-save-pwd');
   btn.disabled     = true;
-  btn.textContent  = '⏳ Mise à jour...';
+  btn.innerHTML    = '<i class="fas fa-spinner fa-spin"></i> Mise à jour...';
 
   try {
     await api('/auth/change-password/', {
@@ -1835,7 +1838,7 @@ async function savePwd() {
     });
 
     alEl.innerHTML = `<div class="info-box info-ok">
-      ✅ Mot de passe mis à jour avec succès !
+      <i class="fas fa-check-circle"></i> Mot de passe mis à jour avec succès !
       Vous allez être déconnecté dans 3 secondes...
     </div>`;
 
@@ -1850,10 +1853,10 @@ async function savePwd() {
       var parsed = JSON.parse(msg);
       msg = Object.values(parsed).flat().join(' ');
     } catch(_) {}
-    alEl.innerHTML = `<div class="info-box info-err">❌ ${msg || 'Mot de passe actuel incorrect.'}</div>`;
+    alEl.innerHTML = `<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> ${msg || 'Mot de passe actuel incorrect.'}</div>`;
   } finally {
     btn.disabled    = false;
-    btn.textContent = '🔑 Mettre à jour le mot de passe';
+    btn.innerHTML = '<i class="fas fa-key"></i> Mettre à jour le mot de passe';
   }
 }
 // ════════════════════════════════════════
