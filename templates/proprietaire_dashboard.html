@@ -112,8 +112,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 
 /* ── SIDEBAR ── */
 .sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--surface);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100;border-right:1px solid var(--border);overflow-y:auto}
-.logo-area{padding:18px 16px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--green),var(--green2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:#fff}
+.logo-area{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo-icon{
+  width:50px;height:50px;
+  background:transparent;
+  border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+  overflow:visible;
+}
+.logo-icon img{width:100%;height:100%;object-fit:contain;border-radius:6px}
 .logo-name{font-size:14px;font-weight:800;color:var(--text)}
 .logo-sub{font-size:10px;color:var(--text3);margin-top:1px}
 .nav-group{font-size:9px;font-weight:700;color:var(--text3);padding:16px 16px 5px;letter-spacing:1.5px;text-transform:uppercase}
@@ -312,7 +320,7 @@ tbody tr:hover td{background:rgba(255,255,255,.02)}
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
   <div class="logo-area">
-    <div class="logo-icon"><i class="fas fa-building"></i></div>
+    <div class="logo-icon"><img src="{% static 'images/logo_adexpert.png' %}" alt="ADEXPERT"></div>
     <div>
       <div class="logo-name">ADEXPERT</div>
       <div class="logo-sub">Espace Propriétaire</div>

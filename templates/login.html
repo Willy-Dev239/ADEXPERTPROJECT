@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -9,7 +10,23 @@
 body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
 .card{background:#fff;border-radius:24px;width:420px;max-width:100%;padding:40px 36px;box-shadow:0 40px 120px rgba(0,0,0,.5);}
 .logo{text-align:center;margin-bottom:32px;}
-.logo-icon{width:64px;height:64px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 12px;box-shadow:0 8px 24px rgba(59,130,246,.4);}
+.logo-icon{
+  width:110px;
+  height:110px;
+  background:#fff;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 14px;
+  box-shadow:0 8px 24px rgba(59,130,246,.25);
+  overflow:hidden;
+}
+.logo-icon img{
+  width:120%;
+  height:120%;
+  object-fit:cover;
+}
 .logo h1{font-size:22px;font-weight:800;color:#0f172a;}
 .logo p{font-size:13px;color:#94a3b8;margin-top:2px;}
 .fg{margin-bottom:16px;}
@@ -43,7 +60,9 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
 <body>
 <div class="card">
   <div class="logo">
-    <div class="logo-icon">&#127962;</div>
+  <div class="logo-icon">
+  <img src="{% static 'images/logo_adexpert.png' %}" alt="ADEXPER">
+</div>
     <h1>ADEXPER</h1>
     <p>Gestion Locative - Bujumbura</p>
   </div>
