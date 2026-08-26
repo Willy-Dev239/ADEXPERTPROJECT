@@ -345,33 +345,49 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     <div class="nav-item" onclick="goSection('contrats',this)"><span class="nav-icon"><i class="bi bi-file-earmark-text-fill"></i></span><span data-i18n="nav.contrats">Contrats Location</span></div>
     <div class="nav-item" onclick="goSection('contrats_societe',this)"><span class="nav-icon"><i class="bi bi-handshake-fill"></i></span><span data-i18n="nav.contrats_societe">Contrats Société</span></div>
     <div class="nav-item" onclick="goSection('loyers',this)">
-      <span class="nav-icon"><i class="bi bi-coin-fill"></i></span>Loyers & Paiements
-      <span class="nav-badge" id="badge-retard">0</span>
-    </div>
-   <div class="nav-item" onclick="goSection('bordereaux',this)">
-      <span class="nav-icon"><i class="bi bi-image-fill"></i></span>Bordereaux
-      <span class="nav-badge" id="badge-bord">0</span>
-    </div>
-    <div class="nav-item" onclick="goSection('virements',this)">
-      <span class="nav-icon"><i class="bi bi-bank-fill"></i></span>Virements Propriétaires
-      <span class="nav-badge" id="badge-vir">0</span>
-    </div>
+  <span class="nav-icon"><i class="bi bi-coin-fill"></i></span>
+  <span data-i18n="nav.loyers">Loyers & Paiements</span>
+  <span class="nav-badge" id="badge-retard">0</span>
+</div>
+<div class="nav-item" onclick="goSection('bordereaux',this)">
+  <span class="nav-icon"><i class="bi bi-image-fill"></i></span>
+  <span data-i18n="nav.bordereaux">Bordereaux</span>
+  <span class="nav-badge" id="badge-bord">0</span>
+</div>
+<div class="nav-item" onclick="goSection('virements',this)">
+  <span class="nav-icon"><i class="bi bi-bank-fill"></i></span>
+  <span data-i18n="nav.virements">Virements Propriétaires</span>
+  <span class="nav-badge" id="badge-vir">0</span>
+</div>
 
-    <div class="nav-group" data-i18n="nav.analyse" >Analyse</div>
-    <div class="nav-item" onclick="goSection('rapports',this)"><span class="nav-icon"><i class="bi bi-bar-chart-fill"></i></span>Rapports</div>
-    <div class="nav-item" onclick="goSection('portefeuille',this)"><span class="nav-icon"><i class="bi bi-briefcase-fill"></i></span>Portefeuille</div>
+<div class="nav-item" onclick="goSection('rapports',this)">
+  <span class="nav-icon"><i class="bi bi-bar-chart-fill"></i></span>
+  <span data-i18n="nav.rapports">Rapports</span>
+</div>
+<div class="nav-item" onclick="goSection('portefeuille',this)">
+  <span class="nav-icon"><i class="bi bi-briefcase-fill"></i></span>
+  <span data-i18n="nav.portefeuille">Portefeuille</span>
+</div>
 
-    <div class="nav-group" data-i18n="nav.communication" >Communication</div>
-    <div class="nav-item" onclick="goSection('chat',this)"><span class="nav-icon"><i class="bi bi-chat-fill"></i></span>Chat Immeubles</div>
-    <div class="nav-item" onclick="goSection('notifications',this)">
-      <span class="nav-icon"><i class="bi bi-bell-fill"></i></span>Notifications
-      <span class="nav-badge" id="badge-notif" style="display:none">!</span>
-    </div>
+<div class="nav-item" onclick="goSection('chat',this)">
+  <span class="nav-icon"><i class="bi bi-chat-fill"></i></span>
+  <span data-i18n="nav.chat">Chat Immeubles</span>
+</div>
+<div class="nav-item" onclick="goSection('notifications',this)">
+  <span class="nav-icon"><i class="bi bi-bell-fill"></i></span>
+  <span data-i18n="nav.notifications">Notifications</span>
+  <span class="nav-badge" id="badge-notif" style="display:none">!</span>
+</div>
 
-    <div class="nav-group nav-hidden" id="nav-sec-admin" data-i18n="nav.administration" >Administration</div>
-    <div class="nav-item nav-hidden" id="nav-users" onclick="goSection('utilisateurs',this)"><span class="nav-icon"><i class="bi bi-person-gear"></i></span>Gestion des Utilisateurs</div>
-  </div>
-  <div class="sb-footer">
+<div class="nav-group nav-hidden" id="nav-sec-admin" data-i18n="nav.administration">Administration</div>
+<div class="nav-item nav-hidden" id="nav-users" onclick="goSection('utilisateurs',this)">
+  <span class="nav-icon"><i class="bi bi-person-gear"></i></span>
+  <span data-i18n="nav.utilisateurs">Gestion des Utilisateurs</span>
+</div>
+</div><!-- ferme <div style="flex:1"> -->
+
+
+<div class="sb-footer">
     <div class="sb-user">
       <div class="sb-avatar" id="sb-avatar">?</div>
       <div style="flex:1;min-width:0">
