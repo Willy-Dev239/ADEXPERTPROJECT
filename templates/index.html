@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ADEXPER | Administration</title>
+<link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -62,9 +63,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--surface);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100;border-right:1px solid var(--border);overflow-y:auto}
 .sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 .logo-area{padding:18px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
-.logo-icon{width:50px;height:50px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:visible}
-.logo-icon img{width:100%;height:100%;object-fit:contain;border-radius:6px}
+.logo-icon{width:50px;height:50px;background:transparent;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.logo-icon img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .logo-sub{font-size:10px;color:var(--text3);margin-top:1px;font-family:'DM Mono',monospace}
+.logo-area{position:relative}
+.logo-text{flex:1;min-width:0;overflow:hidden}
+.sidebar-toggle{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--text3);flex-shrink:0;font-size:12px;transition:background-color .15s,color .15s,transform .2s}
+.sidebar-toggle:hover{background:rgba(255,255,255,.06);color:var(--text)}
+
+/* ── État réduit ── */
+.sidebar.collapsed{width:68px;min-width:68px}
+.sidebar.collapsed ~ .main{margin-left:68px}
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .nav-group,
+.sidebar.collapsed .nav-item span:not(.nav-icon),
+.sidebar.collapsed .nav-badge,
+.sidebar.collapsed .sb-name,
+.sidebar.collapsed .sb-role{display:none}
+.sidebar.collapsed .logo-area{justify-content:center;padding:18px 8px}
+.sidebar.collapsed .sidebar-toggle{width:22px;height:22px}
+.sidebar.collapsed .sidebar-toggle i{transform:rotate(180deg)}
+.sidebar.collapsed .nav-item{justify-content:center;padding:9px 0}
+.sidebar.collapsed .sb-footer{justify-content:center}
+.sidebar.collapsed .sb-user{justify-content:center}
+
 .nav-group{font-size:9.5px;font-weight:700;color:var(--text3);padding:16px 16px 5px;letter-spacing:1.5px;text-transform:uppercase}
 .nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:12.5px;color:var(--text2);cursor:pointer;border-left:2.5px solid transparent;transition:all .15s;user-select:none;position:relative}
 .nav-item:hover{background:rgba(255,255,255,.04);color:var(--text)}
@@ -79,7 +101,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);dis
 .sb-role{font-size:10px;color:var(--text3);margin-top:1px}
 .sb-logout{background:none;border:none;color:var(--text3);cursor:pointer;font-size:18px;padding:3px;margin-left:auto;flex-shrink:0;transition:color .2s;border-radius:6px}
 .sb-logout:hover{color:var(--red);background:rgba(239,68,68,.1)}
-
+.profile-widget{position:relative}
+.profile-avatar-btn{width:34px;height:34px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;border:1px solid var(--border2);background:var(--surface2);transition:border-color .15s}
+.profile-avatar-btn:hover{border-color:var(--accent)}
+.profile-avatar{width:100%;height:100%;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800}
+.profile-avatar--lg{width:38px;height:38px;font-size:15px;flex-shrink:0}
+.profile-dropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;width:220px;background:var(--surface);border:1px solid var(--border2);border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.35);padding:10px;z-index:200}
+.profile-dropdown.open{display:block;animation:overlayIn .15s ease}
+.profile-dropdown__head{display:flex;align-items:center;gap:10px;padding:4px 6px 10px}
+.profile-dropdown__name{font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.profile-dropdown__role{font-size:11px;color:var(--text3);margin-top:2px}
+.profile-dropdown__sep{height:1px;background:var(--border);margin:4px 0 6px}
+.profile-dropdown__item{width:100%;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:var(--text2);text-align:left;transition:background-color .15s,color .15s}
+.profile-dropdown__item:hover{background:rgba(255,255,255,.06);color:var(--text)}
 /* MAIN */
 .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:var(--topbar-h);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;gap:12px}
@@ -325,15 +359,19 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
 })();
 </script>
 
-<!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="logo-area">
     <div class="logo-icon"><img src="/static/images/logo_adexpert.png" alt="ADEXPERT"></div>
-    <div>
+    <div class="logo-text">
       <div class="logo-name">ADEXPER</div>
       <div class="logo-sub">ADMIN PANEL</div>
     </div>
+    <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" title="Réduire le menu">
+      <i class="bi bi-chevron-left"></i>
+    </button>
   </div>
+
+
   <div style="flex:1">
     <div class="nav-group" data-i18n="nav.principal" >Principal</div>
     <div class="nav-item active" onclick="goSection('dashboard',this)"><span class="nav-icon"><i class="bi bi-grid-1x2-fill"></i></span><span data-i18n="nav.dashboard">Tableau de bord</span></div>
@@ -411,6 +449,23 @@ tbody tr:hover td{background:rgba(255,255,255,.03);color:var(--text)}
     <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
       <span id="theme-icon"><i class="bi bi-moon-fill"></i></span>
     </button>
+    <div class="profile-widget" id="profile-widget">
+  <button class="profile-avatar-btn" onclick="toggleProfileMenu()">
+    <span class="profile-avatar" id="pw-avatar">?</span>
+  </button>
+  <div class="profile-dropdown" id="profile-dropdown">
+    <div class="profile-dropdown__head">
+      <span class="profile-avatar profile-avatar--lg" id="pw-avatar-lg">?</span>
+      <div>
+        <div class="profile-dropdown__name" id="pw-name">…</div>
+        <div class="profile-dropdown__role" id="pw-role"></div>
+      </div>
+    </div>
+    <div class="profile-dropdown__sep"></div>
+    <button class="profile-dropdown__item" onclick="toggleTheme()"><i class="bi bi-moon-fill"></i> Changer le thème</button>
+    <button class="profile-dropdown__item" onclick="confirmLogout()"><i class="bi bi-box-arrow-right"></i> Déconnexion</button>
+  </div>
+</div>
     <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
       <option value="fr">🇫🇷 Français</option>
       <option value="en">🇬🇧 English</option>
@@ -1531,6 +1586,10 @@ function updateCommunes(provId,comId){
 //  UI INIT
 // ═══════════════════════════════════════════
 function initUI(){
+  document.getElementById('pw-avatar').textContent=(S.username||'?').charAt(0).toUpperCase();
+document.getElementById('pw-avatar-lg').textContent=(S.username||'?').charAt(0).toUpperCase();
+document.getElementById('pw-name').textContent=S.fullname||S.username;
+document.getElementById('pw-role').textContent=t('role.'+S.role)||S.role;
   document.getElementById('sb-avatar').textContent=(S.username||'?').charAt(0).toUpperCase();
   document.getElementById('sb-name').textContent=S.fullname||S.username;
   var rd={admin:'Administrateur',gestionnaire:'Gestionnaire',lecteur:'Lecteur'};
@@ -3270,6 +3329,27 @@ function toggleTheme(){
   var cur = document.documentElement.getAttribute('data-theme') || 'dark';
   applyTheme(cur === 'dark' ? 'light' : 'dark');
 }
+
+function toggleSidebar(){
+  var sb = document.querySelector('.sidebar');
+  sb.classList.toggle('collapsed');
+  localStorage.setItem('sidebarCollapsed', sb.classList.contains('collapsed') ? '1' : '0');
+}
+(function(){
+  if(localStorage.getItem('sidebarCollapsed') === '1'){
+    document.addEventListener('DOMContentLoaded', function(){
+      document.querySelector('.sidebar').classList.add('collapsed');
+    });
+  }
+})();
+
+function toggleProfileMenu(){
+  document.getElementById('profile-dropdown').classList.toggle('open');
+}
+document.addEventListener('click', function(e){
+  var w=document.getElementById('profile-widget');
+  if(w && !w.contains(e.target)) document.getElementById('profile-dropdown').classList.remove('open');
+});
 // ═══════════════════════════════════════════
 //  UTILISATEURS
 // ═══════════════════════════════════════════
