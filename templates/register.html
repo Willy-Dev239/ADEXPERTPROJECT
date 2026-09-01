@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADEXPERT — Inscription</title>
+<link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+<style>
+  :root{
+    --bg-top:#0e1c33;
+    --bg-bottom:#16294a;
+    --card-bg:#ffffff;
+    --input-bg:#e9eefb;
+    --blue:#2f5fdb;
+    --blue-dark:#274ec2;
+    --text-dark:#1c2333;
+    --text-muted:#5b6b8c;
+    --footer-text:#8ea0c4;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    font-family:'Segoe UI', Arial, sans-serif;
+    background:linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+    padding:32px 16px;
+  }
+  .card{
+    background:var(--card-bg);
+    width:100%;
+    max-width:560px;
+    border-radius:22px;
+    padding:34px 32px 30px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.35);
+    text-align:center;
+  }
+  .logo-icon{
+    width:110px;
+    height:110px;
+    background:#fff;
+    border-radius:22px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 14px;
+    box-shadow:0 8px 24px rgba(59,130,246,.25);
+    overflow:hidden;
+  }
+  .logo-icon img{
+    width:120%;
+    height:120%;
+    object-fit:cover;
+  }
+  h1{
+    font-size:20px;
+    margin:0 0 4px;
+    color:var(--text-dark);
+  }
+  .subtitle{
+    font-size:12px;
+    color:var(--blue);
+    margin:0 0 22px;
+    font-weight:600;
+  }
+  label{
+    display:block;
+    text-align:left;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.6px;
+    color:var(--text-muted);
+    margin:0 0 6px;
+  }
+  .form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0 16px;
+  }
+  .field{margin-bottom:14px;}
+  .field.full{grid-column:1 / -1;}
+  input{
+    width:100%;
+    padding:12px 14px;
+    border:none;
+    border-radius:10px;
+    background:var(--input-bg);
+    font-size:14px;
+    color:var(--text-dark);
+  }
+  input:focus{outline:2px solid var(--blue);}
+  .hint{
+    font-size:11px;
+    color:var(--text-muted);
+    text-align:left;
+    margin:-8px 0 14px;
+  }
+  .btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    margin-top:4px;
+  }
+  .btn-primary{
+    background:var(--blue);
+    color:#fff;
+  }
+  .btn-primary:hover{background:var(--blue-dark);}
+  .link-back{
+    display:inline-block;
+    margin-top:16px;
+    font-size:13px;
+    color:var(--blue);
+    text-decoration:none;
+    font-weight:600;
+  }
+  .error{
+    color:#d8354a;
+    font-size:12px;
+    margin-top:10px;
+    min-height:14px;
+  }
+  .role-note{
+    background:#eef3ff;
+    color:var(--blue-dark);
+    font-size:11.5px;
+    border-radius:10px;
+    padding:10px 12px;
+    margin-top:16px;
+    text-align:left;
+    line-height:1.5;
+  }
+  footer{
+    text-align:center;
+    margin-top:28px;
+    color:var(--footer-text);
+    font-size:12px;
+    line-height:1.7;
+  }
+  footer b{color:#c4d0ec;}
+
+  @media (max-width:480px){
+    .form-grid{grid-template-columns:1fr;}
+    .field.full{grid-column:auto;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo-icon">
+      <img src="{% static 'images/logo_adexpert.png' %}" alt="ADEXPER">
+    </div>
+
+    <h1><b>Créer un compte</b></h1>
+    <p class="subtitle">ADEXPERT · Gestion Locative — Bujumbura</p>
+
+    <form id="registerForm">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="fullname">Nom complet</label>
+          <input type="text" id="fullname" required>
+        </div>
+
+        <div class="field">
+          <label for="username">Nom d'utilisateur</label>
+          <input type="text" id="username" required>
+        </div>
+        <div class="field">
+          <label for="email">Adresse e-mail</label>
+          <input type="email" id="email" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" minlength="6" required>
+        </div>
+        <div class="field">
+          <label for="confirm">Confirmer le mot de passe</label>
+          <input type="password" id="confirm" minlength="6" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary">S'inscrire</button>
+      <div class="error" id="registerError"></div>
+
+      <div class="role-note">
+        Les comptes créés via ce formulaire ont un accès <b>Lecteur</b> : consultation limitée, sans accès aux données de gestion sensibles (contrats, finances, coordonnées des propriétaires/locataires).
+      </div>
+    </form>
+
+    <a href="/login/" class="link-back">← Retour à la connexion</a>
+  </div>
+
+  <footer>
+    © 2026 <b>ADEXPERT</b> — InfinityHome<br>
+    Gestion Locative · Bujumbura, Burundi · Support
+  </footer>
+<script>
+  document.getElementById("registerForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+    const errorEl = document.getElementById("registerError");
+    errorEl.textContent = "";
+
+    const fullname = document.getElementById("fullname").value.trim();
+    const [first_name, ...rest] = fullname.split(" ");
+    const last_name = rest.join(" ");
+
+    const username = document.getElementById("username").value.trim();
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirm  = document.getElementById("confirm").value;
+
+    if(password !== confirm){
+      errorEl.textContent = "Les mots de passe ne correspondent pas.";
+      return;
+    }
+    if(password.length < 6){
+      errorEl.textContent = "Le mot de passe doit contenir au moins 6 caractères.";
+      return;
+    }
+
+    try{
+      const res = await fetch("/api/auth/register/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, first_name, last_name, password })
+      });
+      const data = await res.json();
+
+      if(!res.ok){
+        const firstError = Object.values(data)[0];
+        errorEl.textContent = Array.isArray(firstError) ? firstError[0] : (data.detail || "Erreur d'inscription.");
+        return;
+      }
+
+      localStorage.setItem('authToken', data.token);
+      localStorage.setItem('username', data.username);
+      localStorage.setItem('fullname', data.fullname);
+      localStorage.setItem('role', data.role);
+      localStorage.setItem('peutEcrire', data.peutEcrire);
+      localStorage.setItem('estAdmin', data.estAdmin);
+
+      const role = (data.role || "").toLowerCase();
+      let target = "/dashboard.html";
+
+      if(role === "locataire"){
+        target = "/locataire/";
+      } else if(role === "proprietaire"){
+        target = "/proprietaire/";
+      }
+
+      window.location.href = target;
+    } catch(err){
+      errorEl.textContent = "Impossible de contacter le serveur.";
+    }
+  });
+</script>
+</body>
+</html>

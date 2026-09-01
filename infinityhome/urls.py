@@ -23,5 +23,7 @@ urlpatterns = [
     path('proprietaire/', TemplateView.as_view(template_name='proprietaire_dashboard.html')),
     path('identifiants/', TemplateView.as_view(template_name='identifiants.html')),
     path('', TemplateView.as_view(template_name='index.html'), name='home'),
+    path('register/', TemplateView.as_view(template_name='register.html'), name='register'),
+   path('dashboard.html', TemplateView.as_view(template_name='dashboard.html'), name='dashboard'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

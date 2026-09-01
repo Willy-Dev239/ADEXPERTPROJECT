@@ -1,0 +1,757 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADEXPERT — Tableau de bord</title>
+<link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+<!-- Font Awesome 6 (gratuit) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<!-- Polices dédiées à la vitrine "Lecteur" uniquement -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#f3f5fb;
+    --navy:#0c4a6e;
+    --navy2:#0369a1;
+    --blue:#38bdf8;
+    --blue-dark:#0ea5e9;
+    --text-dark:#1c2333;
+    --text-muted:#5b6b8c;
+    --card-bg:#ffffff;
+    --border:#e4e8f4;
+    --locked-bg:#f4f6fb;
+
+    /* Vitrine lecteur — thème sombre */
+    --gold:#c99b4a;
+    --dark-1:#0c4a6e;
+    --dark-2:#075985;
+    --dark-card:#0a5178;
+    --dark-border:#0e6ba8;
+    --ink-light:#eef2fb;
+    --ink-muted:#bfe3fb;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Arial, sans-serif;
+    background:var(--bg);
+    color:var(--text-dark);
+  }
+
+  /* ===== Barre unique : marque + nav vitrine + compte ===== */
+  header{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff;
+    padding:0 28px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+    position:sticky;
+    top:0;
+    z-index:30;
+  }
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:17px;letter-spacing:0.3px;padding:14px 0;flex-shrink:0;}
+  .brand .logo-icon{
+    width:38px;height:38px;background:#fff;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,.25);
+  }
+  .brand .logo-icon img{width:120%;height:120%;object-fit:cover;}
+
+  .nav-center{
+    display:none;
+    flex:1;
+    align-items:center;
+    justify-content:center;
+    gap:2px;
+    overflow-x:auto;
+  }
+  .nav-center a{
+    color:rgba(255,255,255,0.68);
+    text-decoration:none;
+    font-size:15px;
+    font-weight:600;
+    padding:20px 15px;
+    white-space:nowrap;
+    border-bottom:2px solid transparent;
+  }
+  .nav-center a:hover, .nav-center a:focus-visible{color:#fff;border-bottom-color:var(--blue);outline:none;}
+
+  .lang-toggle{
+    display:none;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:999px;
+    padding:3px;
+    font-size:12.5px;
+    flex-shrink:0;
+  }
+  .lang-toggle button{border:none;background:transparent;color:rgba(255,255,255,0.65);padding:6px 13px;border-radius:999px;font-weight:700;font-family:inherit;cursor:pointer;}
+  .lang-toggle button.active{background:var(--blue);color:#fff;}
+
+  .who{display:flex;align-items:center;gap:12px;font-size:13px;flex-shrink:0;padding:14px 0;}
+  .avatar{
+    width:28px;height:28px;border-radius:50%;
+    background:rgba(255,255,255,0.15);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:12px;
+  }
+  .badge{padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:0.4px;}
+  .badge-admin{background:#1f9d55;color:#fff;}
+  .badge-lecteur{background:rgba(255,255,255,0.15);color:#fff;}
+  .logout{
+    background:transparent;border:1px solid rgba(255,255,255,0.35);color:#fff;
+    padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12.5px;font-family:inherit;
+  }
+  .logout:hover{background:rgba(255,255,255,0.1);}
+
+  @media (max-width:900px){
+    #whoNameText{display:none;}
+  }
+
+  /* ===== Zone principale ===== */
+  main{max-width:1000px;margin:0 auto;padding:28px 20px 60px;}
+  main.full-bleed{max-width:none;margin:0;padding:0;}
+  h2{font-size:19px;margin:0 0 4px;}
+  .lead{color:var(--text-muted);font-size:13.5px;margin:0 0 24px;}
+
+  /* ===== Contenu admin (inchangé) ===== */
+  .welcome{
+    background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);
+    border-radius:18px;padding:26px 28px;color:#fff;margin-bottom:24px;
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+    box-shadow:0 12px 30px rgba(37,99,235,0.25);
+  }
+  .grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(210px,1fr));gap:16px;margin-bottom:24px;}
+  .stat{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:18px;transition:box-shadow .15s, transform .15s;}
+  .stat.open:hover{box-shadow:0 8px 20px rgba(59,130,246,0.12);transform:translateY(-2px);}
+  .stat .label{font-size:11.5px;color:var(--text-muted);font-weight:700;letter-spacing:0.3px;}
+  .stat .value{font-size:24px;font-weight:800;margin-top:6px;color:var(--text-dark);}
+  section.admin-section{background:var(--card-bg);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:18px;}
+  section.admin-section h3{margin:0 0 4px;font-size:15px;}
+  section.admin-section h3 i{color:var(--blue);margin-right:8px;}
+  section.admin-section p.desc{margin:0 0 14px;color:var(--text-muted);font-size:13px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:left;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.4px;padding:8px 10px;border-bottom:1px solid var(--border);}
+  td{padding:10px 10px;border-bottom:1px solid var(--border);}
+
+  /* ===================================================== */
+  /* ===== Vitrine société — compte Lecteur (plein écran) ===== */
+  /* ===================================================== */
+  .landing{font-family:'Work Sans', 'Segoe UI', Arial, sans-serif;background:var(--dark-1);color:var(--ink-light);}
+  .landing .inner{max-width:1080px;margin:0 auto;padding:0 28px;}
+  .landing h1, .landing h2, .landing h3{font-family:'Fraunces', Georgia, serif;}
+
+  .landing-section{padding:76px 0;}
+  .landing-section.alt{background:var(--dark-2);}
+
+  .section-head-center{text-align:center;max-width:600px;margin:0 auto 46px;}
+  .section-head-center .eyebrow{color:var(--blue);font-size:13px;font-weight:700;letter-spacing:1.2px;margin:0 0 12px;text-transform:uppercase;}
+  .section-head-center h2{font-size:34px;font-weight:600;color:#fff;margin:0;line-height:1.2;}
+
+  /* Hero plein écran, avec photo d'immeuble en arrière-plan */
+  .hero{
+    position:relative;
+    padding:84px 0 0;
+    background:
+      linear-gradient(180deg, rgba(7,16,32,0.55) 0%, rgba(7,16,32,0.72) 55%, rgba(6,12,26,0.92) 100%),
+      url("{% static 'images/hero-building-alt (1).jpg' %}");
+    background-size:cover;
+    background-position:center;
+    overflow:hidden;
+    min-height:580px;
+  }
+  .hero-content{position:relative;z-index:2;padding-bottom:76px;}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(56,189,248,0.16);border:1px solid rgba(56,189,248,0.36);
+    color:#bfe3fb;padding:8px 18px;border-radius:999px;font-size:13.5px;font-weight:600;margin-bottom:26px;
+  }
+  .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--blue);}
+  .hero h1{font-size:58px;line-height:1.08;font-weight:600;color:#fff;margin:0 0 22px;max-width:720px;}
+  .hero p{font-size:17.5px;line-height:1.7;color:var(--ink-muted);max-width:540px;margin:0 0 36px;}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:48px;}
+  .btn-primary{background:var(--blue);color:#fff;border:1px solid var(--blue);padding:15px 26px;border-radius:9px;font-size:15px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px;}
+  .btn-outline{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.25);padding:15px 26px;border-radius:9px;font-size:15px;font-weight:700;text-decoration:none;}
+  .trust-row{display:flex;flex-wrap:wrap;gap:0;}
+  .trust-row span{
+    font-size:13.5px;color:var(--ink-muted);padding:0 18px 0 0;margin-right:18px;
+    border-right:1px solid var(--dark-border);
+  }
+  .trust-row span:last-child{border-right:none;margin-right:0;}
+
+  /* Pourquoi nous */
+  .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center;}
+  .why-grid .eyebrow{color:var(--blue);font-size:13px;font-weight:700;letter-spacing:1.2px;margin:0 0 12px;text-transform:uppercase;}
+  .why-grid h2{font-size:34px;font-weight:600;color:#fff;margin:0 0 18px;line-height:1.2;}
+  .why-grid > div:first-child > p{font-size:16.5px;line-height:1.7;color:var(--ink-muted);margin:0 0 28px;max-width:440px;}
+  .why-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px;}
+  .why-list li{display:flex;align-items:center;gap:14px;font-size:15.5px;color:var(--ink-light);}
+  .why-list .ico{width:38px;height:38px;border-radius:10px;flex-shrink:0;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.3);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;}
+  .mockup{background:var(--dark-card);border:1px solid var(--dark-border);border-radius:14px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,0.4);}
+  .mockup-bar{display:flex;gap:6px;padding:12px 14px;background:rgba(255,255,255,0.03);border-bottom:1px solid var(--dark-border);}
+  .mockup-bar span{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.15);}
+  .mockup-body{padding:38px 32px;}
+  .mockup-body .who-label{display:block;font-size:12px;letter-spacing:0.5px;color:var(--ink-muted);margin-bottom:16px;font-family:'Work Sans',sans-serif;}
+  .mockup-body blockquote{font-family:'Fraunces',serif;font-size:20px;line-height:1.5;color:#fff;margin:0;}
+  .mockup-body blockquote b{color:var(--gold);}
+
+  /* Services */
+  .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .service-card{background:var(--dark-card);border:1px solid var(--dark-border);border-radius:14px;overflow:hidden;}
+  .service-photo{height:150px;position:relative;background-size:cover;background-position:center;}
+  .service-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg, rgba(12,74,110,0.15) 0%, rgba(9,20,38,0.85) 100%);}
+  .service-photo i{position:absolute;bottom:14px;right:14px;font-size:30px;color:rgba(255,255,255,0.5);z-index:1;}
+  .service-body{padding:22px;}
+  .service-icon{width:38px;height:38px;border-radius:10px;background:rgba(56,189,248,0.14);border:1px solid rgba(56,189,248,0.3);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:16px;}
+  .service-card h4{font-family:'Fraunces',serif;font-size:18.5px;font-weight:600;color:#fff;margin:0 0 10px;}
+  .service-card p{font-size:14.5px;line-height:1.6;color:var(--ink-muted);margin:0;}
+
+  /* Marquees */
+  .marquee-wrap{overflow:hidden;margin-top:6px;}
+  .marquee-track{display:flex;gap:18px;width:max-content;animation:marquee-scroll 34s linear infinite;}
+  .marquee-card{width:300px;height:210px;border-radius:12px;flex-shrink:0;position:relative;overflow:hidden;background-size:cover;background-position:center;border:1px solid var(--dark-border);}
+  .marquee-card::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 60%);}
+  .marquee-card i{position:absolute;top:20px;left:20px;font-size:26px;color:rgba(255,255,255,0.6);z-index:1;}
+  .marquee-card span{position:absolute;bottom:16px;left:18px;right:18px;color:#fff;font-size:15.5px;font-weight:600;z-index:1;}
+
+  .clients-track{display:flex;gap:18px;width:max-content;animation:marquee-scroll 26s linear infinite;}
+  .client-card{width:230px;height:130px;flex-shrink:0;background:#fff;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;}
+  .client-card .mark{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:17px;font-family:'Fraunces',serif;}
+  .client-card span{font-size:13.5px;font-weight:700;color:var(--text-dark);}
+
+  @keyframes marquee-scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media (prefers-reduced-motion: reduce){.marquee-track, .clients-track{animation:none;}}
+
+  /* Equipe */
+  .team-row{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}
+  .avatar-lg{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin-bottom:16px;}
+  .team-card h4{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin:0 0 4px;color:#fff;}
+  .team-card p{font-size:13.5px;color:var(--ink-muted);margin:0;}
+
+  /* Galerie */
+  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .gallery-item{border-radius:14px;overflow:hidden;height:230px;border:1px solid var(--dark-border);}
+  .gallery-item img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s;}
+  .gallery-item:hover img{transform:scale(1.05);}
+
+  /* Contact */
+  .contact-band{background:linear-gradient(135deg,var(--blue-dark) 0%, #0284c7 100%);color:#fff;border-radius:16px;padding:38px 34px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+  .contact-band h3{font-size:23px;margin:0 0 10px;font-weight:600;}
+  .contact-band p{font-size:15px;color:#dbe6ff;margin:0;line-height:1.6;max-width:380px;}
+  .contact-band .cta{background:#fff;color:var(--blue-dark);border:none;padding:13px 24px;border-radius:9px;font-size:14.5px;font-weight:700;text-decoration:none;white-space:nowrap;}
+  .contact-note{font-size:12.5px;color:var(--ink-muted);margin-top:18px;}
+
+  /* Footer */
+  .landing-footer{background:var(--dark-1);padding:56px 0 30px;border-top:1px solid var(--dark-border);}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:44px;margin-bottom:36px;}
+  .footer-brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:#fff;margin-bottom:16px;font-family:'Work Sans',sans-serif;}
+  .footer-brand .logo-icon-sm{width:32px;height:32px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;flex-shrink:0;}
+  .footer-tagline{font-size:14px;line-height:1.75;color:var(--ink-muted);margin:0 0 22px;max-width:320px;}
+  .footer-social{display:flex;gap:10px;}
+  .footer-social a{width:36px;height:36px;border-radius:9px;border:1px solid var(--dark-border);display:flex;align-items:center;justify-content:center;color:var(--ink-light);text-decoration:none;font-size:14px;}
+  .footer-social a:hover{background:rgba(56,189,248,0.16);border-color:var(--blue);color:var(--blue);}
+  .footer-col h5{font-size:14.5px;font-weight:700;color:#fff;margin:0 0 18px;font-family:'Work Sans',sans-serif;}
+  .footer-col a{display:block;font-size:14px;color:var(--ink-muted);text-decoration:none;margin-bottom:13px;}
+  .footer-col a:hover{color:var(--blue);}
+  .footer-contact-item{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-muted);margin-bottom:13px;}
+  .footer-contact-item i{color:var(--blue);width:16px;text-align:center;}
+  .footer-bottom{border-top:1px solid var(--dark-border);padding-top:22px;font-size:12.5px;color:var(--ink-muted);text-align:center;}
+
+  @media (max-width:780px){
+    .footer-grid{grid-template-columns:1fr;gap:32px;}
+  }
+
+  @media (max-width:780px){
+    .why-grid{grid-template-columns:1fr;}
+    .services-grid{grid-template-columns:1fr 1fr;}
+    .team-row{grid-template-columns:1fr 1fr;}
+    .gallery-grid{grid-template-columns:1fr 1fr;}
+    .hero h1{font-size:38px;}
+  }
+  @media (max-width:480px){
+    .services-grid, .team-row, .gallery-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:30px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo-icon"><img src="{% static 'images/logo_adexpert.png' %}" alt="ADEXPER"></div>
+    ADEXPERT
+  </div>
+
+  <nav class="nav-center" id="navCenter">
+    <a href="#accueil" data-i18n="nav.accueil">Home</a>
+    <a href="#services" data-i18n="nav.services">Services</a>
+    <a href="#apropos" data-i18n="nav.apropos">About</a>
+    <a href="#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+    <a href="#equipe" data-i18n="nav.equipe">Team</a>
+    <a href="#contact" data-i18n="nav.contact">Contact</a>
+  </nav>
+
+  <div class="lang-toggle" id="langToggle">
+    <button type="button" class="active" data-lang="en">EN</button>
+    <button type="button" data-lang="fr">FR</button>
+  </div>
+
+  <div class="who">
+    <div class="avatar" id="avatarInitial"></div>
+    <span id="whoNameText"></span>
+    <span class="badge" id="roleBadge"></span>
+    <button class="logout" onclick="logout()"><i class="fas fa-sign-out-alt" style="margin-right:6px;"></i>Déconnexion</button>
+  </div>
+</header>
+
+<main id="mainEl">
+  <h2 id="pageTitle" style="display:none;">Tableau de bord</h2>
+  <p class="lead" id="pageLead" style="display:none;"></p>
+
+  <div id="content"></div>
+</main>
+
+<script>
+  const authToken = localStorage.getItem('authToken');
+  if(!authToken){
+    window.location.href = "/login/";
+  }
+  const username   = localStorage.getItem('username') || '';
+  const fullname   = (localStorage.getItem('fullname') || username || 'Utilisateur').trim();
+  const role       = localStorage.getItem('role') || 'lecteur';
+  const isAdmin    = (localStorage.getItem('estAdmin') === 'true') || role === 'admin';
+
+  document.getElementById("whoNameText").textContent = fullname;
+  document.getElementById("avatarInitial").textContent = (fullname.charAt(0) || '?').toUpperCase();
+
+  const badge = document.getElementById("roleBadge");
+  badge.textContent = isAdmin ? "ADMINISTRATEUR" : "LECTEUR";
+  badge.className = "badge " + (isAdmin ? "badge-admin" : "badge-lecteur");
+
+  const content = document.getElementById("content");
+  const mainEl = document.getElementById("mainEl");
+
+  if(isAdmin){
+    document.getElementById("pageTitle").style.display = "block";
+    document.getElementById("pageLead").style.display = "block";
+    document.getElementById("pageLead").textContent =
+      "Vue complète de la gestion locative — biens, contrats, locataires et finances.";
+    content.innerHTML = `
+      <div class="grid">
+        <div class="stat open"><div class="label"><i class="fas fa-building" style="margin-right:4px;"></i>Biens gérés</div><div class="value">42</div></div>
+        <div class="stat open"><div class="label"><i class="fas fa-users" style="margin-right:4px;"></i>Locataires actifs</div><div class="value">37</div></div>
+        <div class="stat open"><div class="label"><i class="fas fa-coins" style="margin-right:4px;"></i>Loyers encaissés (mois)</div><div class="value">18 450 000 BIF</div></div>
+        <div class="stat open"><div class="label"><i class="fas fa-exclamation-triangle" style="margin-right:4px;"></i>Impayés en cours</div><div class="value">2 950 000 BIF</div></div>
+      </div>
+      <section class="admin-section">
+        <h3><i class="fas fa-file-signature"></i> Contrats récents</h3>
+        <p class="desc">Derniers contrats société et coordonnées associées.</p>
+        <table>
+          <tr><th>Locataire</th><th>Bien</th><th>Loyer</th><th>Statut</th></tr>
+          <tr><td>N. Ndikumana</td><td>Rohero — Villa 12</td><td>950 000 BIF</td><td>À jour</td></tr>
+          <tr><td>C. Nzeyimana</td><td>Kinindo — App. 4B</td><td>620 000 BIF</td><td>En retard</td></tr>
+          <tr><td>D. Bigirimana</td><td>Kabondo — Villa 3</td><td>1 100 000 BIF</td><td>À jour</td></tr>
+        </table>
+      </section>
+      <section class="admin-section">
+        <h3><i class="fas fa-user-cog"></i> Gestion des utilisateurs</h3>
+        <p class="desc">Comptes inscrits sur la plateforme et leur rôle.</p>
+        <table id="userTable"><tr><th>Nom d'utilisateur</th><th>E-mail</th><th>Rôle</th><th>Inscrit le</th></tr></table>
+      </section>
+    `;
+    fetch('/api/auth/users/', { headers: { 'Authorization': 'Token ' + authToken } })
+      .then(r => r.ok ? r.json() : [])
+      .then(users => {
+        const tbl = document.getElementById("userTable");
+        (users.results || users).forEach(u => {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td>${u.username}</td><td>${u.email || '—'}</td><td>${u.role}</td><td>${new Date(u.date_joined).toLocaleDateString('fr-FR')}</td>`;
+          tbl.appendChild(row);
+        });
+      })
+      .catch(() => {});
+
+  } else {
+    // ===== Compte Lecteur : vitrine société plein écran =====
+    mainEl.classList.add("full-bleed");
+    document.getElementById("navCenter").style.display = "flex";
+    document.getElementById("langToggle").style.display = "flex";
+
+    const PHOTOS = [
+      "{% static 'images/hero-building-alt (1).jpg' %}",
+      "{% static 'images/hero-building-alt (2).jpg' %}",
+      "{% static 'images/hero-building-alt (3).jpg' %}",
+      "{% static 'images/hero-building-alt (4).jpg' %}"
+    ];
+
+    const I18N = {
+      en: {
+        nav: { accueil:"Home", services:"Services", apropos:"About", portfolio:"Portfolio", equipe:"Team", contact:"Contact" },
+        hero: {
+          badge:"Based in Bujumbura, local rental management",
+          h1:"Rental management that moves with your property.",
+          p:"ADEXPERT supports property owners and tenants in Bujumbura: rent tracking, property upkeep, verified receipts, and a trusted relationship every day.",
+          cta1:"Discover our services", cta2:"Contact us"
+        },
+        why: {
+          eyebrow:"Why ADEXPERT", h2:"Real results, not just promises",
+          p:"We combine rigorous tracking with local knowledge of Bujumbura, for reliable rental management suited to your real constraints.",
+          li1:"42 properties managed across 6 neighborhoods of Bujumbura",
+          li2:"Verified, QR-code traceable receipts",
+          li3:"One single point of contact for every owner",
+          mockLabel:"RECEIPT — ROHERO, VILLA 12",
+          mockPrefix:"Rent ", mockHighlight:"received", mockSuffix:" and confirmed on the 3rd of the month."
+        },
+        services: {
+          eyebrow:"Our services", h2:"What we do for you",
+          s1t:"Rent management", s1p:"Payment tracking and reminders at every due date, for each property.",
+          s2t:"Upkeep & maintenance", s2p:"Coordinated, monitored interventions across the whole portfolio.",
+          s3t:"Receipts & tracking", s3p:"Every payment confirmed and traceable, from contract to receipt."
+        },
+        about: {
+          eyebrow:"About", h2:"Born from a simple observation",
+          p:"Rental management still too often relies on notebooks and phone calls. ADEXPERT wanted to build more reliable tracking, without losing the human contact that builds trust between owners and tenants — from the first contract to every rent receipt."
+        },
+        portfolio: { eyebrow:"Portfolio", h2:"Our neighborhoods" },
+        partners: { eyebrow:"They trust us", h2:"Our partners" },
+        team: { eyebrow:"The team", h2:"The people behind ADEXPERT" },
+        gallery: { eyebrow:"Gallery", h2:"Properties we manage" },
+        contact: {
+          h3:"A question about your property?",
+          p:"Contact an administrator to access your contracts, payments and detailed contact information.",
+          cta:"Contact us",
+          note:"Reader access — public view of ADEXPERT. Management data (contracts, finances, contact details) is reserved for administrator accounts."
+        },
+        footer: {
+          tagline:"Property and tenant management solutions for owners in Bujumbura and the East African region.",
+          navTitle:"Navigation",
+          contactTitle:"Contact",
+          address:"Bujumbura, Burundi",
+          email:"contact@adexpert.bi",
+          phone:"+257 00 00 00 00",
+          rights:"All rights reserved."
+        },
+        quartiers: [
+          { nom:"Rohero — Villas", icon:"fa-home" },
+          { nom:"Kinindo — Residences", icon:"fa-building" },
+          { nom:"Kabondo — Apartments", icon:"fa-city" },
+          { nom:"Buyenzi — Shops", icon:"fa-store" },
+          { nom:"Nyakabiga — Villas", icon:"fa-home" },
+          { nom:"Kiriri — Residences", icon:"fa-building" }
+        ],
+        partenaires: [
+          { nom:"Private owners", c:"#0284c7" },
+          { nom:"Partner agencies", c:"#c99b4a" },
+          { nom:"Rental investors", c:"#0369a1" },
+          { nom:"Property associations", c:"#0c4a6e" }
+        ],
+        equipe: [
+          { nom:"Diogene", titre:"General Manager", c:"#0284c7" },
+          { nom:"Anicet", titre:"Rental Management Lead", c:"#c99b4a" },
+          { nom:"Edouard", titre:"Owner & Tenant Relations", c:"#0369a1" },
+          { nom:"Willy", titre:"Maintenance & Interventions", c:"#0c4a6e" }
+        ]
+      },
+      fr: {
+        nav: { accueil:"Accueil", services:"Services", apropos:"À propos", portfolio:"Portfolio", equipe:"Équipe", contact:"Contact" },
+        hero: {
+          badge:"Basée à Bujumbura, gestion locative locale",
+          h1:"La gestion locative qui avance avec votre bien.",
+          p:"ADEXPERT accompagne propriétaires et locataires à Bujumbura : suivi des loyers, entretien des biens, quittances vérifiées et une relation de confiance au quotidien.",
+          cta1:"Découvrir nos services", cta2:"Nous contacter"
+        },
+        why: {
+          eyebrow:"Pourquoi ADEXPERT", h2:"Des résultats concrets, pas juste des promesses",
+          p:"Nous combinons suivi rigoureux et connaissance du terrain à Bujumbura, pour une gestion locative fiable et adaptée à vos contraintes réelles.",
+          li1:"42 biens gérés dans 6 quartiers de Bujumbura",
+          li2:"Quittances vérifiées et traçables par QR code",
+          li3:"Un interlocuteur unique pour chaque propriétaire",
+          mockLabel:"QUITTANCE — ROHERO, VILLA 12",
+          mockPrefix:"Loyer ", mockHighlight:"encaissé", mockSuffix:" et confirmé le 3 du mois."
+        },
+        services: {
+          eyebrow:"Nos services", h2:"Ce que nous faisons pour vous",
+          s1t:"Gestion des loyers", s1p:"Suivi des paiements et rappels aux échéances, pour chaque bien.",
+          s2t:"Entretien & maintenance", s2p:"Interventions coordonnées et suivies sur l'ensemble du parc.",
+          s3t:"Quittances & suivi", s3p:"Chaque paiement confirmé et traçable, du contrat à la quittance."
+        },
+        about: {
+          eyebrow:"À propos", h2:"Née d'un constat simple",
+          p:"La gestion locative repose encore trop souvent sur des carnets et des appels téléphoniques. ADEXPERT a voulu construire un suivi plus fiable, sans perdre le contact humain qui fait la confiance entre propriétaires et locataires — du premier contrat jusqu'à chaque quittance de loyer."
+        },
+        portfolio: { eyebrow:"Portfolio", h2:"Nos quartiers" },
+        partners: { eyebrow:"Ils nous font confiance", h2:"Nos partenaires" },
+        team: { eyebrow:"L'équipe", h2:"Les personnes derrière ADEXPERT" },
+        gallery: { eyebrow:"Galerie", h2:"Les biens que nous gérons" },
+        contact: {
+          h3:"Une question sur votre bien ?",
+          p:"Contactez un administrateur pour accéder à vos contrats, paiements et coordonnées détaillées.",
+          cta:"Nous contacter",
+          note:"Accès Lecteur — vue publique d'ADEXPERT. Les données de gestion (contrats, finances, coordonnées) sont réservées aux comptes administrateurs."
+        },
+        footer: {
+          tagline:"Solutions de gestion locative et de suivi des locataires pour les propriétaires à Bujumbura et en Afrique de l'Est.",
+          navTitle:"Navigation",
+          contactTitle:"Contact",
+          address:"Bujumbura, Burundi",
+          email:"contact@adexpert.bi",
+          phone:"+257 00 00 00 00",
+          rights:"Tous droits réservés."
+        },
+        quartiers: [
+          { nom:"Rohero — Villas", icon:"fa-home" },
+          { nom:"Kinindo — Résidences", icon:"fa-building" },
+          { nom:"Kabondo — Appartements", icon:"fa-city" },
+          { nom:"Buyenzi — Commerces", icon:"fa-store" },
+          { nom:"Nyakabiga — Villas", icon:"fa-home" },
+          { nom:"Kiriri — Résidences", icon:"fa-building" }
+        ],
+        partenaires: [
+          { nom:"Propriétaires privés", c:"#0284c7" },
+          { nom:"Agences partenaires", c:"#c99b4a" },
+          { nom:"Investisseurs locatifs", c:"#0369a1" },
+          { nom:"Syndics & copropriétés", c:"#0c4a6e" }
+        ],
+        equipe: [
+          { nom:"Diogène", titre:"Directeur Général", c:"#0284c7" },
+          { nom:"Anicet N", titre:"Responsable Gestion Locative", c:"#c99b4a" },
+          { nom:"Edouard", titre:"Relation Propriétaires & Locataires", c:"#0369a1" },
+          { nom:"Willy", titre:"Maintenance & Interventions", c:"#0c4a6e" }
+        ]
+      }
+    };
+
+    function renderLanding(lang){
+      const t = I18N[lang];
+
+      const marqueeItems = [...t.quartiers, ...t.quartiers].map((q, idx) =>
+        `<div class="marquee-card" style="background-image:url('${PHOTOS[idx % 4]}')"><i class="fas ${q.icon}"></i><span>${q.nom}</span></div>`
+      ).join("");
+
+      const clientsHtml = [...t.partenaires, ...t.partenaires].map(p => {
+        const initials = p.nom.split(" ").map(w => w[0]).join("").slice(0,2);
+        return `<div class="client-card"><div class="mark" style="background:${p.c};">${initials}</div><span>${p.nom}</span></div>`;
+      }).join("");
+
+      const equipeHtml = t.equipe.map(m => {
+        const initials = m.nom.split(" ").map(n => n[0]).join("");
+        return `<div class="team-card"><div class="avatar-lg" style="background:${m.c};">${initials}</div><h4>${m.nom}</h4><p>${m.titre}</p></div>`;
+      }).join("");
+
+      const galleryHtml = PHOTOS.map(src =>
+        `<div class="gallery-item"><img src="${src}" alt="ADEXPERT — bien géré" loading="lazy"></div>`
+      ).join("");
+
+      content.innerHTML = `
+        <div class="landing">
+
+          <section class="hero" id="accueil">
+            <div class="inner hero-content">
+              <div class="hero-badge"><span class="dot"></span>${t.hero.badge}</div>
+              <h1>${t.hero.h1}</h1>
+              <p>${t.hero.p}</p>
+              <div class="hero-ctas">
+                <a class="btn-primary" href="#services">${t.hero.cta1} <i class="fas fa-arrow-right"></i></a>
+                <a class="btn-outline" href="#contact">${t.hero.cta2}</a>
+              </div>
+              <div class="trust-row">
+                <span>Rohero</span><span>Kinindo</span><span>Kabondo</span><span>Buyenzi</span><span>Nyakabiga</span><span>Kiriri</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="landing-section alt">
+            <div class="inner why-grid">
+              <div>
+                <p class="eyebrow">${t.why.eyebrow}</p>
+                <h2>${t.why.h2}</h2>
+                <p>${t.why.p}</p>
+                <ul class="why-list">
+                  <li><span class="ico"><i class="fas fa-house-chimney"></i></span>${t.why.li1}</li>
+                  <li><span class="ico"><i class="fas fa-qrcode"></i></span>${t.why.li2}</li>
+                  <li><span class="ico"><i class="fas fa-handshake"></i></span>${t.why.li3}</li>
+                </ul>
+              </div>
+              <div class="mockup">
+                <div class="mockup-bar"><span></span><span></span><span></span></div>
+                <div class="mockup-body">
+                  <span class="who-label">${t.why.mockLabel}</span>
+                  <blockquote>${t.why.mockPrefix}<b>${t.why.mockHighlight}</b>${t.why.mockSuffix}</blockquote>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="landing-section" id="services">
+            <div class="inner">
+              <div class="section-head-center">
+                <p class="eyebrow">${t.services.eyebrow}</p>
+                <h2>${t.services.h2}</h2>
+              </div>
+              <div class="services-grid">
+                <div class="service-card">
+                  <div class="service-photo" style="background-image:url('${PHOTOS[0]}')"><i class="fas fa-coins"></i></div>
+                  <div class="service-body">
+                    <div class="service-icon"><i class="fas fa-coins"></i></div>
+                    <h4>${t.services.s1t}</h4>
+                    <p>${t.services.s1p}</p>
+                  </div>
+                </div>
+                <div class="service-card">
+                  <div class="service-photo" style="background-image:url('${PHOTOS[1]}')"><i class="fas fa-tools"></i></div>
+                  <div class="service-body">
+                    <div class="service-icon"><i class="fas fa-tools"></i></div>
+                    <h4>${t.services.s2t}</h4>
+                    <p>${t.services.s2p}</p>
+                  </div>
+                </div>
+                <div class="service-card">
+                  <div class="service-photo" style="background-image:url('${PHOTOS[2]}')"><i class="fas fa-file-invoice"></i></div>
+                  <div class="service-body">
+                    <div class="service-icon"><i class="fas fa-file-invoice"></i></div>
+                    <h4>${t.services.s3t}</h4>
+                    <p>${t.services.s3p}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="landing-section alt" id="apropos">
+            <div class="inner">
+              <div class="section-head-center">
+                <p class="eyebrow">${t.about.eyebrow}</p>
+                <h2>${t.about.h2}</h2>
+              </div>
+              <div style="max-width:680px;margin:0 auto;text-align:center;">
+                <p style="font-size:16px;line-height:1.8;color:var(--ink-muted);margin:0;">${t.about.p}</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="landing-section" id="portfolio">
+            <div class="inner">
+              <div class="section-head-center">
+                <p class="eyebrow">${t.portfolio.eyebrow}</p>
+                <h2>${t.portfolio.h2}</h2>
+              </div>
+              <div class="marquee-wrap">
+                <div class="marquee-track">${marqueeItems}</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="landing-section alt">
+            <div class="inner">
+              <div class="section-head-center">
+                <p class="eyebrow">${t.partners.eyebrow}</p>
+                <h2>${t.partners.h2}</h2>
+              </div>
+              <div class="marquee-wrap">
+                <div class="clients-track">${clientsHtml}</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="landing-section" id="equipe">
+            <div class="inner">
+              <div class="section-head-center">
+                <p class="eyebrow">${t.team.eyebrow}</p>
+                <h2>${t.team.h2}</h2>
+              </div>
+              <div class="team-row">${equipeHtml}</div>
+            </div>
+          </section>
+
+          <section class="landing-section alt">
+            <div class="inner">
+              <div class="section-head-center">
+                <p class="eyebrow">${t.gallery.eyebrow}</p>
+                <h2>${t.gallery.h2}</h2>
+              </div>
+              <div class="gallery-grid">${galleryHtml}</div>
+            </div>
+          </section>
+
+          <section class="landing-section" id="contact">
+            <div class="inner">
+              <div class="contact-band">
+                <div>
+                  <h3>${t.contact.h3}</h3>
+                  <p>${t.contact.p}</p>
+                </div>
+                <a class="cta" href="mailto:contact@adexpert.bi">${t.contact.cta}</a>
+              </div>
+              <p class="contact-note">${t.contact.note}</p>
+            </div>
+          </section>
+
+          <footer class="landing-footer">
+            <div class="inner">
+              <div class="footer-grid">
+                <div>
+                  <div class="footer-brand"><span class="logo-icon-sm"><i class="fas fa-building"></i></span>ADEXPERT</div>
+                  <p class="footer-tagline">${t.footer.tagline}</p>
+                  <div class="footer-social">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                  </div>
+                </div>
+                <div class="footer-col">
+                  <h5>${t.footer.navTitle}</h5>
+                  <a href="#accueil">${t.nav.accueil}</a>
+                  <a href="#services">${t.nav.services}</a>
+                  <a href="#apropos">${t.nav.apropos}</a>
+                  <a href="#contact">${t.nav.contact}</a>
+                </div>
+                <div class="footer-col">
+                  <h5>${t.footer.contactTitle}</h5>
+                  <div class="footer-contact-item"><i class="fas fa-location-dot"></i>${t.footer.address}</div>
+                  <div class="footer-contact-item"><i class="fas fa-envelope"></i>${t.footer.email}</div>
+                  <div class="footer-contact-item"><i class="fas fa-phone"></i>${t.footer.phone}</div>
+                </div>
+              </div>
+              <div class="footer-bottom">© ${new Date().getFullYear()} ADEXPERT — ${t.footer.rights}</div>
+            </div>
+          </footer>
+
+        </div>
+      `;
+    }
+
+    let currentLang = 'en';
+    renderLanding(currentLang);
+
+    document.querySelectorAll(".lang-toggle button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".lang-toggle button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentLang = btn.dataset.lang;
+        renderLanding(currentLang);
+      });
+    });
+  }
+
+  function logout(){
+    fetch('/api/auth/logout/', {
+      method: 'POST',
+      headers: { 'Authorization': 'Token ' + authToken }
+    }).catch(() => {}).finally(() => {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('username');
+      localStorage.removeItem('fullname');
+      localStorage.removeItem('role');
+      localStorage.removeItem('peutEcrire');
+      localStorage.removeItem('estAdmin');
+      window.location.href = "/login/";
+    });
+  }
+</script>
+</body>
+</html>

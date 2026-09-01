@@ -18,7 +18,7 @@ class GroupChatSerializer(serializers.ModelSerializer):
     nb_messages      = serializers.SerializerMethodField()
     dernier_message  = serializers.SerializerMethodField()
 
-    # Champs gérés par perform_create → non obligatoires en écriture
+  
     nom          = serializers.CharField(required=False, allow_blank=True, default='')
     immeuble     = serializers.IntegerField(required=False, write_only=False,
                        source='immeuble_id', allow_null=True)

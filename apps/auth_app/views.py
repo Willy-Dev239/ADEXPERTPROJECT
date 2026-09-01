@@ -8,13 +8,7 @@ from django.http import JsonResponse
 from .models import User
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserCreateSerializer, LoginSerializer
-
-
-
-# Import depuis immeubles/permissions.py
 from apps.immeubles.permissions import IsAdminOrGestionnaire
-
-# views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -42,7 +36,7 @@ class ChangePasswordView(APIView):
         return Response({'message': 'Mot de passe mis à jour.'})
 
 
-# ── CSRF (Feature 9) ─────────────────────────────────────────
+
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def csrf_token_view(request):
@@ -68,7 +62,7 @@ class ResetUserPasswordView(APIView):
         user.set_password(new_pwd)
         user.save()
 
-        # Garder une trace en clair pour affichage admin, si le profil lié existe
+    
         if user.locataire_profile:
             user.locataire_profile.mot_de_passe_temp = new_pwd
             user.locataire_profile.save(update_fields=['mot_de_passe_temp'])
@@ -77,7 +71,7 @@ class ResetUserPasswordView(APIView):
             user.proprietaire_profile.save(update_fields=['mot_de_passe_temp'])
 
         return Response({'message': f'Mot de passe réinitialisé pour {user.username}.', 'reason': reason})
-# ── LOGIN ─────────────────────────────────────────────────────
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -99,7 +93,6 @@ def login_view(request):
     })
 
 
-# ── LOGOUT ────────────────────────────────────────────────────
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
@@ -110,13 +103,12 @@ def logout_view(request):
     return Response({'detail': 'Déconnecté.'})
 
 
-# ── ME ────────────────────────────────────────────────────────
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def me_view(request):
     return Response(UserSerializer(request.user).data)
 
-# ── LISTE / CRÉATION utilisateurs ────────────────────────────
+
 class UserListCreateView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
@@ -125,9 +117,9 @@ class UserListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         qs = User.objects.all().order_by('-date_joined')
-        role = self.request.query_params.get('role')  # ✅ AJOUTER
+        role = self.request.query_params.get('role') 
         if role:
-            qs = qs.filter(role=role)                 # ✅ AJOUTER
+            qs = qs.filter(role=role)                 
         return qs
 
     def create(self, request, *args, **kwargs):
@@ -168,6 +160,29 @@ def lier_locataire(request, user_id):
         return Response({'ok': True, 'message': f'{user.username} lié à {loca.nom_prenom}'})
     except Exception as e:
         return Response({'error': str(e)}, status=400)
+ 
+ 
+from .serializers import RegisterSerializer  # à côté des autres imports de serializers
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register_view(request):
+    s = RegisterSerializer(data=request.data)
+    if not s.is_valid():
+        return Response(s.errors, status=400)
+    user = s.save()
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({
+        'token':      token.key,
+        'user_id':    user.pk,
+        'username':   user.username,
+        'fullname':   user.full_name,
+        'role':       user.role,
+        'peutEcrire': user.peut_ecrire,
+        'estAdmin':   user.est_admin,
+    }, status=201)
+ 
+ 
     
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

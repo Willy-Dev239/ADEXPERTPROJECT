@@ -92,3 +92,30 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Compte désactivé.')
         data['user'] = u
         return data
+
+
+
+class RegisterSerializer(serializers.ModelSerializer):   # ← à ajouter, tout en bas
+    password = serializers.CharField(write_only=True, min_length=6)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name', 'password']
+
+    def validate_username(self, value):
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("Ce nom d'utilisateur est déjà utilisé.")
+        return value
+
+    def validate_email(self, value):
+        if value and User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Cette adresse e-mail est déjà associée à un compte.")
+        return value
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.role = 'lecteur'
+        user.set_password(password)
+        user.save()
+        return user
