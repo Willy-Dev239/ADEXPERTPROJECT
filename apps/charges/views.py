@@ -31,7 +31,7 @@ def rapport_mensuel_charges(request):
     mois = int(request.query_params.get('mois', timezone.now().month))
     annee = int(request.query_params.get('annee', timezone.now().year))
     qs = Charge.objects.filter(date_charge__month=mois, date_charge__year=annee)
-    # ✅ Filtre par propriétaire
+  
     user = request.user
     if user.role == 'proprietaire' and user.proprietaire_profile:
         qs = qs.filter(local__proprietaire=user.proprietaire_profile)

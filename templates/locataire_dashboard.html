@@ -2,910 +2,898 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ADEXPER | Espace Locataire</title>
-<link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
-<script>
-(function(){
-  var t=localStorage.getItem('authToken');
-  var r=localStorage.getItem('role');
-  if(!t){window.location.replace('/login/');throw 'NOT_AUTH';}
-  if(r!=='locataire'&&r!=='admin'&&r!=='gestionnaire'){window.location.replace('/login/');throw 'WRONG_ROLE';}
-  var theme=localStorage.getItem('theme')||'dark';
-  document.documentElement.setAttribute('data-theme',theme);
-})();
-</script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-/* ══════════════════ THEME VARIABLES ══════════════════ */
-:root{
-  --sidebar-w:230px;
-  --topbar-h:58px;
-  --radius:12px;
-  --radius-lg:16px;
-  --radius-xl:20px;
-  --transition:.2s ease;
-  --font-head:'Syne',sans-serif;
-  --font-body:'DM Sans',sans-serif;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADEXPER | Espace Locataire</title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <script>
+        (function(){
+            var t=localStorage.getItem('authToken');
+            var r=localStorage.getItem('role');
+            if(!t){window.location.replace('/login/');throw 'NOT_AUTH';}
+            if(r!=='locataire'&&r!=='admin'&&r!=='gestionnaire'){window.location.replace('/login/');throw 'WRONG_ROLE';}
+            var theme=localStorage.getItem('theme')||'dark';
+            document.documentElement.setAttribute('data-theme',theme);
+        })();
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ══════════════════ THEME VARIABLES ══════════════════ */
+        :root {
+            --sidebar-w: 230px;
+            --topbar-h: 58px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --transition: .2s ease;
+            --font-head: 'Syne', sans-serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
 
-[data-theme="dark"]{
-  --bg:#080c14;
-  --bg2:#0d1220;
-  --surface:#111827;
-  --surface2:#1a2234;
-  --surface3:#212d43;
-  --border:rgba(255,255,255,.06);
-  --border2:rgba(255,255,255,.11);
-  --border3:rgba(255,255,255,.18);
-  --text:#f0f4fc;
-  --text2:#8a9ab8;
-  --text3:#4a5a7a;
-  --text4:#2e3d5a;
-  --accent:#6366f1;
-  --accent2:#4f46e5;
-  --accent-glow:rgba(99,102,241,.25);
-  --green:#10b981;--green-bg:rgba(16,185,129,.12);--green-border:rgba(16,185,129,.25);
-  --red:#ef4444;--red-bg:rgba(239,68,68,.12);--red-border:rgba(239,68,68,.25);
-  --amber:#f59e0b;--amber-bg:rgba(245,158,11,.12);--amber-border:rgba(245,158,11,.25);
-  --blue:#3b82f6;--blue-bg:rgba(59,130,246,.12);--blue-border:rgba(59,130,246,.25);
-  --purple:#a78bfa;--purple-bg:rgba(167,139,250,.12);
-  --shadow:0 4px 24px rgba(0,0,0,.4);
-  --shadow-lg:0 12px 48px rgba(0,0,0,.6);
-  --scrollbar:rgba(255,255,255,.08);
-}
+        [data-theme="dark"] {
+            --bg: #0a1628;
+            --bg2: #0e1d33;
+            --surface: #12243f;
+            --surface2: #1a3255;
+            --surface3: #24406b;
+            --border: rgba(56, 189, 248, 0.12);
+            --border2: rgba(56, 189, 248, 0.22);
+            --border3: rgba(56, 189, 248, 0.35);
+            --text: #e0f2fe;
+            --text2: #a8c8e8;
+            --text3: #6b9fc9;
+            --text4: #3a6a8e;
+            --accent: #38bdf8;
+            --accent2: #0ea5e9;
+            --accent-glow: rgba(56, 189, 248, 0.2);
+            --blue: #38bdf8;
+            --blue2: #0ea5e9;
+            --blue3: #7dd3fc;
+            --shadow: 0 4px 24px rgba(0,0,0,.5);
+            --shadow-lg: 0 12px 48px rgba(0,0,0,.7);
+            --scrollbar: rgba(56,189,248,.15);
+        }
 
-[data-theme="light"]{
-  --bg:#f4f6fb;
-  --bg2:#edf0f7;
-  --surface:#ffffff;
-  --surface2:#f8f9fd;
-  --surface3:#eef1f8;
-  --border:rgba(0,0,0,.07);
-  --border2:rgba(0,0,0,.11);
-  --border3:rgba(0,0,0,.18);
-  --text:#0f172a;
-  --text2:#475569;
-  --text3:#94a3b8;
-  --text4:#cbd5e1;
-  --accent:#6366f1;
-  --accent2:#4f46e5;
-  --accent-glow:rgba(99,102,241,.15);
-  --green:#059669;--green-bg:rgba(5,150,105,.08);--green-border:rgba(5,150,105,.2);
-  --red:#dc2626;--red-bg:rgba(220,38,38,.08);--red-border:rgba(220,38,38,.2);
-  --amber:#d97706;--amber-bg:rgba(217,119,6,.08);--amber-border:rgba(217,119,6,.2);
-  --blue:#2563eb;--blue-bg:rgba(37,99,235,.08);--blue-border:rgba(37,99,235,.2);
-  --purple:#7c3aed;--purple-bg:rgba(124,58,237,.08);
-  --shadow:0 2px 12px rgba(0,0,0,.08);
-  --shadow-lg:0 8px 32px rgba(0,0,0,.12);
-  --scrollbar:rgba(0,0,0,.1);
-}
+        [data-theme="light"] {
+            --bg: #e8f4fc;
+            --bg2: #d6ecfa;
+            --surface: #ffffff;
+            --surface2: #f0f9ff;
+            --surface3: #dceaf7;
+            --border: rgba(56, 189, 248, 0.15);
+            --border2: rgba(56, 189, 248, 0.3);
+            --border3: rgba(56, 189, 248, 0.5);
+            --text: #0a3d5e;
+            --text2: #2a5f82;
+            --text3: #6b9fc9;
+            --text4: #a8c8e8;
+            --accent: #0ea5e9;
+            --accent2: #38bdf8;
+            --accent-glow: rgba(14, 165, 233, 0.12);
+            --blue: #0ea5e9;
+            --blue2: #38bdf8;
+            --blue3: #7dd3fc;
+            --shadow: 0 2px 12px rgba(14,165,233,.08);
+            --shadow-lg: 0 8px 32px rgba(14,165,233,.15);
+            --scrollbar: rgba(14,165,233,.15);
+        }
 
-/* ══════════════════ RESET & BASE ══════════════════ */
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  font-family:var(--font-body);
-  background:var(--bg);
-  color:var(--text);
-  display:flex;
-  min-height:100vh;
-  font-size:14px;
-  line-height:1.5;
-  transition:background var(--transition),color var(--transition);
-}
+        /* ══════════════════ RESET & BASE ══════════════════ */
+        *{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:smooth}
+        body{
+            font-family:var(--font-body);
+            background:var(--bg);
+            color:var(--text);
+            display:flex;
+            min-height:100vh;
+            font-size:14px;
+            line-height:1.5;
+            transition:background var(--transition),color var(--transition);
+        }
 
-/* ══════════════════ SCROLLBAR ══════════════════ */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:10px}
+        /* ══════════════════ SCROLLBAR ══════════════════ */
+        ::-webkit-scrollbar{width:5px;height:5px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:10px}
 
-/* ══════════════════ SIDEBAR ══════════════════ */
-.sidebar{
-  width:var(--sidebar-w);
-  min-width:var(--sidebar-w);
-  background:var(--surface);
-  display:flex;
-  flex-direction:column;
-  position:fixed;
-  top:0;bottom:0;left:0;
-  z-index:100;
-  border-right:1px solid var(--border);
-  overflow-y:auto;
-  transition:background var(--transition),border-color var(--transition);
-}
-.logo-area{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
-.logo-icon{
-  width:50px;height:50px;
-  background:transparent;
-  border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;flex-shrink:0;
-  overflow:visible;
-}
-.logo-icon img{width:100%;height:100%;object-fit:contain;border-radius:6px}
-.logo-name{font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px}
-.logo-sub{font-size:10px;color:var(--text3);margin-top:1px;letter-spacing:.3px}
+        /* ══════════════════ SIDEBAR ══════════════════ */
+        .sidebar{
+            width:var(--sidebar-w);
+            min-width:var(--sidebar-w);
+            background:var(--surface);
+            display:flex;
+            flex-direction:column;
+            position:fixed;
+            top:0;bottom:0;left:0;
+            z-index:100;
+            border-right:1px solid var(--border);
+            overflow-y:auto;
+            transition:background var(--transition),border-color var(--transition);
+        }
+        .logo-area{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+        .logo-icon{
+            width:50px;height:50px;
+            background:transparent;
+            border-radius:6px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:18px;flex-shrink:0;
+            overflow:visible;
+        }
+        .logo-icon img{width:100%;height:100%;object-fit:contain;border-radius:6px}
+        .logo-name{font-family:var(--font-head);font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+        .logo-sub{font-size:10px;color:var(--text3);margin-top:1px;letter-spacing:.3px}
 
-.nav-section{padding:20px 0 6px}
-.nav-group{font-size:9.5px;font-weight:700;color:var(--text3);padding:4px 18px 6px;letter-spacing:1.8px;text-transform:uppercase;font-family:var(--font-head)}
-.nav-item{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 18px;
-  font-size:12.5px;font-weight:500;
-  color:var(--text2);
-  cursor:pointer;
-  position:relative;
-  transition:all var(--transition);
-  user-select:none;
-  border-radius:0;
-  margin:1px 8px;
-  border-radius:9px;
-}
-.nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{
-  background:var(--accent-glow);
-  color:var(--accent);
-  font-weight:600;
-}
-.nav-item.active::before{
-  content:'';
-  position:absolute;left:-8px;top:50%;transform:translateY(-50%);
-  width:3px;height:60%;
-  background:var(--accent);
-  border-radius:0 3px 3px 0;
-}
-.nav-icon{font-size:14px;width:16px;text-align:center;flex-shrink:0}
-.nav-badge{
-  margin-left:auto;
-  background:var(--red);color:#fff;
-  font-size:9px;font-weight:800;
-  padding:2px 6px;border-radius:20px;min-width:18px;text-align:center;
-  font-family:var(--font-head);
-}
+        .nav-section{padding:20px 0 6px}
+        .nav-group{font-size:9.5px;font-weight:700;color:var(--text3);padding:4px 18px 6px;letter-spacing:1.8px;text-transform:uppercase;font-family:var(--font-head)}
+        .nav-item{
+            display:flex;align-items:center;gap:10px;
+            padding:9px 18px;
+            font-size:12.5px;font-weight:500;
+            color:var(--text2);
+            cursor:pointer;
+            position:relative;
+            transition:all var(--transition);
+            user-select:none;
+            border-radius:0;
+            margin:1px 8px;
+            border-radius:9px;
+        }
+        .nav-item:hover{background:var(--accent-glow);color:var(--text)}
+        .nav-item.active{
+            background:var(--accent-glow);
+            color:var(--accent);
+            font-weight:600;
+        }
+        .nav-item.active::before{
+            content:'';
+            position:absolute;left:-8px;top:50%;transform:translateY(-50%);
+            width:3px;height:60%;
+            background:var(--accent);
+            border-radius:0 3px 3px 0;
+        }
+        .nav-icon{font-size:14px;width:16px;text-align:center;flex-shrink:0}
+        .nav-badge{
+            margin-left:auto;
+            background:var(--blue);color:#fff;
+            font-size:9px;font-weight:800;
+            padding:2px 6px;border-radius:20px;min-width:18px;text-align:center;
+            font-family:var(--font-head);
+        }
 
-.sb-footer{
-  padding:14px 16px;
-  border-top:1px solid var(--border);
-  margin-top:auto;
-}
-.sb-user{display:flex;align-items:center;gap:10px}
-.sb-avatar{
-  width:34px;height:34px;border-radius:50%;
-  background:linear-gradient(135deg,#6366f1,#8b5cf6);
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-size:13px;font-weight:800;flex-shrink:0;
-  font-family:var(--font-head);
-}
-.sb-name{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-role{font-size:10px;color:var(--text3);margin-top:1px}
-.sb-logout{
-  background:none;border:none;color:var(--text3);cursor:pointer;
-  font-size:15px;padding:5px;margin-left:auto;flex-shrink:0;
-  transition:color var(--transition);border-radius:7px;
-  width:30px;height:30px;display:flex;align-items:center;justify-content:center;
-}
-.sb-logout:hover{color:var(--red);background:var(--red-bg)}
+        .sb-footer{
+            padding:14px 16px;
+            border-top:1px solid var(--border);
+            margin-top:auto;
+        }
+        .sb-user{display:flex;align-items:center;gap:10px}
+        .sb-avatar{
+            width:34px;height:34px;border-radius:50%;
+            background:linear-gradient(135deg,var(--accent),var(--accent2));
+            display:flex;align-items:center;justify-content:center;
+            color:#fff;font-size:13px;font-weight:800;flex-shrink:0;
+            font-family:var(--font-head);
+        }
+        .sb-name{font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .sb-role{font-size:10px;color:var(--text3);margin-top:1px}
+        .sb-logout{
+            background:none;border:none;color:var(--text3);cursor:pointer;
+            font-size:15px;padding:5px;margin-left:auto;flex-shrink:0;
+            transition:color var(--transition);border-radius:7px;
+            width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+        }
+        .sb-logout:hover{color:var(--blue);background:rgba(56,189,248,.15)}
 
-/* ══════════════════ MAIN ══════════════════ */
-.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-width:0}
+        /* ══════════════════ MAIN ══════════════════ */
+        .main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-width:0}
 
-/* ══════════════════ TOPBAR ══════════════════ */
-.topbar{
-  background:var(--surface);
-  border-bottom:1px solid var(--border);
-  padding:0 24px;
-  height:var(--topbar-h);
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:50;gap:12px;
-  transition:background var(--transition),border-color var(--transition);
-}
-.topbar-left{display:flex;align-items:center;gap:12px}
-.topbar-title{
-  font-family:var(--font-head);
-  font-size:16px;font-weight:700;color:var(--text);
-  letter-spacing:-.2px;
-}
-.breadcrumb{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px;margin-top:1px}
-.topbar-right{display:flex;gap:8px;align-items:center}
+        /* ══════════════════ TOPBAR ══════════════════ */
+        .topbar{
+            background:var(--surface);
+            border-bottom:1px solid var(--border);
+            padding:0 24px;
+            height:var(--topbar-h);
+            display:flex;align-items:center;justify-content:space-between;
+            position:sticky;top:0;z-index:50;gap:12px;
+            transition:background var(--transition),border-color var(--transition);
+        }
+        .topbar-left{display:flex;align-items:center;gap:12px}
+        .topbar-title{
+            font-family:var(--font-head);
+            font-size:16px;font-weight:700;color:var(--text);
+            letter-spacing:-.2px;
+        }
+        .breadcrumb{font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px;margin-top:1px}
+        .topbar-right{display:flex;gap:8px;align-items:center}
 
-/* Theme Toggle */
-.theme-toggle{
-  width:36px;height:36px;border-radius:10px;
-  background:var(--surface2);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:15px;
-  transition:all var(--transition);color:var(--text2);
-}
-.theme-toggle:hover{background:var(--surface3);color:var(--text);border-color:var(--border3)}
+        .theme-toggle{
+            width:36px;height:36px;border-radius:10px;
+            background:var(--surface2);border:1px solid var(--border2);
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;font-size:15px;
+            transition:all var(--transition);color:var(--text2);
+        }
+        .theme-toggle:hover{background:var(--surface3);color:var(--text);border-color:var(--border3)}
 
-/* Notification bell */
-.notif-btn{
-  width:36px;height:36px;border-radius:10px;
-  background:var(--surface2);border:1px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:14px;position:relative;
-  transition:all var(--transition);color:var(--text2);
-}
-.notif-btn:hover{background:var(--surface3);color:var(--text)}
-.notif-btn .dot{
-  position:absolute;top:7px;right:7px;
-  width:7px;height:7px;border-radius:50%;
-  background:var(--red);border:1.5px solid var(--surface);
-}
-.role-pill{
-  padding:4px 11px;border-radius:20px;font-size:10.5px;font-weight:700;
-  background:var(--accent-glow);color:var(--accent);
-  border:1px solid rgba(99,102,241,.25);
-  font-family:var(--font-head);letter-spacing:.3px;
-}
+        .notif-btn{
+            width:36px;height:36px;border-radius:10px;
+            background:var(--surface2);border:1px solid var(--border2);
+            display:flex;align-items:center;justify-content:center;
+            cursor:pointer;font-size:14px;position:relative;
+            transition:all var(--transition);color:var(--text2);
+        }
+        .notif-btn:hover{background:var(--surface3);color:var(--text)}
+        .notif-btn .dot{
+            position:absolute;top:7px;right:7px;
+            width:7px;height:7px;border-radius:50%;
+            background:var(--blue);border:1.5px solid var(--surface);
+        }
+        .role-pill{
+            padding:4px 11px;border-radius:20px;font-size:10.5px;font-weight:700;
+            background:var(--accent-glow);color:var(--accent);
+            border:1px solid rgba(56,189,248,.25);
+            font-family:var(--font-head);letter-spacing:.3px;
+        }
 
-/* ══════════════════ CONTENT ══════════════════ */
-.content{padding:24px;flex:1}
-.section{display:none}
-.section.active{display:block;animation:fadeUp .3s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        /* ══════════════════ CONTENT ══════════════════ */
+        .content{padding:24px;flex:1}
+        .section{display:none}
+        .section.active{display:block;animation:fadeUp .3s ease}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-/* ══════════════════ CARDS ══════════════════ */
-.card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:20px 22px;
-  margin-bottom:16px;
-  transition:background var(--transition),border-color var(--transition);
-  box-shadow:var(--shadow);
-}
-.card-title{
-  font-family:var(--font-head);
-  font-size:14px;font-weight:700;color:var(--text);
-  margin-bottom:16px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  letter-spacing:-.1px;
-}
+        /* ══════════════════ CARDS ══════════════════ */
+        .card{
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:var(--radius-lg);
+            padding:20px 22px;
+            margin-bottom:16px;
+            transition:background var(--transition),border-color var(--transition);
+            box-shadow:var(--shadow);
+        }
+        .card-title{
+            font-family:var(--font-head);
+            font-size:14px;font-weight:700;color:var(--text);
+            margin-bottom:16px;
+            display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+            letter-spacing:-.1px;
+        }
 
-/* ══════════════════ STAT CARDS ══════════════════ */
-.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:22px}
-.stat-card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius-lg);
-  padding:20px 22px;
-  position:relative;overflow:hidden;
-  box-shadow:var(--shadow);
-  transition:all var(--transition);
-}
-.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--border2)}
-.stat-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--c,linear-gradient(90deg,#6366f1,#8b5cf6));
-}
-.stat-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-family:var(--font-head)}
-.stat-value{font-family:var(--font-head);font-size:26px;font-weight:800;margin:10px 0 5px;color:var(--text)}
-.stat-sub{font-size:11.5px;color:var(--text2)}
-.stat-icon{position:absolute;right:18px;bottom:16px;font-size:36px;opacity:.07}
+        /* ══════════════════ STAT CARDS ══════════════════ */
+        .stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:22px}
+        .stat-card{
+            background:var(--surface);
+            border:1px solid var(--border);
+            border-radius:var(--radius-lg);
+            padding:20px 22px;
+            position:relative;overflow:hidden;
+            box-shadow:var(--shadow);
+            transition:all var(--transition);
+        }
+        .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--border2)}
+        .stat-card::before{
+            content:'';position:absolute;top:0;left:0;right:0;height:3px;
+            background:var(--c,linear-gradient(90deg,var(--accent),var(--accent2)));
+        }
+        .stat-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;font-family:var(--font-head)}
+        .stat-value{font-family:var(--font-head);font-size:26px;font-weight:800;margin:10px 0 5px;color:var(--text)}
+        .stat-sub{font-size:11.5px;color:var(--text2)}
+        .stat-icon{position:absolute;right:18px;bottom:16px;font-size:36px;opacity:.07}
 
-/* ══════════════════ KPI ══════════════════ */
-.kpi-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.kpi{
-  background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius);padding:13px 16px;flex:1;min-width:110px;
-  box-shadow:var(--shadow);transition:background var(--transition);
-}
-.kpi-label{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--font-head)}
-.kpi-val{font-family:var(--font-head);font-size:22px;font-weight:800;margin-top:5px;color:var(--text)}
+        /* ══════════════════ KPI ══════════════════ */
+        .kpi-row{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+        .kpi{
+            background:var(--surface);border:1px solid var(--border);
+            border-radius:var(--radius);padding:13px 16px;flex:1;min-width:110px;
+            box-shadow:var(--shadow);transition:background var(--transition);
+        }
+        .kpi-label{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--font-head)}
+        .kpi-val{font-family:var(--font-head);font-size:22px;font-weight:800;margin-top:5px;color:var(--text)}
 
-/* ══════════════════ TABLE ══════════════════ */
-.table-wrap{overflow-x:auto;border-radius:10px}
-table{width:100%;border-collapse:collapse;font-size:12.5px}
-thead tr{background:var(--surface2)}
-th{
-  text-align:left;font-weight:700;font-size:9.5px;color:var(--text3);
-  padding:11px 13px;border-bottom:1px solid var(--border);
-  text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;
-  font-family:var(--font-head);
-}
-td{padding:12px 13px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tbody tr:hover td{background:rgba(99,102,241,.04)}
+        /* ══════════════════ TABLE ══════════════════ */
+        .table-wrap{overflow-x:auto;border-radius:10px}
+        table{width:100%;border-collapse:collapse;font-size:12.5px}
+        thead tr{background:var(--surface2)}
+        th{
+            text-align:left;font-weight:700;font-size:9.5px;color:var(--text3);
+            padding:11px 13px;border-bottom:1px solid var(--border);
+            text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;
+            font-family:var(--font-head);
+        }
+        td{padding:12px 13px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle}
+        tr:last-child td{border-bottom:none}
+        tbody tr:hover td{background:var(--accent-glow)}
 
-/* ══════════════════ BADGES ══════════════════ */
-.bs{
-  display:inline-flex;align-items:center;gap:4px;
-  padding:3px 10px;border-radius:20px;
-  font-size:10.5px;font-weight:700;white-space:nowrap;
-  font-family:var(--font-head);letter-spacing:.2px;
-}
-.bs-paye{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.bs-retard{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-.bs-attente{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
-.bs-partiel{background:var(--purple-bg);color:var(--purple);border:1px solid rgba(167,139,250,.25)}
+        /* ══════════════════ BADGES ══════════════════ */
+        .bs{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:3px 10px;border-radius:20px;
+            font-size:10.5px;font-weight:700;white-space:nowrap;
+            font-family:var(--font-head);letter-spacing:.2px;
+        }
+        .bs-paye{background:rgba(56,189,248,.15);color:var(--accent);border:1px solid rgba(56,189,248,.25)}
+        .bs-retard{background:rgba(56,189,248,.12);color:var(--blue2);border:1px solid rgba(56,189,248,.2)}
+        .bs-attente{background:rgba(56,189,248,.1);color:var(--accent);border:1px solid rgba(56,189,248,.2)}
+        .bs-partiel{background:rgba(56,189,248,.1);color:var(--blue3);border:1px solid rgba(56,189,248,.2)}
 
-/* ══════════════════ BUTTONS ══════════════════ */
-.btn{
-  padding:8px 14px;border-radius:9px;
-  font-size:12.5px;cursor:pointer;
-  border:1px solid var(--border2);
-  background:var(--surface2);color:var(--text2);
-  transition:all var(--transition);
-  font-family:var(--font-body);font-weight:600;
-  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
-}
-.btn:hover{background:var(--surface3);color:var(--text);transform:translateY(-1px)}
-.btn:active{transform:translateY(0) scale(.98)}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-primary{
-  background:linear-gradient(135deg,#6366f1,#4f46e5);
-  color:#fff;border-color:transparent;
-  box-shadow:0 4px 14px rgba(99,102,241,.35);
-}
-.btn-primary:hover{background:linear-gradient(135deg,#5254cc,#4338ca);box-shadow:0 6px 20px rgba(99,102,241,.45)}
-.btn-success{background:linear-gradient(135deg,var(--green),#059669);color:#fff;border-color:transparent}
-.btn-sm{padding:5px 11px;font-size:11.5px;border-radius:7px}
+        /* ══════════════════ BUTTONS ══════════════════ */
+        .btn{
+            padding:8px 14px;border-radius:9px;
+            font-size:12.5px;cursor:pointer;
+            border:1px solid var(--border2);
+            background:var(--surface2);color:var(--text2);
+            transition:all var(--transition);
+            font-family:var(--font-body);font-weight:600;
+            display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
+        }
+        .btn:hover{background:var(--surface3);color:var(--text);transform:translateY(-1px)}
+        .btn:active{transform:translateY(0) scale(.98)}
+        .btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+        .btn-primary{
+            background:linear-gradient(135deg,var(--accent),var(--accent2));
+            color:#fff;border-color:transparent;
+            box-shadow:0 4px 14px rgba(56,189,248,.35);
+        }
+        .btn-primary:hover{background:linear-gradient(135deg,#0c8ec9,#0284c7);box-shadow:0 6px 20px rgba(56,189,248,.45)}
+        .btn-success{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+        .btn-sm{padding:5px 11px;font-size:11.5px;border-radius:7px}
 
-/* ══════════════════ PROGRESS ══════════════════ */
-.prog-wrap{background:var(--surface2);border-radius:20px;height:6px;overflow:hidden}
-.prog-fill{height:100%;border-radius:20px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+        /* ══════════════════ PROGRESS ══════════════════ */
+        .prog-wrap{background:var(--surface2);border-radius:20px;height:6px;overflow:hidden}
+        .prog-fill{height:100%;border-radius:20px;transition:width .8s cubic-bezier(.4,0,.2,1)}
 
-/* ══════════════════ INFO BOXES ══════════════════ */
-.info-box{
-  display:flex;align-items:flex-start;gap:9px;
-  padding:11px 15px;border-radius:10px;
-  font-size:12.5px;margin-bottom:13px;line-height:1.5;
-}
-.info-ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
-.info-err{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border)}
-.info-warn{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-border)}
-.info-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border)}
+        /* ══════════════════ INFO BOXES ══════════════════ */
+        .info-box{
+            display:flex;align-items:flex-start;gap:9px;
+            padding:11px 15px;border-radius:10px;
+            font-size:12.5px;margin-bottom:13px;line-height:1.5;
+        }
+        .info-ok{background:rgba(56,189,248,.12);color:var(--accent);border:1px solid rgba(56,189,248,.2)}
+        .info-err{background:rgba(56,189,248,.1);color:var(--blue2);border:1px solid rgba(56,189,248,.2)}
+        .info-warn{background:rgba(56,189,248,.1);color:var(--accent);border:1px solid rgba(56,189,248,.2)}
+        .info-blue{background:rgba(56,189,248,.12);color:var(--accent);border:1px solid rgba(56,189,248,.2)}
 
-/* ══════════════════ MODAL BORDEREAU ══════════════════ */
-.modal-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.7);z-index:500;
-  align-items:center;justify-content:center;
-  padding:20px;backdrop-filter:blur(6px);
-}
-.modal-overlay.open{display:flex;animation:overlayIn .2s ease}
-@keyframes overlayIn{from{opacity:0}to{opacity:1}}
-.modal{
-  background:var(--surface);
-  border:1px solid var(--border2);
-  border-radius:var(--radius-xl);
-  width:560px;max-width:100%;max-height:90vh;overflow-y:auto;
-  box-shadow:var(--shadow-lg);
-  animation:modalIn .28s cubic-bezier(.34,1.56,.64,1);
-}
-.modal-lg{width:700px}
-@keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
-.modal-header{
-  padding:20px 22px 0;
-  display:flex;align-items:center;gap:12px;
-  border-bottom:1px solid var(--border);
-  padding-bottom:15px;margin-bottom:18px;
-}
-.modal-icon{
-  width:42px;height:42px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;flex-shrink:0;
-}
-.modal-title{font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--text)}
-.modal-subtitle{font-size:11.5px;color:var(--text3);margin-top:2px}
-.modal-close{
-  background:none;border:none;cursor:pointer;
-  color:var(--text3);font-size:18px;
-  width:32px;height:32px;border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  transition:all var(--transition);margin-left:auto;flex-shrink:0;
-}
-.modal-close:hover{background:var(--surface2);color:var(--text)}
-.modal-body{padding:0 22px}
-.modal-footer{
-  padding:15px 22px 20px;
-  display:flex;gap:8px;justify-content:flex-end;
-  border-top:1px solid var(--border);margin-top:18px;flex-wrap:wrap;
-}
+        /* ══════════════════ MODAL BORDEREAU ══════════════════ */
+        .modal-overlay{
+            display:none;position:fixed;inset:0;
+            background:rgba(0,0,0,.7);z-index:500;
+            align-items:center;justify-content:center;
+            padding:20px;backdrop-filter:blur(6px);
+        }
+        .modal-overlay.open{display:flex;animation:overlayIn .2s ease}
+        @keyframes overlayIn{from{opacity:0}to{opacity:1}}
+        .modal{
+            background:var(--surface);
+            border:1px solid var(--border2);
+            border-radius:var(--radius-xl);
+            width:560px;max-width:100%;max-height:90vh;overflow-y:auto;
+            box-shadow:var(--shadow-lg);
+            animation:modalIn .28s cubic-bezier(.34,1.56,.64,1);
+        }
+        .modal-lg{width:700px}
+        @keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .modal-header{
+            padding:20px 22px 0;
+            display:flex;align-items:center;gap:12px;
+            border-bottom:1px solid var(--border);
+            padding-bottom:15px;margin-bottom:18px;
+        }
+        .modal-icon{
+            width:42px;height:42px;border-radius:12px;
+            display:flex;align-items:center;justify-content:center;
+            font-size:18px;flex-shrink:0;
+        }
+        .modal-title{font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--text)}
+        .modal-subtitle{font-size:11.5px;color:var(--text3);margin-top:2px}
+        .modal-close{
+            background:none;border:none;cursor:pointer;
+            color:var(--text3);font-size:18px;
+            width:32px;height:32px;border-radius:8px;
+            display:flex;align-items:center;justify-content:center;
+            transition:all var(--transition);margin-left:auto;flex-shrink:0;
+        }
+        .modal-close:hover{background:var(--surface2);color:var(--text)}
+        .modal-body{padding:0 22px}
+        .modal-footer{
+            padding:15px 22px 20px;
+            display:flex;gap:8px;justify-content:flex-end;
+            border-top:1px solid var(--border);margin-top:18px;flex-wrap:wrap;
+        }
 
-/* ══════════════════ MODAL BORDEREAU SPÉCIFIQUE ══════════════════ */
-#m-bordereau .modal{width:580px}
+        /* ══════════════════ MODAL BORDEREAU SPÉCIFIQUE ══════════════════ */
+        #m-bordereau .modal{width:580px}
 
-/* Upload zone */
-.upload-zone{
-  border:2px dashed var(--border2);border-radius:var(--radius);
-  padding:28px;text-align:center;cursor:pointer;
-  transition:all var(--transition);position:relative;
-}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-glow)}
-.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.upload-icon{font-size:32px;margin-bottom:8px}
-.upload-text{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
-.upload-sub{font-size:11.5px;color:var(--text3)}
+        .upload-zone{
+            border:2px dashed var(--border2);border-radius:var(--radius);
+            padding:28px;text-align:center;cursor:pointer;
+            transition:all var(--transition);position:relative;
+        }
+        .upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-glow)}
+        .upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+        .upload-icon{font-size:32px;margin-bottom:8px}
+        .upload-text{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+        .upload-sub{font-size:11.5px;color:var(--text3)}
 
-/* File badge */
-.file-badge{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;border-radius:10px;
-  background:var(--green-bg);border:1px solid var(--green-border);
-  font-size:12.5px;color:var(--green);
-}
-.file-badge button{background:none;border:none;cursor:pointer;color:var(--green);margin-left:auto;font-size:14px;padding:2px}
+        .file-badge{
+            display:flex;align-items:center;gap:10px;
+            padding:10px 14px;border-radius:10px;
+            background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.2);
+            font-size:12.5px;color:var(--accent);
+        }
+        .file-badge button{background:none;border:none;cursor:pointer;color:var(--accent);margin-left:auto;font-size:14px;padding:2px}
 
-/* Payment grid */
-.payment-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
-.pay-btn{
-  display:flex;flex-direction:column;align-items:center;gap:5px;
-  padding:11px 6px;
-  border:1px solid var(--border2);border-radius:10px;
-  cursor:pointer;background:var(--surface2);
-  font-size:11px;color:var(--text2);font-weight:600;
-  transition:all var(--transition);font-family:var(--font-body);
-  line-height:1.3;text-align:center;
-}
-.pay-btn i{font-size:20px;display:block}
-.pay-btn:hover{border-color:var(--accent);background:var(--accent-glow);color:var(--accent)}
-.pay-btn.active{
-  border:2px solid var(--accent);
-  background:var(--accent-glow);color:var(--accent);
-  font-weight:700;
-  box-shadow:0 0 0 3px rgba(99,102,241,.12);
-}
+        .payment-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+        .pay-btn{
+            display:flex;flex-direction:column;align-items:center;gap:5px;
+            padding:11px 6px;
+            border:1px solid var(--border2);border-radius:10px;
+            cursor:pointer;background:var(--surface2);
+            font-size:11px;color:var(--text2);font-weight:600;
+            transition:all var(--transition);font-family:var(--font-body);
+            line-height:1.3;text-align:center;
+        }
+        .pay-btn i{font-size:20px;display:block}
+        .pay-btn:hover{border-color:var(--accent);background:var(--accent-glow);color:var(--accent)}
+        .pay-btn.active{
+            border:2px solid var(--accent);
+            background:var(--accent-glow);color:var(--accent);
+            font-weight:700;
+            box-shadow:0 0 0 3px rgba(56,189,248,.15);
+        }
 
-/* Form groups */
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
-.fg label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;font-family:var(--font-head)}
-.fg input,.fg select,.fg textarea{
-  padding:9px 12px;border:1px solid var(--border2);
-  border-radius:9px;background:var(--surface2);
-  color:var(--text);font-size:12.5px;font-family:var(--font-body);
-  transition:all .2s;width:100%;
-}
-.fg input:focus,.fg select:focus,.fg textarea:focus{
-  outline:none;border-color:var(--accent);
-  box-shadow:0 0 0 3px var(--accent-glow);
-}
-.fg select option{background:var(--surface2)}
-.req{color:var(--red)}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+        .fg label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;font-family:var(--font-head)}
+        .fg input,.fg select,.fg textarea{
+            padding:9px 12px;border:1px solid var(--border2);
+            border-radius:9px;background:var(--surface2);
+            color:var(--text);font-size:12.5px;font-family:var(--font-body);
+            transition:all .2s;width:100%;
+        }
+        .fg input:focus,.fg select:focus,.fg textarea:focus{
+            outline:none;border-color:var(--accent);
+            box-shadow:0 0 0 3px var(--accent-glow);
+        }
+        .fg select option{background:var(--surface2)}
+        .req{color:var(--blue2)}
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-/* ══════════════════ BORDEREAUX GRID ══════════════════ */
-.bord-grid-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-top:12px}
-.bord-card{
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:var(--radius);overflow:hidden;
-  transition:all var(--transition);cursor:pointer;
-}
-.bord-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--border2)}
-.bord-img{width:100%;height:108px;object-fit:cover;display:block;background:var(--surface2)}
-.bord-img-placeholder{width:100%;height:108px;display:flex;align-items:center;justify-content:center;font-size:34px;background:var(--surface2)}
-.bord-info{padding:9px 11px}
-.bord-label{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-head)}
-.bord-date{font-size:10px;color:var(--text3);margin-top:3px}
+        /* ══════════════════ BORDEREAUX GRID ══════════════════ */
+        .bord-grid-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px;margin-top:12px}
+        .bord-card{
+            background:var(--surface2);border:1px solid var(--border);
+            border-radius:var(--radius);overflow:hidden;
+            transition:all var(--transition);cursor:pointer;
+        }
+        .bord-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--border2)}
+        .bord-img{width:100%;height:108px;object-fit:cover;display:block;background:var(--surface2)}
+        .bord-img-placeholder{width:100%;height:108px;display:flex;align-items:center;justify-content:center;font-size:34px;background:var(--surface2)}
+        .bord-info{padding:9px 11px}
+        .bord-label{font-size:11.5px;font-weight:700;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--font-head)}
+        .bord-date{font-size:10px;color:var(--text3);margin-top:3px}
 
-/* ══════════════════ HISTORIQUE ══════════════════ */
-.hist-item{
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:var(--radius);padding:15px 17px;margin-bottom:10px;
-  transition:border-color var(--transition);
-}
-.hist-item:hover{border-color:var(--border2)}
-.hist-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px;gap:10px;flex-wrap:wrap}
-.hist-label{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text)}
-.hist-period{font-size:11px;color:var(--text3)}
-.hist-amounts{display:flex;gap:16px;font-size:12px;color:var(--text2);margin-bottom:7px;flex-wrap:wrap}
-.pay-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
-.pay-chip{
-  background:var(--green-bg);border:1px solid var(--green-border);
-  border-radius:7px;padding:3px 9px;font-size:11px;color:var(--green);white-space:nowrap;
-}
+        /* ══════════════════ HISTORIQUE ══════════════════ */
+        .hist-item{
+            background:var(--surface2);border:1px solid var(--border);
+            border-radius:var(--radius);padding:15px 17px;margin-bottom:10px;
+            transition:border-color var(--transition);
+        }
+        .hist-item:hover{border-color:var(--border2)}
+        .hist-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px;gap:10px;flex-wrap:wrap}
+        .hist-label{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text)}
+        .hist-period{font-size:11px;color:var(--text3)}
+        .hist-amounts{display:flex;gap:16px;font-size:12px;color:var(--text2);margin-bottom:7px;flex-wrap:wrap}
+        .pay-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+        .pay-chip{
+            background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.2);
+            border-radius:7px;padding:3px 9px;font-size:11px;color:var(--accent);white-space:nowrap;
+        }
 
-/* ══════════════════ CHAT ══════════════════ */
-.chat-container{display:flex;flex-direction:column;height:430px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)}
-.chat-messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
-.chat-msg{display:flex;flex-direction:column;gap:3px;max-width:78%}
-.chat-msg.mine{align-self:flex-end;align-items:flex-end}
-.chat-msg.other{align-self:flex-start;align-items:flex-start}
-.chat-bubble{padding:9px 14px;border-radius:14px;font-size:12.5px;line-height:1.5;word-break:break-word}
-.chat-msg.mine .chat-bubble{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border-radius:14px 14px 3px 14px}
-.chat-msg.other .chat-bubble{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:14px 14px 14px 3px}
-.chat-meta{font-size:10px;color:var(--text3)}
-.chat-input-row{padding:11px 13px;border-top:1px solid var(--border);display:flex;gap:8px}
-.chat-input{
-  flex:1;padding:9px 13px;
-  border:1px solid var(--border2);border-radius:9px;
-  background:var(--surface);color:var(--text);
-  font-size:12.5px;font-family:var(--font-body);
-  transition:border-color .2s;
-}
-.chat-input:focus{outline:none;border-color:var(--accent)}
+        /* ══════════════════ CHAT ══════════════════ */
+        .chat-container{display:flex;flex-direction:column;height:430px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)}
+        .chat-messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
+        .chat-msg{display:flex;flex-direction:column;gap:3px;max-width:78%}
+        .chat-msg.mine{align-self:flex-end;align-items:flex-end}
+        .chat-msg.other{align-self:flex-start;align-items:flex-start}
+        .chat-bubble{padding:9px 14px;border-radius:14px;font-size:12.5px;line-height:1.5;word-break:break-word}
+        .chat-msg.mine .chat-bubble{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-radius:14px 14px 3px 14px}
+        .chat-msg.other .chat-bubble{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:14px 14px 14px 3px}
+        .chat-meta{font-size:10px;color:var(--text3)}
+        .chat-input-row{padding:11px 13px;border-top:1px solid var(--border);display:flex;gap:8px}
+        .chat-input{
+            flex:1;padding:9px 13px;
+            border:1px solid var(--border2);border-radius:9px;
+            background:var(--surface);color:var(--text);
+            font-size:12.5px;font-family:var(--font-body);
+            transition:border-color .2s;
+        }
+        .chat-input:focus{outline:none;border-color:var(--accent)}
 
-/* ══════════════════ NOTIFICATIONS ══════════════════ */
-.notif-item{display:flex;align-items:flex-start;gap:11px;padding:13px 0;border-bottom:1px solid var(--border)}
-.notif-item:last-child{border-bottom:none}
-.notif-dot{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.notif-dot.paiement{background:var(--green-bg)}
-.notif-dot.bordereau{background:var(--blue-bg)}
-.notif-dot.rappel{background:var(--amber-bg)}
-.notif-dot.unread{box-shadow:0 0 0 2px var(--accent)}
-.notif-title{font-family:var(--font-head);font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px}
-.notif-msg{font-size:11.5px;color:var(--text2);line-height:1.4}
-.notif-time{font-size:10.5px;color:var(--text3);margin-top:3px}
+        /* ══════════════════ NOTIFICATIONS ══════════════════ */
+        .notif-item{display:flex;align-items:flex-start;gap:11px;padding:13px 0;border-bottom:1px solid var(--border)}
+        .notif-item:last-child{border-bottom:none}
+        .notif-dot{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+        .notif-dot.paiement{background:rgba(56,189,248,.12)}
+        .notif-dot.bordereau{background:rgba(56,189,248,.12)}
+        .notif-dot.rappel{background:rgba(56,189,248,.1)}
+        .notif-dot.unread{box-shadow:0 0 0 2px var(--accent)}
+        .notif-title{font-family:var(--font-head);font-size:12.5px;font-weight:700;color:var(--text);margin-bottom:2px}
+        .notif-msg{font-size:11.5px;color:var(--text2);line-height:1.4}
+        .notif-time{font-size:10.5px;color:var(--text3);margin-top:3px}
 
-/* ══════════════════ MISC ══════════════════ */
-.loader{text-align:center;padding:40px 20px;color:var(--text3);font-size:12.5px}
-.hidden{display:none!important}
-.sep{height:1px;background:var(--border);margin:16px 0}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        /* ══════════════════ MISC ══════════════════ */
+        .loader{text-align:center;padding:40px 20px;color:var(--text3);font-size:12.5px}
+        .hidden{display:none!important}
+        .sep{height:1px;background:var(--border);margin:16px 0}
+        .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 
-/* ══════════════════ RESPONSIVE ══════════════════ */
-@media(max-width:900px){
-  .stats-grid{grid-template-columns:1fr 1fr}
-  .payment-grid{grid-template-columns:repeat(4,1fr)}
-}
-@media(max-width:768px){
-  .sidebar{transform:translateX(-100%)}
-  .main{margin-left:0}
-  .stats-grid{grid-template-columns:1fr}
-  .two-col{grid-template-columns:1fr}
-  .payment-grid{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:480px){
-  .payment-grid{grid-template-columns:repeat(2,1fr)}
-}
-</style>
-<script src="{% static 'js/i18n.js' %}"></script>
+        /* ══════════════════ RESPONSIVE ══════════════════ */
+        @media(max-width:900px){
+            .stats-grid{grid-template-columns:1fr 1fr}
+            .payment-grid{grid-template-columns:repeat(4,1fr)}
+        }
+        @media(max-width:768px){
+            .sidebar{transform:translateX(-100%)}
+            .main{margin-left:0}
+            .stats-grid{grid-template-columns:1fr}
+            .two-col{grid-template-columns:1fr}
+            .payment-grid{grid-template-columns:repeat(3,1fr)}
+        }
+        @media(max-width:480px){
+            .payment-grid{grid-template-columns:repeat(2,1fr)}
+        }
+    </style>
+    <script src="{% static 'js/i18n.js' %}"></script>
 </head>
 <body>
 
-<!-- ══════════════════ SIDEBAR ══════════════════ -->
-<nav class="sidebar">
-  <div class="logo-area">
-   <div class="logo-icon"><img src="{% static 'images/favicon.png'' %}" alt="ADEXPERT"></div>
-   <div>
-      <div class="logo-name">ADEXPERT</div>
-      <div class="logo-sub">Espace Locataire</div>
-    </div>
-  </div>
-  <div class="nav-section">
-    <div class="nav-group">Mon Espace</div>
-    <div class="nav-item active" onclick="goSection('dashboard',this)">
-      <span class="nav-icon"><i class="fas fa-chart-pie"></i></span>Mon Dashboard
-    </div>
-    <div class="nav-group">Paiements</div>
-    <div class="nav-item" onclick="goSection('mes-loyers',this)">
-      <span class="nav-icon"><i class="fas fa-wallet"></i></span>Mes Loyers
-      <span class="nav-badge" id="badge-retard">0</span>
-    </div>
-    <div class="nav-item" onclick="goSection('bordereaux',this)">
-      <span class="nav-icon"><i class="fas fa-receipt"></i></span>Mes Bordereaux
-    </div>
-    <div class="nav-group">Communication</div>
-    <div class="nav-item" onclick="goSection('chat',this)">
-      <span class="nav-icon"><i class="fas fa-comments"></i></span>Chat Immeuble
-    </div>
-    <div class="nav-item" onclick="goSection('notifications',this)">
-      <span class="nav-icon"><i class="fas fa-bell"></i></span>Notifications
-      <span class="nav-badge" id="badge-notif">0</span>
-    </div>
-    <div class="nav-group">Mon Contrat</div>
-    <div class="nav-item" onclick="goSection('mon-contrat',this)">
-      <span class="nav-icon"><i class="fas fa-file-contract"></i></span>Mon Contrat
-    </div>
-    <div class="nav-group">Mon Compte</div>
-    <div class="nav-item" onclick="goSection('mon-compte',this)">
-      <span class="nav-icon"><i class="fas fa-lock"></i></span>Changer mot de passe
-    </div>
-  </div>
-  <div class="sb-footer">
-    <div class="sb-user">
-      <div class="sb-avatar" id="sb-avatar">L</div>
-      <div style="flex:1;min-width:0">
-        <div class="sb-name" id="sb-name">Chargement...</div>
-        <div class="sb-role">Locataire</div>
-      </div>
-      <button class="sb-logout" onclick="confirmLogout()" title="Déconnexion">
-        <i class="fas fa-power-off"></i>
-      </button>
-    </div>
-  </div>
-</nav>
-
-<!-- ══════════════════ MAIN ══════════════════ -->
-<div class="main">
-
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="topbar-left">
-    <div>
-      <div class="topbar-title" id="page-title">Mon Dashboard</div>
-      <div class="breadcrumb">
-        <i class="fas fa-home" style="font-size:9px"></i>
-        <span id="page-breadcrumb">Tableau de bord</span>
-      </div>
-    </div>
-  </div>
-  <div class="topbar-right">
-    <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
-      <span id="theme-icon"><i class="fas fa-sun"></i></span>
-    </button>
-    <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
-      <option value="fr"><i class="fas fa-flag"></i> Français</option>
-      <option value="en"><i class="fas fa-flag"></i> English</option>
-      <option value="rn"><i class="fas fa-flag"></i> Kirundi</option>
-      <option value="sw"><i class="fas fa-flag"></i> Kiswahili</option>
-      <option value="rw"><i class="fas fa-flag"></i> Kinyarwanda</option>
-      <option value="it"><i class="fas fa-flag"></i> Italiano</option>
-      <option value="es"><i class="fas fa-flag"></i> Español</option>
-      <option value="zh"><i class="fas fa-flag"></i> 中文</option>
-    </select>
-    <!-- Notification bell -->
-    <button class="notif-btn" onclick="goSection('notifications',document.querySelector('[onclick*=notifications]'))" title="Notifications">
-      <i class="fas fa-bell"></i>
-      <span class="dot" id="notif-dot" style="display:none"></span>
-    </button>
-    <span class="role-pill"><i class="fas fa-home"></i> Locataire</span>
-    <button class="btn btn-sm btn-primary" onclick="openModalBordereau()">
-      <i class="fas fa-upload"></i> Envoyer un bordereau
-    </button>
-  </div>
-</div>
-
-<!-- CONTENT -->
-<div class="content">
-<!-- ════ DASHBOARD ════ -->
-<div class="section active" id="s-dashboard">
-  <div id="dash-alerte" class="hidden"></div>
-  <div class="stats-grid">
-    <div class="stat-card" style="--c:linear-gradient(90deg,#6366f1,#8b5cf6)">
-      <div class="stat-label">Total loyers</div>
-      <div class="stat-value" id="d-total">—</div>
-      <div class="stat-sub" id="d-total-sub">BIF total dû</div>
-      <div class="stat-icon"><i class="fas fa-list-alt"></i></div>
-    </div>
-    <div class="stat-card" style="--c:linear-gradient(90deg,#10b981,#059669)">
-      <div class="stat-label">Déjà payé</div>
-      <div class="stat-value" id="d-paye">—</div>
-      <div class="stat-sub" id="d-paye-sub">BIF versés</div>
-      <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-    </div>
- <div class="stat-card" id="d-solde-card" style="--c:linear-gradient(90deg,#ef4444,#dc2626)">
-      <div class="stat-label">Solde restant</div>
-      <div class="stat-value" id="d-solde">—</div>
-      <div class="stat-sub" id="d-retard-sub">BIF restants</div>
-      <div class="stat-icon"><i class="fas fa-exclamation-triangle" id="d-solde-icon"></i></div>
-    </div>
-  </div>
-  <div class="two-col">
-    <div class="card">
-      <div class="card-title"><span><i class="fas fa-home" style="color:var(--accent);margin-right:6px"></i>Mon Local</span></div>
-      <div id="dash-local"><div class="loader">Chargement...</div></div>
-    </div>
-    <div class="card">
-      <div class="card-title"><span><i class="fas fa-file-contract" style="color:var(--green);margin-right:6px"></i>Mon Contrat actif</span></div>
-      <div id="dash-contrat"><div class="loader">Chargement...</div></div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-title">
-      <span><i class="fas fa-bell" style="color:var(--purple);margin-right:6px"></i>Notifications récentes</span>
-      <button class="btn btn-sm" onclick="goSection('notifications',document.querySelector('[onclick*=notifications]'))">Voir tout <i class="fas fa-arrow-right"></i></button>
-    </div>
-    <div id="dash-notifs"><div class="loader">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ════ MES LOYERS ════ -->
-<div class="section" id="s-mes-loyers">
-  <div class="kpi-row" id="kpi-loyers"></div>
-  <div class="card">
-    <div class="card-title">
-      <span><i class="fas fa-wallet" style="color:var(--amber);margin-right:6px"></i>Mes Loyers & Paiements</span>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-sm" onclick="loadMesLoyers('tous')">Tous</button>
-        <button class="btn btn-sm" style="color:var(--red);border-color:var(--red-border)" onclick="loadMesLoyers('retard')">En retard</button>
-        <button class="btn btn-sm" style="color:var(--amber);border-color:var(--amber-border)" onclick="loadMesLoyers('attente')">Impayés</button>
-      </div>
-    </div>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Libellé</th><th>Période</th><th>Total</th><th>Payé</th><th>Solde</th><th>Échéance</th><th>Statut</th></tr></thead>
-      <tbody id="tb-loyers"><tr><td colspan="8" class="loader"></td></tr></tbody>
-    </table></div>
-  </div>
-</div>
-
-<!-- ════ BORDEREAUX ════ -->
-<div class="section" id="s-bordereaux">
-  <div class="card">
-    <div class="card-title">
-      <span><i class="fas fa-receipt" style="color:var(--accent);margin-right:6px"></i>Mes Bordereaux de paiement</span>
-      <button class="btn btn-primary btn-sm" onclick="openModalBordereau()">
-        <i class="fas fa-plus"></i> Envoyer un bordereau
-      </button>
-    </div>
-    <div class="info-box info-blue">
-      <i class="fas fa-info-circle"></i>
-      Prenez en photo votre reçu de paiement et envoyez-le ici. L'administration le vérifiera et mettra à jour votre dossier.
-    </div>
-    <div id="bord-alert" style="margin-top:10px"></div>
-    <div class="sep"></div>
-    <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">
-      Bordereaux envoyés
-    </div>
-    <div id="bord-grid"><div class="loader">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ════ CHAT ════ -->
-<div class="section" id="s-chat">
-  <div id="chat-no-group" class="hidden">
-    <div class="card" style="text-align:center;padding:52px">
-      <div style="font-size:44px;margin-bottom:14px"><i class="fas fa-comments"></i></div>
-      <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px">Pas encore de groupe de chat</div>
-      <div style="font-size:12.5px;color:var(--text3)">Vous serez automatiquement ajouté au groupe de votre immeuble dès que votre contrat est actif.</div>
-    </div>
-  </div>
-  <div id="chat-panel" class="hidden">
-    <div class="card" style="padding:0;overflow:hidden">
-      <div style="padding:15px 19px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px">
-        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff"><i class="fas fa-building"></i></div>
-        <div>
-          <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--text)" id="chat-group-name">Groupe immeuble</div>
-          <div style="font-size:11px;color:var(--text3)" id="chat-group-sub">Chat avec la gestion et les résidents</div>
+    <!-- ══════════════════ SIDEBAR ══════════════════ -->
+    <nav class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><img src="{% static 'images/favicon.png' %}" alt="ADEXPERT"></div>
+            <div>
+                <div class="logo-name">ADEXPERT</div>
+                <div class="logo-sub">Espace Locataire</div>
+            </div>
         </div>
-        <div style="margin-left:auto">
-          <span style="font-size:10px;color:var(--green);background:var(--green-bg);padding:3px 9px;border-radius:20px;font-weight:700;border:1px solid var(--green-border)"><i class="fas fa-circle" style="font-size:6px;margin-right:4px"></i> En ligne</span>
+        <div class="nav-section">
+            <div class="nav-group">Mon Espace</div>
+            <div class="nav-item active" onclick="goSection('dashboard',this)">
+                <span class="nav-icon"><i class="fas fa-chart-pie"></i></span>Mon Dashboard
+            </div>
+            <div class="nav-group">Paiements</div>
+            <div class="nav-item" onclick="goSection('mes-loyers',this)">
+                <span class="nav-icon"><i class="fas fa-wallet"></i></span>Mes Loyers
+                <span class="nav-badge" id="badge-retard">0</span>
+            </div>
+            <div class="nav-item" onclick="goSection('bordereaux',this)">
+                <span class="nav-icon"><i class="fas fa-receipt"></i></span>Mes Bordereaux
+            </div>
+            <div class="nav-group">Communication</div>
+            <div class="nav-item" onclick="goSection('chat',this)">
+                <span class="nav-icon"><i class="fas fa-comments"></i></span>Chat Immeuble
+            </div>
+            <div class="nav-item" onclick="goSection('notifications',this)">
+                <span class="nav-icon"><i class="fas fa-bell"></i></span>Notifications
+                <span class="nav-badge" id="badge-notif">0</span>
+            </div>
+            <div class="nav-group">Mon Contrat</div>
+            <div class="nav-item" onclick="goSection('mon-contrat',this)">
+                <span class="nav-icon"><i class="fas fa-file-contract"></i></span>Mon Contrat
+            </div>
+            <div class="nav-group">Mon Compte</div>
+            <div class="nav-item" onclick="goSection('mon-compte',this)">
+                <span class="nav-icon"><i class="fas fa-lock"></i></span>Changer mot de passe
+            </div>
         </div>
-      </div>
-      <div class="chat-container" style="border:none;border-radius:0">
-        <div class="chat-messages" id="chat-msgs"></div>
-        <div class="chat-input-row">
-          <input class="chat-input" id="chat-input" placeholder="Écrivez un message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}">
-          <button class="btn btn-primary btn-sm" onclick="sendMsg()">Envoyer <i class="fas fa-paper-plane"></i></button>
+        <div class="sb-footer">
+            <div class="sb-user">
+                <div class="sb-avatar" id="sb-avatar">L</div>
+                <div style="flex:1;min-width:0">
+                    <div class="sb-name" id="sb-name">Chargement...</div>
+                    <div class="sb-role">Locataire</div>
+                </div>
+                <button class="sb-logout" onclick="confirmLogout()" title="Déconnexion">
+                    <i class="fas fa-power-off"></i>
+                </button>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
+    </nav>
 
-<!-- ════ NOTIFICATIONS ════ -->
-<div class="section" id="s-notifications">
-  <div class="card">
-    <div class="card-title">
-      <span><i class="fas fa-bell" style="color:var(--purple);margin-right:6px"></i>Mes Notifications</span>
-      <button class="btn btn-sm" onclick="marquerTousLus()"><i class="fas fa-check-double"></i> Tout marquer lu</button>
-    </div>
-    <div id="notif-list"><div class="loader">Chargement...</div></div>
-  </div>
-</div>
+    <!-- ══════════════════ MAIN ══════════════════ -->
+    <div class="main">
 
-<!-- ════ MON CONTRAT ════ -->
-<div class="section" id="s-mon-contrat">
-  <div class="card">
-    <div class="card-title"><i class="fas fa-file-contract" style="color:var(--green);margin-right:6px"></i>Mon Contrat de location</div>
-    <div id="contrat-detail"><div class="loader">Chargement...</div></div>
-  </div>
-</div>
-
-<!-- ════ MON COMPTE ════ -->
-<div class="section" id="s-mon-compte">
-  <div class="two-col">
-
-    <!-- Changer mot de passe -->
-    <div class="card">
-      <div class="card-title">
-        <span><i class="fas fa-lock" style="color:var(--accent);margin-right:6px"></i>Changer mon mot de passe</span>
-      </div>
-
-      <div id="al-pwd"></div>
-
-      <div class="fg">
-        <label>Mot de passe actuel <span class="req">*</span></label>
-        <div style="position:relative">
-          <input type="password" id="pwd-ancien" placeholder="Votre mot de passe actuel" style="padding-right:42px">
-          <button type="button" onclick="toggleVis('pwd-ancien',this)"
-            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
-            <i class="fas fa-eye"></i>
-          </button>
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <div>
+                    <div class="topbar-title" id="page-title">Mon Dashboard</div>
+                    <div class="breadcrumb">
+                        <i class="fas fa-home" style="font-size:9px"></i>
+                        <span id="page-breadcrumb">Tableau de bord</span>
+                    </div>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <button class="btn btn-ghost" id="theme-btn" onclick="toggleTheme()" title="Changer le thème" style="gap:6px;font-size:13px">
+                    <span id="theme-icon"><i class="fas fa-sun"></i></span>
+                </button>
+                <select id="lang-select" class="btn btn-ghost" style="cursor:pointer;padding:6px 8px" title="Changer la langue">
+                    <option value="fr"><i class="fas fa-flag"></i> Français</option>
+                    <option value="en"><i class="fas fa-flag"></i> English</option>
+                    <option value="rn"><i class="fas fa-flag"></i> Kirundi</option>
+                    <option value="sw"><i class="fas fa-flag"></i> Kiswahili</option>
+                    <option value="rw"><i class="fas fa-flag"></i> Kinyarwanda</option>
+                    <option value="it"><i class="fas fa-flag"></i> Italiano</option>
+                    <option value="es"><i class="fas fa-flag"></i> Español</option>
+                    <option value="zh"><i class="fas fa-flag"></i> 中文</option>
+                </select>
+                <button class="notif-btn" onclick="goSection('notifications',document.querySelector('[onclick*=notifications]'))" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="dot" id="notif-dot" style="display:none"></span>
+                </button>
+                <span class="role-pill"><i class="fas fa-home"></i> Locataire</span>
+                <button class="btn btn-sm btn-primary" onclick="openModalBordereau()">
+                    <i class="fas fa-upload"></i> Envoyer un bordereau
+                </button>
+            </div>
         </div>
-      </div>
 
-      <div class="fg">
-        <label>Nouveau mot de passe <span class="req">*</span></label>
-        <div style="position:relative">
-          <input type="password" id="pwd-nouveau" placeholder="Minimum 6 caractères"
-            oninput="checkPwdStrength(this.value)" style="padding-right:42px">
-          <button type="button" onclick="toggleVis('pwd-nouveau',this)"
-            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-        <!-- Barre de force -->
-        <div style="margin-top:6px">
-          <div style="background:var(--surface2);border-radius:6px;height:5px;overflow:hidden">
-            <div id="pwd-strength-bar" style="height:100%;border-radius:6px;width:0%;transition:all .3s"></div>
-          </div>
-          <div id="pwd-strength-txt" style="font-size:10.5px;color:var(--text3);margin-top:3px"></div>
-        </div>
-      </div>
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- ════ DASHBOARD ════ -->
+            <div class="section active" id="s-dashboard">
+                <div id="dash-alerte" class="hidden"></div>
+                <div class="stats-grid">
+                    <div class="stat-card" style="--c:linear-gradient(90deg,var(--accent),var(--accent2))">
+                        <div class="stat-label">Total loyers</div>
+                        <div class="stat-value" id="d-total">—</div>
+                        <div class="stat-sub" id="d-total-sub">BIF total dû</div>
+                        <div class="stat-icon"><i class="fas fa-list-alt"></i></div>
+                    </div>
+                    <div class="stat-card" style="--c:linear-gradient(90deg,var(--accent),var(--accent2))">
+                        <div class="stat-label">Déjà payé</div>
+                        <div class="stat-value" id="d-paye">—</div>
+                        <div class="stat-sub" id="d-paye-sub">BIF versés</div>
+                        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    </div>
+                    <div class="stat-card" id="d-solde-card" style="--c:linear-gradient(90deg,var(--blue2),var(--blue))">
+                        <div class="stat-label">Solde restant</div>
+                        <div class="stat-value" id="d-solde">—</div>
+                        <div class="stat-sub" id="d-retard-sub">BIF restants</div>
+                        <div class="stat-icon"><i class="fas fa-exclamation-triangle" id="d-solde-icon"></i></div>
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="card">
+                        <div class="card-title"><span><i class="fas fa-home" style="color:var(--accent);margin-right:6px"></i>Mon Local</span></div>
+                        <div id="dash-local"><div class="loader">Chargement...</div></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title"><span><i class="fas fa-file-contract" style="color:var(--accent);margin-right:6px"></i>Mon Contrat actif</span></div>
+                        <div id="dash-contrat"><div class="loader">Chargement...</div></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">
+                        <span><i class="fas fa-bell" style="color:var(--blue3);margin-right:6px"></i>Notifications récentes</span>
+                        <button class="btn btn-sm" onclick="goSection('notifications',document.querySelector('[onclick*=notifications]'))">Voir tout <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <div id="dash-notifs"><div class="loader">Chargement...</div></div>
+                </div>
+            </div>
 
-      <div class="fg">
-        <label>Confirmer le nouveau mot de passe <span class="req">*</span></label>
-        <div style="position:relative">
-          <input type="password" id="pwd-confirm" placeholder="Répéter le nouveau mot de passe" style="padding-right:42px">
-          <button type="button" onclick="toggleVis('pwd-confirm',this)"
-            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                   background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-      </div>
+            <!-- ════ MES LOYERS ════ -->
+            <div class="section" id="s-mes-loyers">
+                <div class="kpi-row" id="kpi-loyers"></div>
+                <div class="card">
+                    <div class="card-title">
+                        <span><i class="fas fa-wallet" style="color:var(--accent);margin-right:6px"></i>Mes Loyers & Paiements</span>
+                        <div style="display:flex;gap:6px">
+                            <button class="btn btn-sm" onclick="loadMesLoyers('tous')">Tous</button>
+                            <button class="btn btn-sm" style="color:var(--blue2);border-color:rgba(56,189,248,.25)" onclick="loadMesLoyers('retard')">En retard</button>
+                            <button class="btn btn-sm" style="color:var(--accent);border-color:rgba(56,189,248,.2)" onclick="loadMesLoyers('attente')">Impayés</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap"><table>
+                            <thead><tr><th>Libellé</th><th>Période</th><th>Total</th><th>Payé</th><th>Solde</th><th>Échéance</th><th>Statut</th></tr></thead>
+                            <tbody id="tb-loyers"><tr><td colspan="8" class="loader"></td></tr></tbody>
+                        </table></div>
+                </div>
+            </div>
 
-      <div style="display:flex;gap:8px;margin-top:4px">
-        <button class="btn btn-primary" onclick="savePwd()" id="btn-save-pwd" style="flex:1">
-          <i class="fas fa-key"></i> Mettre à jour le mot de passe
-        </button>
-        <button class="btn" onclick="resetPwdForm()">Annuler</button>
-      </div>
-    </div>
+            <!-- ════ BORDEREAUX ════ -->
+            <div class="section" id="s-bordereaux">
+                <div class="card">
+                    <div class="card-title">
+                        <span><i class="fas fa-receipt" style="color:var(--accent);margin-right:6px"></i>Mes Bordereaux de paiement</span>
+                        <button class="btn btn-primary btn-sm" onclick="openModalBordereau()">
+                            <i class="fas fa-plus"></i> Envoyer un bordereau
+                        </button>
+                    </div>
+                    <div class="info-box info-blue">
+                        <i class="fas fa-info-circle"></i>
+                        Prenez en photo votre reçu de paiement et envoyez-le ici. L'administration le vérifiera et mettra à jour votre dossier.
+                    </div>
+                    <div id="bord-alert" style="margin-top:10px"></div>
+                    <div class="sep"></div>
+                    <div style="font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">
+                        Bordereaux envoyés
+                    </div>
+                    <div id="bord-grid"><div class="loader">Chargement...</div></div>
+                </div>
+            </div>
 
-    <!-- Infos du compte -->
-    <div class="card">
-      <div class="card-title">
-        <span><i class="fas fa-user-circle" style="color:var(--green);margin-right:6px"></i>Mes informations</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-        <div style="width:60px;height:60px;border-radius:50%;
-                    background:linear-gradient(135deg,#6366f1,#8b5cf6);
-                    display:flex;align-items:center;justify-content:center;
-                    color:#fff;font-size:22px;font-weight:800;flex-shrink:0;
-                    font-family:var(--font-head)"
-             id="profil-avatar">L</div>
-        <div>
-          <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--text)" id="profil-nom">—</div>
-          <div style="font-size:11.5px;color:var(--text3);margin-top:3px"><i class="fas fa-home"></i> Locataire</div>
-        </div>
-      </div>
+            <!-- ════ CHAT ════ -->
+            <div class="section" id="s-chat">
+                <div id="chat-no-group" class="hidden">
+                    <div class="card" style="text-align:center;padding:52px">
+                        <div style="font-size:44px;margin-bottom:14px"><i class="fas fa-comments"></i></div>
+                        <div style="font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--text);margin-bottom:7px">Pas encore de groupe de chat</div>
+                        <div style="font-size:12.5px;color:var(--text3)">Vous serez automatiquement ajouté au groupe de votre immeuble dès que votre contrat est actif.</div>
+                    </div>
+                </div>
+                <div id="chat-panel" class="hidden">
+                    <div class="card" style="padding:0;overflow:hidden">
+                        <div style="padding:15px 19px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px">
+                            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff"><i class="fas fa-building"></i></div>
+                            <div>
+                                <div style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--text)" id="chat-group-name">Groupe immeuble</div>
+                                <div style="font-size:11px;color:var(--text3)" id="chat-group-sub">Chat avec la gestion et les résidents</div>
+                            </div>
+                            <div style="margin-left:auto">
+                                <span style="font-size:10px;color:var(--accent);background:rgba(56,189,248,.12);padding:3px 9px;border-radius:20px;font-weight:700;border:1px solid rgba(56,189,248,.2)"><i class="fas fa-circle" style="font-size:6px;margin-right:4px"></i> En ligne</span>
+                            </div>
+                        </div>
+                        <div class="chat-container" style="border:none;border-radius:0">
+                            <div class="chat-messages" id="chat-msgs"></div>
+                            <div class="chat-input-row">
+                                <input class="chat-input" id="chat-input" placeholder="Écrivez un message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}">
+                                <button class="btn btn-primary btn-sm" onclick="sendMsg()">Envoyer <i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      <div style="display:flex;flex-direction:column;gap:9px">
-        <div style="display:flex;justify-content:space-between;align-items:center;
-                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
-            <i class="fas fa-user" style="margin-right:6px"></i>USERNAME
-          </span>
-          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-username">—</span>
+            <!-- ════ NOTIFICATIONS ════ -->
+            <div class="section" id="s-notifications">
+                <div class="card">
+                    <div class="card-title">
+                        <span><i class="fas fa-bell" style="color:var(--blue3);margin-right:6px"></i>Mes Notifications</span>
+                        <button class="btn btn-sm" onclick="marquerTousLus()"><i class="fas fa-check-double"></i> Tout marquer lu</button>
+                    </div>
+                    <div id="notif-list"><div class="loader">Chargement...</div></div>
+                </div>
+            </div>
+
+            <!-- ════ MON CONTRAT ════ -->
+            <div class="section" id="s-mon-contrat">
+                <div class="card">
+                    <div class="card-title"><i class="fas fa-file-contract" style="color:var(--accent);margin-right:6px"></i>Mon Contrat de location</div>
+                    <div id="contrat-detail"><div class="loader">Chargement...</div></div>
+                </div>
+            </div>
+
+            <!-- ════ MON COMPTE ════ -->
+            <div class="section" id="s-mon-compte">
+                <div class="two-col">
+
+                    <!-- Changer mot de passe -->
+                    <div class="card">
+                        <div class="card-title">
+                            <span><i class="fas fa-lock" style="color:var(--accent);margin-right:6px"></i>Changer mon mot de passe</span>
+                        </div>
+
+                        <div id="al-pwd"></div>
+
+                        <div class="fg">
+                            <label>Mot de passe actuel <span class="req">*</span></label>
+                            <div style="position:relative">
+                                <input type="password" id="pwd-ancien" placeholder="Votre mot de passe actuel" style="padding-right:42px">
+                                <button type="button" onclick="toggleVis('pwd-ancien',this)"
+                                style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                                background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="fg">
+                        <label>Nouveau mot de passe <span class="req">*</span></label>
+                        <div style="position:relative">
+                            <input type="password" id="pwd-nouveau" placeholder="Minimum 6 caractères"
+                            oninput="checkPwdStrength(this.value)" style="padding-right:42px">
+                            <button type="button" onclick="toggleVis('pwd-nouveau',this)"
+                            style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                            background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div style="margin-top:6px">
+                        <div style="background:var(--surface2);border-radius:6px;height:5px;overflow:hidden">
+                            <div id="pwd-strength-bar" style="height:100%;border-radius:6px;width:0%;transition:all .3s"></div>
+                        </div>
+                        <div id="pwd-strength-txt" style="font-size:10.5px;color:var(--text3);margin-top:3px"></div>
+                    </div>
+                </div>
+
+                <div class="fg">
+                    <label>Confirmer le nouveau mot de passe <span class="req">*</span></label>
+                    <div style="position:relative">
+                        <input type="password" id="pwd-confirm" placeholder="Répéter le nouveau mot de passe" style="padding-right:42px">
+                        <button type="button" onclick="toggleVis('pwd-confirm',this)"
+                        style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                        background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:4px">
+                <button class="btn btn-primary" onclick="savePwd()" id="btn-save-pwd" style="flex:1">
+                    <i class="fas fa-key"></i> Mettre à jour le mot de passe
+                </button>
+                <button class="btn" onclick="resetPwdForm()">Annuler</button>
+            </div>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;
-                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
-            <i class="fas fa-envelope" style="margin-right:6px"></i>EMAIL
-          </span>
-          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-email">—</span>
+
+        <!-- Infos du compte -->
+        <div class="card">
+            <div class="card-title">
+                <span><i class="fas fa-user-circle" style="color:var(--accent);margin-right:6px"></i>Mes informations</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+                <div style="width:60px;height:60px;border-radius:50%;
+                background:linear-gradient(135deg,var(--accent),var(--accent2));
+                display:flex;align-items:center;justify-content:center;
+                color:#fff;font-size:22px;font-weight:800;flex-shrink:0;
+                font-family:var(--font-head)"
+                id="profil-avatar">L</div>
+                <div>
+                    <div style="font-family:var(--font-head);font-size:16px;font-weight:800;color:var(--text)" id="profil-nom">—</div>
+                    <div style="font-size:11.5px;color:var(--text3);margin-top:3px"><i class="fas fa-home"></i> Locataire</div>
+                </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:9px">
+                <div style="display:flex;justify-content:space-between;align-items:center;
+                padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+                <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+                    <i class="fas fa-user" style="margin-right:6px"></i>USERNAME
+                </span>
+                <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-username">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;
+            padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+            <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+                <i class="fas fa-envelope" style="margin-right:6px"></i>EMAIL
+            </span>
+            <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-email">—</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;
-                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+        padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+        <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
             <i class="fas fa-phone" style="margin-right:6px"></i>TÉLÉPHONE
-          </span>
-          <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-tel">—</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;
-                    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
-            <i class="fas fa-home" style="margin-right:6px"></i>LOCAL
-          </span>
-          <span style="font-size:12.5px;font-weight:600;color:var(--accent)" id="profil-local">—</span>
-        </div>
-      </div>
-
-      <div class="info-box info-blue" style="margin-top:16px;margin-bottom:0">
-        <i class="fas fa-info-circle"></i>
-        Pour modifier vos informations personnelles, contactez votre gestionnaire.
-      </div>
+        </span>
+        <span style="font-size:12.5px;font-weight:600;color:var(--text)" id="profil-tel">—</span>
     </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;
+    padding:10px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border)">
+    <span style="font-size:11px;font-weight:700;color:var(--text3);font-family:var(--font-head)">
+        <i class="fas fa-home" style="margin-right:6px"></i>LOCAL
+    </span>
+    <span style="font-size:12.5px;font-weight:600;color:var(--accent)" id="profil-local">—</span>
+</div>
+</div>
 
-  </div>
+<div class="info-box info-blue" style="margin-top:16px;margin-bottom:0">
+    <i class="fas fa-info-circle"></i>
+    Pour modifier vos informations personnelles, contactez votre gestionnaire.
+</div>
+</div>
+
+</div>
 </div>
 
 </div><!-- /content -->
@@ -913,961 +901,955 @@ tbody tr:hover td{background:rgba(99,102,241,.04)}
 
 <!-- ══════════════════ MODAL: ENVOYER BORDEREAU ══════════════════ -->
 <div class="modal-overlay" id="m-bordereau">
-  <div class="modal" style="width:580px">
-    <div class="modal-header">
-      <div class="modal-icon" style="background:var(--accent-glow)"><i class="fas fa-receipt" style="color:var(--accent)"></i></div>
-      <div style="flex:1">
-        <div class="modal-title">Envoyer un bordereau</div>
-        <div class="modal-subtitle">Justificatif de paiement de loyer</div>
-      </div>
-      <button class="modal-close" onclick="closeModal('m-bordereau')"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="modal-body">
-
-      <!-- Upload zone -->
-      <div class="upload-zone" id="bord-upload-zone">
-        <div class="upload-icon"><i class="fas fa-camera" style="font-size:32px;color:var(--text3)"></i></div>
-        <div class="upload-text">Cliquez ou glissez une photo</div>
-        <div class="upload-sub">JPG, PNG, PDF — max 10 MB</div>
-        <input type="file" id="file-input" accept="image/*,.pdf" onchange="handleFileBord(event)">
-      </div>
-
-      <!-- Badge fichier -->
-      <div class="file-badge hidden" id="file-badge">
-        <i class="fas fa-check-circle"></i>
-        <span id="file-name-txt">fichier.jpg</span>
-        <button onclick="removeFileBord()" title="Supprimer"><i class="fas fa-times"></i></button>
-      </div>
-
-      <!-- Mode de paiement -->
-      <div class="fg" style="margin-top:14px">
-        <label>Mode de paiement <span class="req">*</span></label>
-        <div class="payment-grid">
-          <button type="button" class="pay-btn" data-val="lumicash" onclick="selectPay(this)">
-            <i class="fas fa-mobile-alt"></i>Lumicash
-          </button>
-          <button type="button" class="pay-btn" data-val="ecocash" onclick="selectPay(this)">
-            <i class="fas fa-leaf"></i>Ecocash
-          </button>
-          <button type="button" class="pay-btn" data-val="bancobu" onclick="selectPay(this)">
-            <i class="fas fa-university"></i>Bancobu E-Noti
-          </button>
-          
-          <button type="button" class="pay-btn" data-val="virement" onclick="selectPay(this)">
-            <i class="fas fa-exchange-alt"></i>Virement
-          </button>
-          <button type="button" class="pay-btn" data-val="especes" onclick="selectPay(this)">
-            <i class="fas fa-money-bill-wave"></i>Espèces
-          </button>
-          <button type="button" class="pay-btn" data-val="cheque" onclick="selectPay(this)">
-            <i class="fas fa-file-invoice"></i>Chèque
-          </button>
-          <button type="button" class="pay-btn" data-val="autre" onclick="selectPay(this)">
-            <i class="fas fa-ellipsis-h"></i>Autre
-          </button>
+    <div class="modal" style="width:580px">
+        <div class="modal-header">
+            <div class="modal-icon" style="background:var(--accent-glow)"><i class="fas fa-receipt" style="color:var(--accent)"></i></div>
+            <div style="flex:1">
+                <div class="modal-title">Envoyer un bordereau</div>
+                <div class="modal-subtitle">Justificatif de paiement de loyer</div>
+            </div>
+            <button class="modal-close" onclick="closeModal('m-bordereau')"><i class="fas fa-times"></i></button>
         </div>
-      </div>
+        <div class="modal-body">
 
-      <!-- Champ autre -->
-      <div class="fg hidden" id="autre-wrap">
-        <label>Précisez le mode <span class="req">*</span></label>
-        <input id="autre-input" placeholder="Ex: Western Union, MoneyGram...">
-      </div>
+            <!-- Upload zone -->
+            <div class="upload-zone" id="bord-upload-zone">
+                <div class="upload-icon"><i class="fas fa-camera" style="font-size:32px;color:var(--text3)"></i></div>
+                <div class="upload-text">Cliquez ou glissez une photo</div>
+                <div class="upload-sub">JPG, PNG, PDF — max 10 MB</div>
+                <input type="file" id="file-input" accept="image/*,.pdf" onchange="handleFileBord(event)">
+            </div>
 
-      <!-- Loyer concerné -->
-      <div class="fg">
-        <label>Loyer concerné</label>
-        <select id="bord-loyer-sel"><option value="">-- Sélectionner un loyer --</option></select>
-      </div>
+            <!-- Badge fichier -->
+            <div class="file-badge hidden" id="file-badge">
+                <i class="fas fa-check-circle"></i>
+                <span id="file-name-txt">fichier.jpg</span>
+                <button onclick="removeFileBord()" title="Supprimer"><i class="fas fa-times"></i></button>
+            </div>
 
-      <!-- Référence de transaction -->
-<div class="fg">
-  <label>Référence de la transaction</label>
-  <input id="bord-reference" placeholder="Ex: N° Lumicash, réf. virement bancaire...">
-</div>
+            <!-- Mode de paiement -->
+            <div class="fg" style="margin-top:14px">
+                <label>Mode de paiement <span class="req">*</span></label>
+                <div class="payment-grid">
+                    <button type="button" class="pay-btn" data-val="lumicash" onclick="selectPay(this)">
+                        <i class="fas fa-mobile-alt"></i>Lumicash
+                    </button>
+                    <button type="button" class="pay-btn" data-val="ecocash" onclick="selectPay(this)">
+                        <i class="fas fa-leaf"></i>Ecocash
+                    </button>
+                    <button type="button" class="pay-btn" data-val="bancobu" onclick="selectPay(this)">
+                        <i class="fas fa-university"></i>Bancobu E-Noti
+                    </button>
+                    <button type="button" class="pay-btn" data-val="virement" onclick="selectPay(this)">
+                        <i class="fas fa-exchange-alt"></i>Virement
+                    </button>
+                    <button type="button" class="pay-btn" data-val="especes" onclick="selectPay(this)">
+                        <i class="fas fa-money-bill-wave"></i>Espèces
+                    </button>
+                    <button type="button" class="pay-btn" data-val="cheque" onclick="selectPay(this)">
+                        <i class="fas fa-file-invoice"></i>Chèque
+                    </button>
+                    <button type="button" class="pay-btn" data-val="autre" onclick="selectPay(this)">
+                        <i class="fas fa-ellipsis-h"></i>Autre
+                    </button>
+                </div>
+            </div>
 
-<!-- Notes -->
-<div class="fg">
-  <label>Notes (optionnel)</label>
-  <input id="bord-notes" placeholder="Ex: paiement en 2 fois, précision utile...">
-</div>
-      <div id="bord-modal-alert"></div>
+            <!-- Champ autre -->
+            <div class="fg hidden" id="autre-wrap">
+                <label>Précisez le mode <span class="req">*</span></label>
+                <input id="autre-input" placeholder="Ex: Western Union, MoneyGram...">
+            </div>
+
+            <!-- Loyer concerné -->
+            <div class="fg">
+                <label>Loyer concerné</label>
+                <select id="bord-loyer-sel"><option value="">-- Sélectionner un loyer --</option></select>
+            </div>
+
+            <!-- Référence de transaction -->
+            <div class="fg">
+                <label>Référence de la transaction</label>
+                <input id="bord-reference" placeholder="Ex: N° Lumicash, réf. virement bancaire...">
+            </div>
+
+            <!-- Notes -->
+            <div class="fg">
+                <label>Notes (optionnel)</label>
+                <input id="bord-notes" placeholder="Ex: paiement en 2 fois, précision utile...">
+            </div>
+            <div id="bord-modal-alert"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" onclick="closeModal('m-bordereau')">Annuler</button>
+            <button class="btn btn-primary" onclick="submitBordereau()" id="btn-submit-bord">
+                <i class="fas fa-paper-plane"></i> Envoyer le bordereau
+            </button>
+        </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('m-bordereau')">Annuler</button>
-      <button class="btn btn-primary" onclick="submitBordereau()" id="btn-submit-bord">
-        <i class="fas fa-paper-plane"></i> Envoyer le bordereau
-      </button>
-    </div>
-  </div>
 </div>
 
 <!-- ══════════════════ MODAL: APERÇU BORDEREAU ══════════════════ -->
 <div class="modal-overlay" id="m-bord-view">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-icon" style="background:var(--accent-glow)"><i class="fas fa-receipt" style="color:var(--accent)"></i></div>
-      <div style="flex:1"><div class="modal-title">Aperçu du bordereau</div><div class="modal-subtitle" id="bv-subtitle">Justificatif de paiement</div></div>
-      <button class="modal-close" onclick="closeModal('m-bord-view')"><i class="fas fa-times"></i></button>
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-icon" style="background:var(--accent-glow)"><i class="fas fa-receipt" style="color:var(--accent)"></i></div>
+            <div style="flex:1"><div class="modal-title">Aperçu du bordereau</div><div class="modal-subtitle" id="bv-subtitle">Justificatif de paiement</div></div>
+            <button class="modal-close" onclick="closeModal('m-bord-view')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body"><div id="bv-content"></div></div>
+        <div class="modal-footer"><button class="btn" onclick="closeModal('m-bord-view')">Fermer</button></div>
     </div>
-    <div class="modal-body"><div id="bv-content"></div></div>
-    <div class="modal-footer"><button class="btn" onclick="closeModal('m-bord-view')">Fermer</button></div>
-  </div>
 </div>
 
 <!-- ══════════════════ MODAL: QUITTANCE ══════════════════ -->
 <div class="modal-overlay" id="m-quit">
-  <div class="modal modal-lg">
-    <div class="modal-header">
-      <div class="modal-icon" style="background:var(--green-bg)"><i class="fas fa-file-invoice-dollar" style="color:var(--green)"></i></div>
-      <div style="flex:1"><div class="modal-title">Quittance de loyer</div><div class="modal-subtitle">Document officiel</div></div>
-      <button class="modal-close" onclick="closeModal('m-quit')"><i class="fas fa-times"></i></button>
+    <div class="modal modal-lg">
+        <div class="modal-header">
+            <div class="modal-icon" style="background:rgba(56,189,248,.12)"><i class="fas fa-file-invoice-dollar" style="color:var(--accent)"></i></div>
+            <div style="flex:1"><div class="modal-title">Quittance de loyer</div><div class="modal-subtitle">Document officiel</div></div>
+            <button class="modal-close" onclick="closeModal('m-quit')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body"><div id="mc-quit"><div class="loader"></div></div></div>
+        <div class="modal-footer">
+            <button class="btn" onclick="closeModal('m-quit')">Fermer</button>
+            <button class="btn btn-success" id="btn-print"><i class="fas fa-print"></i> Imprimer / PDF</button>
+        </div>
     </div>
-    <div class="modal-body"><div id="mc-quit"><div class="loader"></div></div></div>
-    <div class="modal-footer">
-      <button class="btn" onclick="closeModal('m-quit')">Fermer</button>
-      
-      <button class="btn btn-success" id="btn-print"><i class="fas fa-print"></i> Imprimer / PDF</button> 
-    </div>
-  </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-//  SESSION & API
-// ══════════════════════════════════════════════
-var S={
-  token:localStorage.getItem('authToken')||'',
-  username:localStorage.getItem('username')||'',
-  fullname:localStorage.getItem('fullname')||'',
-  role:localStorage.getItem('role')||'locataire',
-  locataireId:localStorage.getItem('locataire_id')||'',
-  userId:localStorage.getItem('user_id')||'',
-};
-var BASE='/api';
+    // ══════════════════════════════════════════════
+    //  SESSION & API
+    // ══════════════════════════════════════════════
+    var S={
+        token:localStorage.getItem('authToken')||'',
+        username:localStorage.getItem('username')||'',
+        fullname:localStorage.getItem('fullname')||'',
+        role:localStorage.getItem('role')||'locataire',
+        locataireId:localStorage.getItem('locataire_id')||'',
+        userId:localStorage.getItem('user_id')||'',
+    };
+    var BASE='/api';
 
-async function api(url,opts){
-  opts=opts||{};
-  var h=Object.assign({'Content-Type':'application/json'},S.token?{'Authorization':'Token '+S.token}:{},opts.headers||{});
-  var r=await fetch(BASE+url,Object.assign({},opts,{headers:h}));
-  if(r.status===401){doLogout();return null;}
-  if(!r.ok){var e=await r.json().catch(()=>({}));throw new Error(JSON.stringify(e));}
-  if(r.status===204)return null;
-  return r.json();
-}
-var f=n=>n==null?'—':Math.round(n).toLocaleString('fr-FR');
-var fd=d=>d?new Date(d+'T00:00:00').toLocaleDateString('fr-FR'):'—';
-var esc=s=>(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
-function err(msg){return`<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;}
-
-// ══════════════════════════════════════════════
-//  THEME
-// ══════════════════════════════════════════════
-function toggleTheme(){
-  var html=document.documentElement;
-  var current=html.getAttribute('data-theme');
-  var next=current==='dark'?'light':'dark';
-  html.setAttribute('data-theme',next);
-  localStorage.setItem('theme',next);
-  updateThemeIcon(next);
-}
-function updateThemeIcon(theme){
-  var icon=document.getElementById('theme-icon');
-  if(icon){
-    icon.innerHTML=theme==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
-  }
-}
-// Init theme icon
-(function(){
-  var t=localStorage.getItem('theme')||'dark';
-  updateThemeIcon(t);
-})();
-
-// ══════════════════════════════════════════════
-//  AUTH
-// ══════════════════════════════════════════════
-function confirmLogout(){if(confirm('Voulez-vous vous déconnecter ?'))doLogout();}
-async function doLogout(){
-  try{await fetch('/api/auth/logout/',{method:'POST',headers:{'Authorization':'Token '+S.token,'Content-Type':'application/json'}});}catch(e){}
-  localStorage.clear();window.location.replace('/login/');
-}
-async function loadMe(){
-  try{
-    var d=await api('/auth/me/');if(!d)return;
-    S.role=d.role;S.fullname=d.full_name||d.username;
-    S.locataireId=d.locataire_profile||'';
-    localStorage.setItem('locataire_id',S.locataireId);
-    localStorage.setItem('user_id',d.id);
-    var ini=(S.username||'L').charAt(0).toUpperCase();
-    document.getElementById('sb-avatar').textContent=ini;
-    document.getElementById('sb-name').textContent=S.fullname||S.username||'Locataire';
-  }catch(e){
-    document.getElementById('sb-avatar').textContent=(S.username||'L').charAt(0).toUpperCase();
-    document.getElementById('sb-name').textContent=S.fullname||'Locataire';
-  }
-}
-
-// ══════════════════════════════════════════════
-//  NAVIGATION
-// ══════════════════════════════════════════════
-var TITLES={
-  dashboard:'Mon Dashboard','mes-loyers':'Mes Loyers',historique:'Historique complet',
-  bordereaux:'Mes Bordereaux',chat:'Chat Immeuble',notifications:'Notifications','mon-contrat':'Mon Contrat','mon-compte': 'Mon Compte',
-};
-var LOADERS={
-  'mes-loyers':()=>loadMesLoyers('tous'),historique:loadHistorique,
-  bordereaux:loadBordereaux,chat:loadChat,notifications:loadNotifications,'mon-contrat':loadMonContrat,'mon-compte':loadMonCompte,
-};
-function goSection(id,el){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
-  var sec=document.getElementById('s-'+id);
-  if(sec)sec.classList.add('active');
-  if(el)el.classList.add('active');
-  document.getElementById('page-title').textContent=TITLES[id]||id;
-  document.getElementById('page-breadcrumb').textContent=TITLES[id]||id;
-  if(LOADERS[id])LOADERS[id]();
-}
-
-// ══════════════════════════════════════════════
-//  DASHBOARD
-// ══════════════════════════════════════════════
-async function loadDashboard(){
-  if(!S.locataireId){
-    document.getElementById('dash-alerte').innerHTML='<div class="info-box info-warn" style="margin-bottom:16px"><i class="fas fa-exclamation-triangle"></i> Votre compte locataire n\'est pas encore lié à un profil. Contactez l\'administration.</div>';
-    document.getElementById('dash-alerte').classList.remove('hidden');
-    return;
-  }
-  try{
-    var d=await api('/locataires/'+S.locataireId+'/');if(!d)return;
-    var sit=d.situation_financiere||{};
-    document.getElementById('d-total').textContent=f(sit.total_loyers);
-    document.getElementById('d-paye').textContent=f(sit.montant_paye);
-
-    var totalDu=parseFloat(sit.total_loyers)||0;
-    var paye=parseFloat(sit.montant_paye)||0;
-    var ecart=paye-totalDu; // >0 = surplus, <0 = reste à payer
-
-    var soldeEl=document.getElementById('d-solde');
-    var subEl=document.getElementById('d-retard-sub');
-    var cardEl=document.getElementById('d-solde-card');
-    var iconEl=document.getElementById('d-solde-icon');
-
-    if(ecart>0){
-      soldeEl.textContent='+'+f(ecart)+' BIF';
-      soldeEl.style.color='var(--green)';
-      subEl.textContent='✅ Trop-perçu';
-      cardEl.style.setProperty('--c','linear-gradient(90deg,#10b981,#059669)');
-      iconEl.className='fas fa-check-circle';
-    }else if(ecart<0){
-      soldeEl.textContent='-'+f(Math.abs(ecart))+' BIF';
-      soldeEl.style.color='var(--red)';
-      subEl.textContent=sit.loyers_en_retard>0?`⚠️ ${sit.loyers_en_retard} en retard`:'BIF restants';
-      cardEl.style.setProperty('--c','linear-gradient(90deg,#ef4444,#dc2626)');
-      iconEl.className='fas fa-exclamation-triangle';
-    }else{
-      soldeEl.textContent='0 BIF';
-      soldeEl.style.color='var(--text)';
-      subEl.textContent='✅ Soldé';
-      cardEl.style.setProperty('--c','linear-gradient(90deg,#6366f1,#8b5cf6)');
-      iconEl.className='fas fa-check-double';
+    async function api(url,opts){
+        opts=opts||{};
+        var h=Object.assign({'Content-Type':'application/json'},S.token?{'Authorization':'Token '+S.token}:{},opts.headers||{});
+        var r=await fetch(BASE+url,Object.assign({},opts,{headers:h}));
+        if(r.status===401){doLogout();return null;}
+        if(!r.ok){var e=await r.json().catch(()=>({}));throw new Error(JSON.stringify(e));}
+        if(r.status===204)return null;
+        return r.json();
     }
+    var f=n=>n==null?'—':Math.round(n).toLocaleString('fr-FR');
+    var fd=d=>d?new Date(d+'T00:00:00').toLocaleDateString('fr-FR'):'—';
+    var esc=s=>(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    function err(msg){return`<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> ${msg}</div>`;}
 
-    document.getElementById('badge-retard').textContent=sit.loyers_en_retard||0;
-
-    if(sit.loyers_en_retard>0){
-      document.getElementById('dash-alerte').innerHTML=`<div class="info-box info-err" style="margin-bottom:16px"><i class="fas fa-exclamation-triangle"></i> Vous avez <strong>${sit.loyers_en_retard} loyer(s) en retard</strong>. Veuillez régulariser votre situation ou contacter l'administration.</div>`;
-      document.getElementById('dash-alerte').classList.remove('hidden');
+    // ══════════════════════════════════════════════
+    //  THEME
+    // ══════════════════════════════════════════════
+    function toggleTheme(){
+        var html=document.documentElement;
+        var current=html.getAttribute('data-theme');
+        var next=current==='dark'?'light':'dark';
+        html.setAttribute('data-theme',next);
+        localStorage.setItem('theme',next);
+        updateThemeIcon(next);
     }
-    if(d.local_actuel){
-      var l=d.local_actuel;
-      document.getElementById('dash-local').innerHTML=`
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12.5px">
-          <div class="kpi"><div class="kpi-label">Référence</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-top:5px">${l.reference}</div></div>
-          <div class="kpi"><div class="kpi-label">Type</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-top:5px">${l.type_local_display}</div></div>
-          <div class="kpi"><div class="kpi-label">Adresse</div><div style="font-size:12px;font-weight:600;color:var(--text2);margin-top:5px">${l.adresse_complete||'—'}</div></div>
-          <div class="kpi"><div class="kpi-label">Superficie</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-top:5px">${l.superficie?l.superficie+' m²':'—'}</div></div>
-        </div>`;
-    }else{
-      document.getElementById('dash-local').innerHTML='<div class="info-box info-warn">Aucun local actif associé.</div>';
-    }
-  }catch(e){document.getElementById('dash-local').innerHTML=err('Erreur chargement profil.');}
-
-  try{
-    var contrats=await api('/contrats/?statut=actif&page_size=1');
-    var cl=(contrats&&(contrats.results||contrats))||[];
-    if(cl.length){
-      var c=cl[0];
-      document.getElementById('dash-contrat').innerHTML=`
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <div class="kpi"><div class="kpi-label">N° Contrat</div><div style="font-size:14px;font-weight:800;color:var(--text);margin-top:5px">${c.numero}</div></div>
-          <div class="kpi"><div class="kpi-label">Loyer HC</div><div style="font-size:14px;font-weight:800;color:var(--green);margin-top:5px">${f(c.loyer_hors_charges)} BIF</div></div>
-          <div class="kpi"><div class="kpi-label">Entrée</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-top:5px">${fd(c.date_entree)}</div></div>
-          <div class="kpi"><div class="kpi-label">Périodicité</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-top:5px">${c.periodicite_display}</div></div>
-        </div>`;
-    }else{
-      document.getElementById('dash-contrat').innerHTML='<div class="info-box info-warn">Aucun contrat actif.</div>';
-    }
-  }catch(e){}
-
-  try{
-    var nd=await api('/notifications/?page_size=3');
-    var nl=(nd&&(nd.results||nd))||[];
-    var icons={paiement:'<i class="fas fa-coin"></i>',bordereau:'<i class="fas fa-receipt"></i>',rappel:'<i class="fas fa-exclamation-triangle"></i>',message:'<i class="fas fa-comment"></i>',avertissement:'<i class="fas fa-exclamation-circle"></i>'};
-    if(!nl.length){document.getElementById('dash-notifs').innerHTML='<div class="loader">Aucune notification.</div>';return;}
-    document.getElementById('dash-notifs').innerHTML=nl.map(n=>`
-      <div class="notif-item">
-        <div class="notif-dot ${n.type_notif} ${!n.lu?'unread':''}">${icons[n.type_notif]||'<i class="fas fa-bell"></i>'}</div>
-        <div style="flex:1">
-          <div class="notif-title">${n.titre}</div>
-          <div class="notif-msg">${n.message}</div>
-          <div class="notif-time">${new Date(n.created_at).toLocaleString('fr-FR')}</div>
-        </div>
-        ${!n.lu?`<button class="btn btn-sm" onclick="marquerLu(${n.id},this)"><i class="fas fa-check"></i> Lu</button>`:''}
-      </div>`).join('');
-    var unread=nl.filter(n=>!n.lu).length;
-    document.getElementById('badge-notif').textContent=unread||0;
-    var dot=document.getElementById('notif-dot');
-    if(unread>0)dot.style.display='';else dot.style.display='none';
-  }catch(e){}
-}
-// ══════════════════════════════════════════════
-//  MES LOYERS
-// ══════════════════════════════════════════════
-async function loadMesLoyers(filtre){
-  filtre=filtre||'tous';
-  document.getElementById('tb-loyers').innerHTML='<tr><td colspan="8" class="loader"></td></tr>';
-  var url='/loyers/?page_size=200';
-  if(filtre==='retard')url='/loyers/en-retard/';
-  else if(filtre==='attente')url='/loyers/impayes/';
-  try{
-    var [d, pendingSet] = await Promise.all([api(url), getLoyersAvecBordereauEnAttente()]);
-    if(!d)return;
-    var l=Array.isArray(d)?d:(d.results||[]);
-    var nb=l.length,payes=l.filter(x=>x.statut==='paye').length,rets=l.filter(x=>x.statut==='retard').length;
-    document.getElementById('kpi-loyers').innerHTML=
-      `<div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${nb}</div></div>`+
-      `<div class="kpi"><div class="kpi-label">Payés</div><div class="kpi-val" style="color:var(--green)">${payes}</div></div>`+
-      `<div class="kpi"><div class="kpi-label">En retard</div><div class="kpi-val" style="color:var(--red)">${rets}</div></div>`+
-      `<div class="kpi"><div class="kpi-label">Taux paiement</div><div class="kpi-val">${nb?Math.round(payes/nb*100):0}%</div></div>`;
-    if(!l.length){document.getElementById('tb-loyers').innerHTML='<tr><td colspan="8" class="loader">Aucun loyer</td></tr>';return;}
-    var bm={paye:'bs-paye',retard:'bs-retard',attente:'bs-attente',partiel:'bs-partiel'};
-    document.getElementById('tb-loyers').innerHTML=l.map(x=>{
-      var sp=parseFloat(x.solde_restant)||0;
-      var acts='';
-      if(x.quittance_envoyee)acts+=`<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Quittance"><i class="fas fa-file-invoice"></i></button> `;
-      if(x.statut!=='paye'){
-        if(pendingSet.has(x.id)){
-          acts+=`<span class="bs bs-attente" title="En attente de validation admin"><i class="fas fa-clock"></i> Bordereau envoyé</span>`;
-        }else{
-          acts+=`<button class="btn btn-sm btn-primary" onclick="openModalBordereau(${x.id},'${esc(x.libelle)}')" title="Envoyer bordereau"><i class="fas fa-upload"></i></button>`;
+    function updateThemeIcon(theme){
+        var icon=document.getElementById('theme-icon');
+        if(icon){
+            icon.innerHTML=theme==='dark'?'<i class="fas fa-sun"></i>':'<i class="fas fa-moon"></i>';
         }
-      }
-      return`<tr>
-        <td><strong style="color:var(--text)">${x.libelle}</strong></td>
-        <td style="font-size:11px;color:var(--text3)">${fd(x.periode_debut)}${x.periode_fin?' → '+fd(x.periode_fin):''}</td>
-        <td>${f(x.montant_total)} BIF</td>
-        <td style="color:var(--green)">${f(x.montant_paye)} BIF</td>
-        <td style="color:${sp>0?'var(--red)':'var(--green)'}"><strong>${f(sp)} BIF</strong></td>
-        <td>${fd(x.echeance)}</td>
-        <td><span class="bs ${bm[x.statut]||'bs-attente'}">${x.statut_display}</span></td>
-        <td style="white-space:nowrap">${acts}</td>
-      </tr>`;}).join('');
-  }catch(e){document.getElementById('tb-loyers').innerHTML=`<tr><td colspan="8" style="color:var(--red);text-align:center;padding:20px">Erreur: ${e.message}</td></tr>`;}
-}
-// Quittance
-async function showQuit(id){
-  document.getElementById('mc-quit').innerHTML='<div class="loader">Génération...</div>';
-
-  document.getElementById('btn-print').onclick = async () => {
-    try {
-      const res = await fetch(BASE + '/loyers/' + id + '/quittance/', {
-        headers: { 'Authorization': 'Token ' + S.token }
-      });
-      if (!res.ok) throw new Error('Erreur ' + res.status);
-      const html = await res.text();
-      const w = window.open('', '_blank');
-      w.document.write(html);
-      w.document.close();
-      w.focus();
-    } catch(e) {
-      alert('Impossible d\'ouvrir la quittance : ' + e.message);
     }
-  };
+    (function(){
+        var t=localStorage.getItem('theme')||'dark';
+        updateThemeIcon(t);
+    })();
 
-  openModal('m-quit');
-  try{
-    var l=await api('/loyers/'+id+'/');if(!l)return;
-    var paye=parseFloat(l.montant_paye)||0, tot=parseFloat(l.montant_total)||0, sol=tot-paye;
-    var ok=paye>=tot;
-    var paiements=(l.paiements||[]).map(p=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px">
-      <span style="color:var(--text2)">${fd(p.date_paiement)} · ${p.mode_paiement||'—'}</span>
-      <strong style="color:var(--green)">${f(p.montant)} BIF</strong></div>`).join('');
-    document.getElementById('mc-quit').innerHTML=
-      `<div class="info-box ${ok?'info-ok':'info-warn'}">${ok?'<i class="fas fa-check-circle"></i> Loyer entièrement soldé':'<i class="fas fa-exclamation-triangle"></i> Paiement partiel — Solde restant: '+f(sol)+' BIF'}</div>`+
-      `<div class="two-col" style="margin-bottom:14px">
-        <div class="kpi"><div class="kpi-label">Locataire</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${l.locataire_nom}</div></div>
-        <div class="kpi"><div class="kpi-label">Local</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${l.local_reference}</div></div>
-      </div>`+
-      `<div class="kpi-row" style="margin-bottom:13px">
-        <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${f(tot)} BIF</div></div>
-        <div class="kpi"><div class="kpi-label">Payé</div><div class="kpi-val" style="color:var(--green)">${f(paye)} BIF</div></div>
-        <div class="kpi"><div class="kpi-label">Solde</div><div class="kpi-val" style="color:${sol>0?'var(--red)':'var(--green)'}">${f(sol)} BIF</div></div>
-      </div>`+
-      (paiements?`<div style="margin-bottom:11px"><div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:7px;letter-spacing:.8px;font-family:var(--font-head)">Paiements enregistrés</div>${paiements}</div>`:'')+ 
-      `<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Cliquez sur <strong><i class="fas fa-print"></i> Imprimer / PDF</strong> pour la quittance officielle compacte.</div>`;
-  }catch(e){document.getElementById('mc-quit').innerHTML=err('Erreur: '+e.message);}
-}
-// ══════════════════════════════════════════════
-//  HISTORIQUE
-// ══════════════════════════════════════════════
-async function loadHistorique(){
-  if(!S.locataireId){document.getElementById('hist-content').innerHTML='<div class="info-box info-warn">Profil locataire non lié.</div>';return;}
-  document.getElementById('hist-content').innerHTML='<div class="loader">Chargement...</div>';
-  document.getElementById('kpi-hist').innerHTML='';
-  try{
-    var d=await api('/locataires/'+S.locataireId+'/historique/');if(!d)return;
-    document.getElementById('kpi-hist').innerHTML=
-      `<div class="kpi"><div class="kpi-label">Total loyers</div><div class="kpi-val">${d.total_loyers}</div></div>`+
-      `<div class="kpi"><div class="kpi-label">Payés</div><div class="kpi-val" style="color:var(--green)">${d.loyers_payes}</div></div>`+
-      `<div class="kpi"><div class="kpi-label">Restants</div><div class="kpi-val" style="color:var(--red)">${d.loyers_restants}</div></div>`+
-      `<div class="kpi"><div class="kpi-label">Total dû</div><div class="kpi-val">${f(d.montant_total_du)}</div></div>`+
-      `<div class="kpi"><div class="kpi-label">Total payé</div><div class="kpi-val" style="color:var(--green)">${f(d.montant_total_paye)}</div></div>`+
-      `<div class="kpi"><div class="kpi-label">Restant</div><div class="kpi-val" style="color:var(--red)">${f(d.montant_total_restant)}</div></div>`;
-    if(!d.historique.length){document.getElementById('hist-content').innerHTML='<div class="loader">Aucun loyer enregistré.</div>';return;}
-    document.getElementById('hist-content').innerHTML=d.historique.map(h=>{
-      var soldé=h.solde_restant<=0;
-      var couleur=soldé?'var(--green)':h.statut==='retard'?'var(--red)':'var(--amber)';
-      var paysPuces=h.paiements.length
-        ?`<div class="pay-list">${h.paiements.map(p=>`<span class="pay-chip"><i class="fas fa-credit-card"></i> ${fd(p.date_paiement)} · ${f(p.montant)} BIF · ${p.mode_paiement||'—'}${p.reference?' · Réf: '+p.reference:''}</span>`).join('')}</div>`
-        :`<span style="font-size:11.5px;color:var(--text3)">Aucun paiement enregistré</span>`;
-      return`<div class="hist-item">
-        <div class="hist-header">
-          <div>
-            <div class="hist-label">${h.libelle}</div>
-            <div class="hist-period">${h.periode_debut?fd(h.periode_debut):''} ${h.periode_fin?'→ '+fd(h.periode_fin):''}</div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center">
-            <span style="font-size:11.5px;color:var(--text3)">Échéance: ${fd(h.echeance)}</span>
-            <span class="bs ${h.statut==='paye'?'bs-paye':h.statut==='retard'?'bs-retard':'bs-attente'}">${h.statut_display}</span>
-          </div>
-        </div>
-        <div class="hist-amounts">
-          <span>Total: <strong style="color:var(--text)">${f(h.montant_total)} BIF</strong></span>
-          <span>Payé: <strong style="color:var(--green)">${f(h.montant_paye)} BIF</strong></span>
-          <span>Solde: <strong style="color:${couleur}">${f(h.solde_restant)} BIF</strong></span>
-        </div>
-        ${paysPuces}
-      </div>`;}).join('');
-  }catch(e){document.getElementById('hist-content').innerHTML=err('Erreur: '+e.message);}
-}
-
-// ══════════════════════════════════════════════
-//  BORDEREAUX — MODAL
-// ══════════════════════════════════════════════
-var _selectedFile=null;
-var _selectedPay=null;
-var _preselectedLoyerId=null;
-async function openModalBordereau(loyerId, libelle){
-  _preselectedLoyerId = loyerId || null;
-  resetBordForm();
-
-  try{
-    var [d, pendingSet] = await Promise.all([
-      api('/loyers/?page_size=200'),
-      getLoyersAvecBordereauEnAttente()
-    ]);
-    var l = (d && (d.results || d)) || [];
-
-    // Loyers non payés ET sans bordereau déjà en attente, triés du plus ancien au plus récent
-    var impayes = l
-      .filter(x => x.statut !== 'paye' && !pendingSet.has(x.id))
-      .sort((a, b) => new Date(a.echeance) - new Date(b.echeance));
-
-    if(loyerId && pendingSet.has(Number(loyerId))){
-      document.getElementById('bord-modal-alert').innerHTML =
-        `<div class="info-box info-warn">
-          <i class="fas fa-clock"></i>
-          Un bordereau est déjà en cours de vérification pour ce loyer. Attendez la validation avant d'en envoyer un nouveau.
-        </div>`;
-    } else if(loyerId && impayes.length > 0 && String(impayes[0].id) !== String(loyerId)){
-      document.getElementById('bord-modal-alert').innerHTML =
-        `<div class="info-box info-err">
-          <i class="fas fa-exclamation-triangle"></i>
-          Vous devez d'abord payer le loyer le plus ancien :
-          <strong>${impayes[0].libelle}</strong>
-          (échéance: ${fd(impayes[0].echeance)}, solde: ${f(impayes[0].solde_restant)} BIF).
-        </div>`;
-      _preselectedLoyerId = impayes[0].id;
+    // ══════════════════════════════════════════════
+    //  AUTH
+    // ══════════════════════════════════════════════
+    function confirmLogout(){if(confirm('Voulez-vous vous déconnecter ?'))doLogout();}
+    async function doLogout(){
+        try{await fetch('/api/auth/logout/',{method:'POST',headers:{'Authorization':'Token '+S.token,'Content-Type':'application/json'}});}catch(e){}
+        localStorage.clear();window.location.replace('/login/');
+    }
+    async function loadMe(){
+        try{
+            var d=await api('/auth/me/');if(!d)return;
+            S.role=d.role;S.fullname=d.full_name||d.username;
+            S.locataireId=d.locataire_profile||'';
+            localStorage.setItem('locataire_id',S.locataireId);
+            localStorage.setItem('user_id',d.id);
+            var ini=(S.username||'L').charAt(0).toUpperCase();
+            document.getElementById('sb-avatar').textContent=ini;
+            document.getElementById('sb-name').textContent=S.fullname||S.username||'Locataire';
+        }catch(e){
+            document.getElementById('sb-avatar').textContent=(S.username||'L').charAt(0).toUpperCase();
+            document.getElementById('sb-name').textContent=S.fullname||'Locataire';
+        }
     }
 
-    // Remplir le select avec seulement les loyers impayés et sans bordereau en attente
-    var sel = document.getElementById('bord-loyer-sel');
-    sel.innerHTML = '<option value="">-- Sélectionner un loyer --</option>' +
-      impayes.map(x =>
-        `<option value="${x.id}" ${String(x.id)===String(_preselectedLoyerId)?'selected':''}>
-          ${x.libelle} — Solde: ${f(x.solde_restant)} BIF — Éch: ${fd(x.echeance)}
-        </option>`
-      ).join('');
-
-  }catch(e){}
-
-  openModal('m-bordereau');
-}
-
-async function getLoyersAvecBordereauEnAttente(){
-  try{
-    var d = await api('/locataires/'+S.locataireId+'/bordereaux/');
-    var l = Array.isArray(d)?d:(d&&(d.results||d))||[];
-    return new Set(l.filter(b=>b.statut==='en_attente' && b.loyer).map(b=>b.loyer));
-  }catch(e){return new Set();}
-}
-
-
-function handleFileBord(e){
-  var file=e.target.files[0];if(!file)return;
-  _selectedFile=file;
-  document.getElementById('bord-upload-zone').classList.add('hidden');
-  document.getElementById('file-badge').classList.remove('hidden');
-  document.getElementById('file-name-txt').textContent=file.name+' ('+( file.size/1024).toFixed(1)+' KB)';
-}
-
-function removeFileBord(){
-  _selectedFile=null;
-  document.getElementById('file-input').value='';
-  document.getElementById('file-badge').classList.add('hidden');
-  document.getElementById('bord-upload-zone').classList.remove('hidden');
-}
-
-function selectPay(el){
-  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  _selectedPay=el.dataset.val;
-  var autreWrap=document.getElementById('autre-wrap');
-  _selectedPay==='autre'?autreWrap.classList.remove('hidden'):autreWrap.classList.add('hidden');
-}
-
-async function uploadToUploadcare(file, maxRetries = 2) {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const ucForm = new FormData();
-      ucForm.append('UPLOADCARE_PUB_KEY', '3be5391c9201b1716150');
-      ucForm.append('UPLOADCARE_STORE', 'auto');
-      ucForm.append('file', file);
-
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 60000); // 60s
-      const resp = await fetch('https://upload.uploadcare.com/base/', {
-        method: 'POST', body: ucForm, signal: controller.signal
-      });
-      clearTimeout(timeout);
-
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      const data = await resp.json();
-      if (!data.file) throw new Error('UUID manquant');
-      return data.file;
-
-    } catch(e) {
-      if (attempt === maxRetries) throw new Error('Échec après ' + maxRetries + ' tentative(s) : ' + e.message);
-      // sinon on boucle et on retente
-    }
-  }
-}
-
-async function submitBordereau(){
-  const alertBox = document.getElementById('bord-modal-alert');
-  if(!_selectedFile){ alertBox.innerHTML=err('Veuillez sélectionner un fichier.'); return; }
-  if(!_selectedPay){  alertBox.innerHTML=err('Veuillez sélectionner un mode de paiement.'); return; }
-  if(!S.locataireId){ alertBox.innerHTML=err('Profil locataire non trouvé.'); return; }
-
-  var mode = _selectedPay === 'autre' ? document.getElementById('autre-input').value : _selectedPay;
-  if(_selectedPay === 'autre' && !mode.trim()){ alertBox.innerHTML=err('Veuillez préciser le mode de paiement.'); return; }
-
-  var btn = document.getElementById('btn-submit-bord');
-  btn.disabled = true;
-  alertBox.innerHTML = '';
-
-  try {
-    // ── ÉTAPE 1 : Upload vers Uploadcare (avec retry + timeout 60s) ──
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Upload en cours (peut prendre jusqu\'à 1 min)...';
-    const uuid = await uploadToUploadcare(_selectedFile);
-
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
-
-    // ── ÉTAPE 2 : Envoyer l'UUID à ton API ──
-    const loyerId   = document.getElementById('bord-loyer-sel').value;
-    const notes     = document.getElementById('bord-notes').value;
-    const reference = document.getElementById('bord-reference').value;
-
-    const payload = {
-      photo: uuid,
-      mode_paiement: mode,
-      notes: notes || '',
-      reference_client: reference || '',
+    // ══════════════════════════════════════════════
+    //  NAVIGATION
+    // ══════════════════════════════════════════════
+    var TITLES={
+        dashboard:'Mon Dashboard','mes-loyers':'Mes Loyers',historique:'Historique complet',
+        bordereaux:'Mes Bordereaux',chat:'Chat Immeuble',notifications:'Notifications','mon-contrat':'Mon Contrat','mon-compte': 'Mon Compte',
     };
-    if(loyerId) payload.loyer_id = loyerId;
-
-    let r;
-    try {
-      r = await fetch(BASE + '/locataires/' + S.locataireId + '/upload-bordereau/', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Token ' + S.token,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-    } catch(netErr) {
-      throw new Error('Échec de connexion à votre serveur (étape 2/2) : ' + netErr.message);
-    }
-
-    if(!r.ok){ const e = await r.json().catch(()=>({})); throw new Error('Serveur a refusé (étape 2/2) : ' + JSON.stringify(e)); }
-
-    closeModal('m-bordereau');
-    _selectedFile = null;
-    _selectedPay  = null;
-    document.getElementById('file-badge').classList.add('hidden');
-    document.getElementById('bord-upload-zone').classList.remove('hidden');
-
-    if(document.getElementById('s-bordereaux').classList.contains('active')){
-      document.getElementById('bord-alert').innerHTML =
-        '<div class="info-box info-ok"><i class="fas fa-check-circle"></i> Bordereau envoyé ! L\'administration le vérifiera bientôt.</div>';
-      loadBordereaux();
-    }
-
-  } catch(e){
-    alertBox.innerHTML = err('Erreur : ' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer le bordereau';
-  }
-}
-function resetBordForm(){
-  _selectedFile=null;_selectedPay=null;
-  document.getElementById('file-input').value='';
-  document.getElementById('file-badge').classList.add('hidden');
-  document.getElementById('bord-upload-zone').classList.remove('hidden');
-  document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('autre-wrap').classList.add('hidden');
-  document.getElementById('autre-input').value='';
-  document.getElementById('bord-reference').value='';   // ✅ nouveau
-  document.getElementById('bord-notes').value='';
-  document.getElementById('bord-loyer-sel').innerHTML='<option value="">-- Sélectionner un loyer --</option>';
-  document.getElementById('bord-modal-alert').innerHTML='';
-}
-async function loadBordereaux(){
-  if(!S.locataireId){document.getElementById('bord-grid').innerHTML='<div class="info-box info-warn">Profil locataire non lié.</div>';return;}
-  document.getElementById('bord-grid').innerHTML='<div class="loader">Chargement...</div>';
-  try{
-    var d=await api('/locataires/'+S.locataireId+'/bordereaux/');
-    var l=Array.isArray(d)?d:(d&&(d.results||d))||[];
-    if(!l.length){document.getElementById('bord-grid').innerHTML='<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Aucun bordereau envoyé pour l\'instant.</div>';return;}
-    var statusMap={
-      en_attente:{icon:'<i class="fas fa-clock"></i>',color:'var(--amber)',label:'En attente'},
-      valide:{icon:'<i class="fas fa-check-circle"></i>',color:'var(--green)',label:'Validé'},
-      rejete:{icon:'<i class="fas fa-times-circle"></i>',color:'var(--red)',label:'Rejeté'}
+    var LOADERS={
+        'mes-loyers':()=>loadMesLoyers('tous'),historique:loadHistorique,
+        bordereaux:loadBordereaux,chat:loadChat,notifications:loadNotifications,'mon-contrat':loadMonContrat,'mon-compte':loadMonCompte,
     };
-    document.getElementById('bord-grid').innerHTML='<div class="bord-grid-wrap">'+l.map(b=>{
-      var s=statusMap[b.statut]||statusMap.en_attente;
-      var imgHtml=b.photo_url
-        ?`<img class="bord-img" src="${b.photo_url}" alt="Bordereau" loading="lazy" onerror="this.parentElement.innerHTML='<div class=bord-img-placeholder><i class=\'fas fa-file-image\'></i></div>'">`
-        :`<div class="bord-img-placeholder"><i class="fas fa-file-image"></i></div>`;
-      return`<div class="bord-card" onclick="viewBordereau('${b.photo_url||''}','${esc(b.loyer_libelle||'—')}','${b.statut}','${esc(b.commentaire_admin||'')}')">
-        ${imgHtml}
-        <div class="bord-info">
-          <div class="bord-label">${b.loyer_libelle||'Bordereau'}</div>
-          <div style="display:flex;align-items:center;gap:4px;margin-top:4px">
-            <span style="font-size:11px;color:${s.color};font-weight:700">${s.icon} ${s.label}</span>
-          </div>
-          <div class="bord-date">${new Date(b.created_at).toLocaleDateString('fr-FR')}</div>
-        </div>
-      </div>`;}).join('')+'</div>';
-  }catch(e){document.getElementById('bord-grid').innerHTML=err('Erreur: '+e.message);}
-}
-
-function viewBordereau(url,libelle,statut,commentaire){
-  var statusMap={en_attente:'<i class="fas fa-clock"></i> En attente de validation',valide:'<i class="fas fa-check-circle"></i> Validé par l\'administration',rejete:'<i class="fas fa-times-circle"></i> Rejeté'};
-  var statusColors={en_attente:'info-warn',valide:'info-ok',rejete:'info-err'};
-  document.getElementById('bv-subtitle').textContent=libelle;
-  document.getElementById('bv-content').innerHTML=
-    `<div class="info-box ${statusColors[statut]||'info-blue'}">${statusMap[statut]||statut}</div>`+
-    (commentaire?`<div class="info-box info-blue"><i class="fas fa-comment"></i> Commentaire admin: ${commentaire}</div>`:'')+ 
-    (url?`<img src="${url}" style="width:100%;border-radius:10px;margin-top:6px" alt="Bordereau">`:'<div class="loader">Aucune image disponible</div>');
-  openModal('m-bord-view');
-}
-
-// ══════════════════════════════════════════════
-//  CHAT
-// ══════════════════════════════════════════════
-var _chatGroupId=null,_chatPoll=null;
-async function loadChat(){
-  document.getElementById('chat-no-group').classList.add('hidden');
-  document.getElementById('chat-panel').classList.add('hidden');
-  try{
-    var d=await api('/chat/?page_size=10');
-    var l=(d&&(d.results||d))||[];
-    if(!l.length){document.getElementById('chat-no-group').classList.remove('hidden');return;}
-    var group=l[0];_chatGroupId=group.id;
-    document.getElementById('chat-group-name').textContent=group.immeuble_nom||group.nom||'Groupe';
-    document.getElementById('chat-group-sub').textContent='Chat de l\'immeuble · '+group.nb_messages+' message(s)';
-    document.getElementById('chat-panel').classList.remove('hidden');
-    await refreshChatMsgs();
-    if(_chatPoll)clearInterval(_chatPoll);
-    _chatPoll=setInterval(refreshChatMsgs,5000);
-  }catch(e){document.getElementById('chat-no-group').classList.remove('hidden');}
-}
-async function refreshChatMsgs(){
-  if(!_chatGroupId)return;
-  try{
-    var msgs=await api('/chat/'+_chatGroupId+'/messages/');if(!msgs)return;
-    var box=document.getElementById('chat-msgs');
-    var atBottom=box.scrollTop+box.clientHeight>=box.scrollHeight-30;
-    box.innerHTML=msgs.length?msgs.map(m=>{
-      var mine=String(m.auteur)===String(S.userId)||m.auteur_role==='locataire';
-      return`<div class="chat-msg ${mine?'mine':'other'}">
-        <div class="chat-meta">${m.auteur_nom} · ${new Date(m.created_at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
-        <div class="chat-bubble">${m.contenu.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
-      </div>`;}).join('')
-      :'<div style="text-align:center;padding:40px;color:var(--text3);font-size:12.5px">Aucun message — soyez le premier à écrire !</div>';
-    if(atBottom)box.scrollTop=box.scrollHeight;
-  }catch(e){}
-}
-async function sendMsg(){
-  if(!_chatGroupId)return;
-  var inp=document.getElementById('chat-input');var txt=inp.value.trim();if(!txt)return;
-  inp.value='';
-  try{
-    await api('/chat/'+_chatGroupId+'/messages/',{method:'POST',body:JSON.stringify({contenu:txt})});
-    await refreshChatMsgs();
-    document.getElementById('chat-msgs').scrollTop=document.getElementById('chat-msgs').scrollHeight;
-  }catch(e){inp.value=txt;}
-}
-
-// ══════════════════════════════════════════════
-//  NOTIFICATIONS
-// ══════════════════════════════════════════════
-async function loadNotifications(){
-  document.getElementById('notif-list').innerHTML='<div class="loader">Chargement...</div>';
-  try{
-    var d=await api('/notifications/?page_size=50');
-    var l=(d&&(d.results||d))||[];
-    var icons={paiement:'<i class="fas fa-coin"></i>',bordereau:'<i class="fas fa-receipt"></i>',rappel:'<i class="fas fa-exclamation-triangle"></i>',message:'<i class="fas fa-comment"></i>',avertissement:'<i class="fas fa-exclamation-circle"></i>'};
-    if(!l.length){document.getElementById('notif-list').innerHTML='<div class="loader">Aucune notification.</div>';return;}
-    var unread=l.filter(n=>!n.lu).length;
-    document.getElementById('badge-notif').textContent=unread||0;
-    var dot=document.getElementById('notif-dot');
-    if(unread>0)dot.style.display='';else dot.style.display='none';
-    document.getElementById('notif-list').innerHTML=l.map(n=>`
-      <div class="notif-item" id="notif-${n.id}">
-        <div class="notif-dot ${n.type_notif} ${!n.lu?'unread':''}">${icons[n.type_notif]||'<i class="fas fa-bell"></i>'}</div>
-        <div style="flex:1">
-          <div class="notif-title" style="color:${!n.lu?'var(--text)':'var(--text2)'}">${n.titre}</div>
-          <div class="notif-msg">${n.message}</div>
-          <div class="notif-time">${new Date(n.created_at).toLocaleString('fr-FR')}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
-          ${n.loyer?`<button class="btn btn-sm btn-primary" onclick="showQuit(${n.loyer})"><i class="fas fa-file-invoice-dollar"></i> Quittance</button>`:''}
-          ${!n.lu?`<button class="btn btn-sm" onclick="marquerLu(${n.id},this)"><i class="fas fa-check"></i> Lu</button>`:'<span style="font-size:10px;color:var(--text3)">Lu</span>'}
-        </div>
-      </div>`).join('');
-  }catch(e){document.getElementById('notif-list').innerHTML=err('Erreur: '+e.message);}
-}
-async function marquerLu(id,btn){
-  try{
-    await api('/notifications/'+id+'/lire/',{method:'POST'});
-    if(btn){var item=document.getElementById('notif-'+id);if(item){item.querySelector('.notif-dot').classList.remove('unread');btn.remove();}}
-    var badge=document.getElementById('badge-notif');
-    badge.textContent=Math.max(0,parseInt(badge.textContent)||0-1)||0;
-  }catch(e){}
-}
-async function marquerTousLus(){
-  document.querySelectorAll('.notif-item [onclick^="marquerLu"]').forEach(btn=>btn.click());
-}
-
-// ══════════════════════════════════════════════
-//  MON CONTRAT
-// ══════════════════════════════════════════════
-async function loadMonContrat(){
-  document.getElementById('contrat-detail').innerHTML='<div class="loader">Chargement...</div>';
-  try{
-    var d=await api('/contrats/?statut=actif&page_size=5');
-    var l=(d&&(d.results||d))||[];
-    if(!l.length){var all=await api('/contrats/?page_size=5');l=(all&&(all.results||all))||[];}
-    if(!l.length){document.getElementById('contrat-detail').innerHTML='<div class="info-box info-warn">Aucun contrat trouvé.</div>';return;}
-    var c=l[0];
-    document.getElementById('contrat-detail').innerHTML=`
-      <div class="kpi-row" style="margin-bottom:15px">
-        <div class="kpi"><div class="kpi-label">N° Contrat</div><div style="font-size:16px;font-weight:800;color:var(--text);margin-top:5px">${c.numero}</div></div>
-        <div class="kpi"><div class="kpi-label">Statut</div><div class="kpi-val" style="font-size:14px;margin-top:5px"><span class="bs ${c.statut==='actif'?'bs-paye':c.statut==='resilie'?'bs-retard':'bs-attente'}">${c.statut_display}</span></div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;font-size:12.5px">
-        <div class="kpi"><div class="kpi-label">Local</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${c.local_reference}</div></div>
-        <div class="kpi"><div class="kpi-label">Loyer HC</div><div style="font-size:16px;font-weight:800;color:var(--green);margin-top:5px">${f(c.loyer_hors_charges)} BIF</div></div>
-        <div class="kpi"><div class="kpi-label">Provisions charges</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${f(c.provisions_charges)} BIF</div></div>
-        <div class="kpi"><div class="kpi-label">Périodicité</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${c.periodicite_display}</div></div>
-        <div class="kpi"><div class="kpi-label">Date d'entrée</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${fd(c.date_entree)}</div></div>
-        <div class="kpi"><div class="kpi-label">Dépôt de garantie</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${f(c.depot_garantie)} BIF</div></div>
-      </div>
-      ${c.informations_complementaires?`<div class="info-box info-blue" style="margin-top:13px"><i class="fas fa-sticky-note"></i> ${c.informations_complementaires}</div>`:''}`;
-  }catch(e){document.getElementById('contrat-detail').innerHTML=err('Erreur: '+e.message);}
-}
-
-// ══════════════════════════════════════════════
-//  MODALS
-// ══════════════════════════════════════════════
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
-
-// Drag & drop
-var uz=document.getElementById('bord-upload-zone');
-uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag')});
-uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
-uz.addEventListener('drop',e=>{
-  e.preventDefault();uz.classList.remove('drag');
-  var file=e.dataTransfer.files[0];
-  if(file){document.getElementById('file-input').files=e.dataTransfer.files;handleFileBord({target:{files:e.dataTransfer.files}});}
-});
-
-
-// ════════════════════════════════════════
-//  MON COMPTE — CHANGER MOT DE PASSE
-// ════════════════════════════════════════
-async function loadMonCompte() {
-  var ini = (S.fullname || S.username || 'L').charAt(0).toUpperCase();
-  document.getElementById('profil-avatar').textContent   = ini;
-  document.getElementById('profil-nom').textContent      = S.fullname || S.username || '—';
-  document.getElementById('profil-username').textContent = S.username || '—';
-
-  try {
-    var d = await api('/auth/me/');
-    if (!d) return;
-    document.getElementById('profil-email').textContent = d.email     || '—';
-    document.getElementById('profil-tel').textContent   = d.telephone || '—';
-    // Local actuel
-    if (d.locataire_profile) {
-      var loc = await api('/locataires/' + d.locataire_profile + '/');
-      if (loc && loc.local_actuel) {
-        document.getElementById('profil-local').textContent = loc.local_actuel.reference || '—';
-      }
+    function goSection(id,el){
+        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+        var sec=document.getElementById('s-'+id);
+        if(sec)sec.classList.add('active');
+        if(el)el.classList.add('active');
+        document.getElementById('page-title').textContent=TITLES[id]||id;
+        document.getElementById('page-breadcrumb').textContent=TITLES[id]||id;
+        if(LOADERS[id])LOADERS[id]();
     }
-  } catch(e) {}
-}
 
-function toggleVis(inputId, btn) {
-  var inp = document.getElementById(inputId);
-  var icon = btn.querySelector('i');
-  if (inp.type === 'password') {
-    inp.type = 'text';
-    if (icon) icon.className = 'fas fa-eye-slash';
-  } else {
-    inp.type = 'password';
-    if (icon) icon.className = 'fas fa-eye';
-  }
-}
+    // ══════════════════════════════════════════════
+    //  DASHBOARD
+    // ══════════════════════════════════════════════
+    async function loadDashboard(){
+        if(!S.locataireId){
+            document.getElementById('dash-alerte').innerHTML='<div class="info-box info-warn" style="margin-bottom:16px"><i class="fas fa-exclamation-triangle"></i> Votre compte locataire n\'est pas encore lié à un profil. Contactez l\'administration.</div>';
+            document.getElementById('dash-alerte').classList.remove('hidden');
+            return;
+        }
+        try{
+            var d=await api('/locataires/'+S.locataireId+'/');if(!d)return;
+            var sit=d.situation_financiere||{};
+            document.getElementById('d-total').textContent=f(sit.total_loyers);
+            document.getElementById('d-paye').textContent=f(sit.montant_paye);
 
-function checkPwdStrength(pwd) {
-  var bar = document.getElementById('pwd-strength-bar');
-  var txt = document.getElementById('pwd-strength-txt');
-  if (!pwd) { bar.style.width = '0%'; txt.textContent = ''; return; }
+            var totalDu=parseFloat(sit.total_loyers)||0;
+            var paye=parseFloat(sit.montant_paye)||0;
+            var ecart=paye-totalDu;
 
-  var score = 0;
-  if (pwd.length >= 6)  score++;
-  if (pwd.length >= 10) score++;
-  if (/[A-Z]/.test(pwd)) score++;
-  if (/[0-9]/.test(pwd)) score++;
-  if (/[^A-Za-z0-9]/.test(pwd)) score++;
+            var soldeEl=document.getElementById('d-solde');
+            var subEl=document.getElementById('d-retard-sub');
+            var cardEl=document.getElementById('d-solde-card');
+            var iconEl=document.getElementById('d-solde-icon');
 
-  var levels = [
-    { w:'20%', color:'var(--red)',   label:'Très faible' },
-    { w:'40%', color:'var(--red)',   label:'Faible'      },
-    { w:'60%', color:'var(--amber)', label:'Moyen'       },
-    { w:'80%', color:'var(--green)', label:'Fort'        },
-    { w:'100%',color:'var(--green)', label:'Très fort'   },
-  ];
-  var lv = levels[Math.min(score - 1, 4)] || levels[0];
-  bar.style.width      = lv.w;
-  bar.style.background = lv.color;
-  txt.style.color      = lv.color;
-  txt.textContent      = lv.label;
-}
+            if(ecart>0){
+                soldeEl.textContent='+'+f(ecart)+' BIF';
+                soldeEl.style.color='var(--accent)';
+                subEl.textContent='✅ Trop-perçu';
+                cardEl.style.setProperty('--c','linear-gradient(90deg,var(--accent),var(--accent2))');
+                iconEl.className='fas fa-check-circle';
+            }else if(ecart<0){
+                soldeEl.textContent='-'+f(Math.abs(ecart))+' BIF';
+                soldeEl.style.color='var(--blue2)';
+                subEl.textContent=sit.loyers_en_retard>0?`⚠️ ${sit.loyers_en_retard} en retard`:'BIF restants';
+                cardEl.style.setProperty('--c','linear-gradient(90deg,var(--blue2),var(--blue))');
+                iconEl.className='fas fa-exclamation-triangle';
+            }else{
+                soldeEl.textContent='0 BIF';
+                soldeEl.style.color='var(--text)';
+                subEl.textContent='✅ Soldé';
+                cardEl.style.setProperty('--c','linear-gradient(90deg,var(--accent),var(--accent2))');
+                iconEl.className='fas fa-check-double';
+            }
 
-function resetPwdForm() {
-  ['pwd-ancien','pwd-nouveau','pwd-confirm'].forEach(id => {
-    var el = document.getElementById(id);
-    el.value = '';
-    el.type  = 'password';
-    var btn = el.nextElementSibling;
-    if (btn) { var icon = btn.querySelector('i'); if (icon) icon.className = 'fas fa-eye'; }
-  });
-  document.getElementById('al-pwd').innerHTML = '';
-  document.getElementById('pwd-strength-bar').style.width = '0%';
-  document.getElementById('pwd-strength-txt').textContent = '';
-}
+            document.getElementById('badge-retard').textContent=sit.loyers_en_retard||0;
 
-async function savePwd() {
-  var alEl    = document.getElementById('al-pwd');
-  var ancien  = document.getElementById('pwd-ancien').value.trim();
-  var nouveau = document.getElementById('pwd-nouveau').value.trim();
-  var confirm = document.getElementById('pwd-confirm').value.trim();
+            if(sit.loyers_en_retard>0){
+                document.getElementById('dash-alerte').innerHTML=`<div class="info-box info-err" style="margin-bottom:16px"><i class="fas fa-exclamation-triangle"></i> Vous avez <strong>${sit.loyers_en_retard} loyer(s) en retard</strong>. Veuillez régulariser votre situation ou contacter l'administration.</div>`;
+                document.getElementById('dash-alerte').classList.remove('hidden');
+            }
+            if(d.local_actuel){
+                var l=d.local_actuel;
+                document.getElementById('dash-local').innerHTML=`
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12.5px">
+                        <div class="kpi"><div class="kpi-label">Référence</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-top:5px">${l.reference}</div></div>
+                        <div class="kpi"><div class="kpi-label">Type</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-top:5px">${l.type_local_display}</div></div>
+                        <div class="kpi"><div class="kpi-label">Adresse</div><div style="font-size:12px;font-weight:600;color:var(--text2);margin-top:5px">${l.adresse_complete||'—'}</div></div>
+                        <div class="kpi"><div class="kpi-label">Superficie</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-top:5px">${l.superficie?l.superficie+' m²':'—'}</div></div>
+                    </div>`;
+            }else{
+                document.getElementById('dash-local').innerHTML='<div class="info-box info-warn">Aucun local actif associé.</div>';
+            }
+        }catch(e){document.getElementById('dash-local').innerHTML=err('Erreur chargement profil.');}
 
-  alEl.innerHTML = '';
+        try{
+            var contrats=await api('/contrats/?statut=actif&page_size=1');
+            var cl=(contrats&&(contrats.results||contrats))||[];
+            if(cl.length){
+                var c=cl[0];
+                document.getElementById('dash-contrat').innerHTML=`
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                        <div class="kpi"><div class="kpi-label">N° Contrat</div><div style="font-size:14px;font-weight:800;color:var(--text);margin-top:5px">${c.numero}</div></div>
+                        <div class="kpi"><div class="kpi-label">Loyer HC</div><div style="font-size:14px;font-weight:800;color:var(--accent);margin-top:5px">${f(c.loyer_hors_charges)} BIF</div></div>
+                        <div class="kpi"><div class="kpi-label">Entrée</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-top:5px">${fd(c.date_entree)}</div></div>
+                        <div class="kpi"><div class="kpi-label">Périodicité</div><div style="font-size:13px;font-weight:600;color:var(--text);margin-top:5px">${c.periodicite_display}</div></div>
+                    </div>`;
+            }else{
+                document.getElementById('dash-contrat').innerHTML='<div class="info-box info-warn">Aucun contrat actif.</div>';
+            }
+        }catch(e){}
 
-  if (!ancien || !nouveau || !confirm) {
-    alEl.innerHTML = err('Tous les champs sont obligatoires.');
-    return;
-  }
-  if (nouveau.length < 6) {
-    alEl.innerHTML = err('Le nouveau mot de passe doit faire au moins 6 caractères.');
-    return;
-  }
-  if (nouveau !== confirm) {
-    alEl.innerHTML = err('Les deux mots de passe ne correspondent pas.');
-    document.getElementById('pwd-confirm').focus();
-    return;
-  }
-  if (ancien === nouveau) {
-    alEl.innerHTML = `<div class="info-box info-warn"><i class="fas fa-exclamation-triangle"></i> Le nouveau mot de passe doit être différent de l'ancien.</div>`;
-    return;
-  }
+        try{
+            var nd=await api('/notifications/?page_size=3');
+            var nl=(nd&&(nd.results||nd))||[];
+            var icons={paiement:'<i class="fas fa-coin"></i>',bordereau:'<i class="fas fa-receipt"></i>',rappel:'<i class="fas fa-exclamation-triangle"></i>',message:'<i class="fas fa-comment"></i>',avertissement:'<i class="fas fa-exclamation-circle"></i>'};
+            if(!nl.length){document.getElementById('dash-notifs').innerHTML='<div class="loader">Aucune notification.</div>';return;}
+            document.getElementById('dash-notifs').innerHTML=nl.map(n=>`
+                <div class="notif-item">
+                    <div class="notif-dot ${n.type_notif} ${!n.lu?'unread':''}">${icons[n.type_notif]||'<i class="fas fa-bell"></i>'}</div>
+                    <div style="flex:1">
+                        <div class="notif-title">${n.titre}</div>
+                        <div class="notif-msg">${n.message}</div>
+                        <div class="notif-time">${new Date(n.created_at).toLocaleString('fr-FR')}</div>
+                    </div>
+                    ${!n.lu?`<button class="btn btn-sm" onclick="marquerLu(${n.id},this)"><i class="fas fa-check"></i> Lu</button>`:''}
+                </div>`).join('');
+            var unread=nl.filter(n=>!n.lu).length;
+            document.getElementById('badge-notif').textContent=unread||0;
+            var dot=document.getElementById('notif-dot');
+            if(unread>0)dot.style.display='';else dot.style.display='none';
+        }catch(e){}
+    }
 
-  var btn = document.getElementById('btn-save-pwd');
-  btn.disabled    = true;
-  btn.innerHTML   = '<i class="fas fa-spinner fa-spin"></i> Mise à jour...';
+    // ══════════════════════════════════════════════
+    //  MES LOYERS
+    // ══════════════════════════════════════════════
+    async function loadMesLoyers(filtre){
+        filtre=filtre||'tous';
+        document.getElementById('tb-loyers').innerHTML='<tr><td colspan="8" class="loader"></td></tr>';
+        var url='/loyers/?page_size=200';
+        if(filtre==='retard')url='/loyers/en-retard/';
+        else if(filtre==='attente')url='/loyers/impayes/';
+        try{
+            var [d, pendingSet] = await Promise.all([api(url), getLoyersAvecBordereauEnAttente()]);
+            if(!d)return;
+            var l=Array.isArray(d)?d:(d.results||[]);
+            var nb=l.length,payes=l.filter(x=>x.statut==='paye').length,rets=l.filter(x=>x.statut==='retard').length;
+            document.getElementById('kpi-loyers').innerHTML=
+                `<div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${nb}</div></div>`+
+                `<div class="kpi"><div class="kpi-label">Payés</div><div class="kpi-val" style="color:var(--accent)">${payes}</div></div>`+
+                `<div class="kpi"><div class="kpi-label">En retard</div><div class="kpi-val" style="color:var(--blue2)">${rets}</div></div>`+
+                `<div class="kpi"><div class="kpi-label">Taux paiement</div><div class="kpi-val">${nb?Math.round(payes/nb*100):0}%</div></div>`;
+            if(!l.length){document.getElementById('tb-loyers').innerHTML='<tr><td colspan="8" class="loader">Aucun loyer</td></tr>';return;}
+            var bm={paye:'bs-paye',retard:'bs-retard',attente:'bs-attente',partiel:'bs-partiel'};
+            document.getElementById('tb-loyers').innerHTML=l.map(x=>{
+                var sp=parseFloat(x.solde_restant)||0;
+                var acts='';
+                if(x.quittance_envoyee)acts+=`<button class="btn btn-sm" onclick="showQuit(${x.id})" title="Quittance"><i class="fas fa-file-invoice"></i></button> `;
+                if(x.statut!=='paye'){
+                    if(pendingSet.has(x.id)){
+                        acts+=`<span class="bs bs-attente" title="En attente de validation admin"><i class="fas fa-clock"></i> Bordereau envoyé</span>`;
+                    }else{
+                        acts+=`<button class="btn btn-sm btn-primary" onclick="openModalBordereau(${x.id},'${esc(x.libelle)}')" title="Envoyer bordereau"><i class="fas fa-upload"></i></button>`;
+                    }
+                }
+                return`<tr>
+                    <td><strong style="color:var(--text)">${x.libelle}</strong></td>
+                    <td style="font-size:11px;color:var(--text3)">${fd(x.periode_debut)}${x.periode_fin?' → '+fd(x.periode_fin):''}</td>
+                    <td>${f(x.montant_total)} BIF</td>
+                    <td style="color:var(--accent)">${f(x.montant_paye)} BIF</td>
+                    <td style="color:${sp>0?'var(--blue2)':'var(--accent)'}"><strong>${f(sp)} BIF</strong></td>
+                    <td>${fd(x.echeance)}</td>
+                    <td><span class="bs ${bm[x.statut]||'bs-attente'}">${x.statut_display}</span></td>
+                    <td style="white-space:nowrap">${acts}</td>
+                </tr>`;}).join('');
+        }catch(e){document.getElementById('tb-loyers').innerHTML=`<tr><td colspan="8" style="color:var(--blue2);text-align:center;padding:20px">Erreur: ${e.message}</td></tr>`;}
+    }
 
-  try {
-    await api('/auth/change-password/', {
-      method: 'POST',
-      body: JSON.stringify({
-        old_password: ancien,
-        new_password: nouveau,
-      })
+    async function showQuit(id){
+        document.getElementById('mc-quit').innerHTML='<div class="loader">Génération...</div>';
+
+        document.getElementById('btn-print').onclick = async () => {
+            try {
+                const res = await fetch(BASE + '/loyers/' + id + '/quittance/', {
+                    headers: { 'Authorization': 'Token ' + S.token }
+                });
+                if (!res.ok) throw new Error('Erreur ' + res.status);
+                const html = await res.text();
+                const w = window.open('', '_blank');
+                w.document.write(html);
+                w.document.close();
+                w.focus();
+            } catch(e) {
+                alert('Impossible d\'ouvrir la quittance : ' + e.message);
+            }
+        };
+
+        openModal('m-quit');
+        try{
+            var l=await api('/loyers/'+id+'/');if(!l)return;
+            var paye=parseFloat(l.montant_paye)||0, tot=parseFloat(l.montant_total)||0, sol=tot-paye;
+            var ok=paye>=tot;
+            var paiements=(l.paiements||[]).map(p=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px">
+                <span style="color:var(--text2)">${fd(p.date_paiement)} · ${p.mode_paiement||'—'}</span>
+                <strong style="color:var(--accent)">${f(p.montant)} BIF</strong></div>`).join('');
+            document.getElementById('mc-quit').innerHTML=
+                `<div class="info-box ${ok?'info-ok':'info-warn'}">${ok?'<i class="fas fa-check-circle"></i> Loyer entièrement soldé':'<i class="fas fa-exclamation-triangle"></i> Paiement partiel — Solde restant: '+f(sol)+' BIF'}</div>`+
+                `<div class="two-col" style="margin-bottom:14px">
+                    <div class="kpi"><div class="kpi-label">Locataire</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${l.locataire_nom}</div></div>
+                    <div class="kpi"><div class="kpi-label">Local</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${l.local_reference}</div></div>
+                </div>`+
+                `<div class="kpi-row" style="margin-bottom:13px">
+                    <div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${f(tot)} BIF</div></div>
+                    <div class="kpi"><div class="kpi-label">Payé</div><div class="kpi-val" style="color:var(--accent)">${f(paye)} BIF</div></div>
+                    <div class="kpi"><div class="kpi-label">Solde</div><div class="kpi-val" style="color:${sol>0?'var(--blue2)':'var(--accent)'}">${f(sol)} BIF</div></div>
+                </div>`+
+                (paiements?`<div style="margin-bottom:11px"><div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:7px;letter-spacing:.8px;font-family:var(--font-head)">Paiements enregistrés</div>${paiements}</div>`:'')+
+                `<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Cliquez sur <strong><i class="fas fa-print"></i> Imprimer / PDF</strong> pour la quittance officielle compacte.</div>`;
+        }catch(e){document.getElementById('mc-quit').innerHTML=err('Erreur: '+e.message);}
+    }
+
+    // ══════════════════════════════════════════════
+    //  HISTORIQUE
+    // ══════════════════════════════════════════════
+    async function loadHistorique(){
+        if(!S.locataireId){document.getElementById('hist-content').innerHTML='<div class="info-box info-warn">Profil locataire non lié.</div>';return;}
+        document.getElementById('hist-content').innerHTML='<div class="loader">Chargement...</div>';
+        document.getElementById('kpi-hist').innerHTML='';
+        try{
+            var d=await api('/locataires/'+S.locataireId+'/historique/');if(!d)return;
+            document.getElementById('kpi-hist').innerHTML=
+                `<div class="kpi"><div class="kpi-label">Total loyers</div><div class="kpi-val">${d.total_loyers}</div></div>`+
+                `<div class="kpi"><div class="kpi-label">Payés</div><div class="kpi-val" style="color:var(--accent)">${d.loyers_payes}</div></div>`+
+                `<div class="kpi"><div class="kpi-label">Restants</div><div class="kpi-val" style="color:var(--blue2)">${d.loyers_restants}</div></div>`+
+                `<div class="kpi"><div class="kpi-label">Total dû</div><div class="kpi-val">${f(d.montant_total_du)}</div></div>`+
+                `<div class="kpi"><div class="kpi-label">Total payé</div><div class="kpi-val" style="color:var(--accent)">${f(d.montant_total_paye)}</div></div>`+
+                `<div class="kpi"><div class="kpi-label">Restant</div><div class="kpi-val" style="color:var(--blue2)">${f(d.montant_total_restant)}</div></div>`;
+            if(!d.historique.length){document.getElementById('hist-content').innerHTML='<div class="loader">Aucun loyer enregistré.</div>';return;}
+            document.getElementById('hist-content').innerHTML=d.historique.map(h=>{
+                var soldé=h.solde_restant<=0;
+                var couleur=soldé?'var(--accent)':h.statut==='retard'?'var(--blue2)':'var(--accent)';
+                var paysPuces=h.paiements.length
+                    ?`<div class="pay-list">${h.paiements.map(p=>`<span class="pay-chip"><i class="fas fa-credit-card"></i> ${fd(p.date_paiement)} · ${f(p.montant)} BIF · ${p.mode_paiement||'—'}${p.reference?' · Réf: '+p.reference:''}</span>`).join('')}</div>`
+                    :`<span style="font-size:11.5px;color:var(--text3)">Aucun paiement enregistré</span>`;
+                return`<div class="hist-item">
+                    <div class="hist-header">
+                        <div>
+                            <div class="hist-label">${h.libelle}</div>
+                            <div class="hist-period">${h.periode_debut?fd(h.periode_debut):''} ${h.periode_fin?'→ '+fd(h.periode_fin):''}</div>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center">
+                            <span style="font-size:11.5px;color:var(--text3)">Échéance: ${fd(h.echeance)}</span>
+                            <span class="bs ${h.statut==='paye'?'bs-paye':h.statut==='retard'?'bs-retard':'bs-attente'}">${h.statut_display}</span>
+                        </div>
+                    </div>
+                    <div class="hist-amounts">
+                        <span>Total: <strong style="color:var(--text)">${f(h.montant_total)} BIF</strong></span>
+                        <span>Payé: <strong style="color:var(--accent)">${f(h.montant_paye)} BIF</strong></span>
+                        <span>Solde: <strong style="color:${couleur}">${f(h.solde_restant)} BIF</strong></span>
+                    </div>
+                    ${paysPuces}
+                </div>`;}).join('');
+        }catch(e){document.getElementById('hist-content').innerHTML=err('Erreur: '+e.message);}
+    }
+
+    // ══════════════════════════════════════════════
+    //  BORDEREAUX — MODAL
+    // ══════════════════════════════════════════════
+    var _selectedFile=null;
+    var _selectedPay=null;
+    var _preselectedLoyerId=null;
+
+    async function openModalBordereau(loyerId, libelle){
+        _preselectedLoyerId = loyerId || null;
+        resetBordForm();
+
+        try{
+            var [d, pendingSet] = await Promise.all([
+                api('/loyers/?page_size=200'),
+                getLoyersAvecBordereauEnAttente()
+            ]);
+            var l = (d && (d.results || d)) || [];
+
+            var impayes = l
+                .filter(x => x.statut !== 'paye' && !pendingSet.has(x.id))
+                .sort((a, b) => new Date(a.echeance) - new Date(b.echeance));
+
+            if(loyerId && pendingSet.has(Number(loyerId))){
+                document.getElementById('bord-modal-alert').innerHTML =
+                    `<div class="info-box info-warn">
+                        <i class="fas fa-clock"></i>
+                        Un bordereau est déjà en cours de vérification pour ce loyer. Attendez la validation avant d'en envoyer un nouveau.
+                    </div>`;
+            } else if(loyerId && impayes.length > 0 && String(impayes[0].id) !== String(loyerId)){
+                document.getElementById('bord-modal-alert').innerHTML =
+                    `<div class="info-box info-err">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Vous devez d'abord payer le loyer le plus ancien :
+                        <strong>${impayes[0].libelle}</strong>
+                        (échéance: ${fd(impayes[0].echeance)}, solde: ${f(impayes[0].solde_restant)} BIF).
+                    </div>`;
+                _preselectedLoyerId = impayes[0].id;
+            }
+
+            var sel = document.getElementById('bord-loyer-sel');
+            sel.innerHTML = '<option value="">-- Sélectionner un loyer --</option>' +
+                impayes.map(x =>
+                    `<option value="${x.id}" ${String(x.id)===String(_preselectedLoyerId)?'selected':''}>
+                        ${x.libelle} — Solde: ${f(x.solde_restant)} BIF — Éch: ${fd(x.echeance)}
+                    </option>`
+                ).join('');
+
+        }catch(e){}
+
+        openModal('m-bordereau');
+    }
+
+    async function getLoyersAvecBordereauEnAttente(){
+        try{
+            var d = await api('/locataires/'+S.locataireId+'/bordereaux/');
+            var l = Array.isArray(d)?d:(d&&(d.results||d))||[];
+            return new Set(l.filter(b=>b.statut==='en_attente' && b.loyer).map(b=>b.loyer));
+        }catch(e){return new Set();}
+    }
+
+    function handleFileBord(e){
+        var file=e.target.files[0];if(!file)return;
+        _selectedFile=file;
+        document.getElementById('bord-upload-zone').classList.add('hidden');
+        document.getElementById('file-badge').classList.remove('hidden');
+        document.getElementById('file-name-txt').textContent=file.name+' ('+( file.size/1024).toFixed(1)+' KB)';
+    }
+
+    function removeFileBord(){
+        _selectedFile=null;
+        document.getElementById('file-input').value='';
+        document.getElementById('file-badge').classList.add('hidden');
+        document.getElementById('bord-upload-zone').classList.remove('hidden');
+    }
+
+    function selectPay(el){
+        document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+        el.classList.add('active');
+        _selectedPay=el.dataset.val;
+        var autreWrap=document.getElementById('autre-wrap');
+        _selectedPay==='autre'?autreWrap.classList.remove('hidden'):autreWrap.classList.add('hidden');
+    }
+
+    async function uploadToUploadcare(file, maxRetries = 2) {
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            try {
+                const ucForm = new FormData();
+                ucForm.append('UPLOADCARE_PUB_KEY', '3be5391c9201b1716150');
+                ucForm.append('UPLOADCARE_STORE', 'auto');
+                ucForm.append('file', file);
+
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 60000);
+                const resp = await fetch('https://upload.uploadcare.com/base/', {
+                    method: 'POST', body: ucForm, signal: controller.signal
+                });
+                clearTimeout(timeout);
+
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const data = await resp.json();
+                if (!data.file) throw new Error('UUID manquant');
+                return data.file;
+
+            } catch(e) {
+                if (attempt === maxRetries) throw new Error('Échec après ' + maxRetries + ' tentative(s) : ' + e.message);
+            }
+        }
+    }
+
+    async function submitBordereau(){
+        const alertBox = document.getElementById('bord-modal-alert');
+        if(!_selectedFile){ alertBox.innerHTML=err('Veuillez sélectionner un fichier.'); return; }
+        if(!_selectedPay){  alertBox.innerHTML=err('Veuillez sélectionner un mode de paiement.'); return; }
+        if(!S.locataireId){ alertBox.innerHTML=err('Profil locataire non trouvé.'); return; }
+
+        var mode = _selectedPay === 'autre' ? document.getElementById('autre-input').value : _selectedPay;
+        if(_selectedPay === 'autre' && !mode.trim()){ alertBox.innerHTML=err('Veuillez préciser le mode de paiement.'); return; }
+
+        var btn = document.getElementById('btn-submit-bord');
+        btn.disabled = true;
+        alertBox.innerHTML = '';
+
+        try {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Upload en cours (peut prendre jusqu\'à 1 min)...';
+            const uuid = await uploadToUploadcare(_selectedFile);
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+
+            const loyerId   = document.getElementById('bord-loyer-sel').value;
+            const notes     = document.getElementById('bord-notes').value;
+            const reference = document.getElementById('bord-reference').value;
+
+            const payload = {
+                photo: uuid,
+                mode_paiement: mode,
+                notes: notes || '',
+                reference_client: reference || '',
+            };
+            if(loyerId) payload.loyer_id = loyerId;
+
+            let r;
+            try {
+                r = await fetch(BASE + '/locataires/' + S.locataireId + '/upload-bordereau/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Token ' + S.token,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+            } catch(netErr) {
+                throw new Error('Échec de connexion à votre serveur (étape 2/2) : ' + netErr.message);
+            }
+
+            if(!r.ok){ const e = await r.json().catch(()=>({})); throw new Error('Serveur a refusé (étape 2/2) : ' + JSON.stringify(e)); }
+
+            closeModal('m-bordereau');
+            _selectedFile = null;
+            _selectedPay  = null;
+            document.getElementById('file-badge').classList.add('hidden');
+            document.getElementById('bord-upload-zone').classList.remove('hidden');
+
+            if(document.getElementById('s-bordereaux').classList.contains('active')){
+                document.getElementById('bord-alert').innerHTML =
+                    '<div class="info-box info-ok"><i class="fas fa-check-circle"></i> Bordereau envoyé ! L\'administration le vérifiera bientôt.</div>';
+                loadBordereaux();
+            }
+
+        } catch(e){
+            alertBox.innerHTML = err('Erreur : ' + e.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i> Envoyer le bordereau';
+        }
+    }
+
+    function resetBordForm(){
+        _selectedFile=null;_selectedPay=null;
+        document.getElementById('file-input').value='';
+        document.getElementById('file-badge').classList.add('hidden');
+        document.getElementById('bord-upload-zone').classList.remove('hidden');
+        document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById('autre-wrap').classList.add('hidden');
+        document.getElementById('autre-input').value='';
+        document.getElementById('bord-reference').value='';
+        document.getElementById('bord-notes').value='';
+        document.getElementById('bord-loyer-sel').innerHTML='<option value="">-- Sélectionner un loyer --</option>';
+        document.getElementById('bord-modal-alert').innerHTML='';
+    }
+
+    async function loadBordereaux(){
+        if(!S.locataireId){document.getElementById('bord-grid').innerHTML='<div class="info-box info-warn">Profil locataire non lié.</div>';return;}
+        document.getElementById('bord-grid').innerHTML='<div class="loader">Chargement...</div>';
+        try{
+            var d=await api('/locataires/'+S.locataireId+'/bordereaux/');
+            var l=Array.isArray(d)?d:(d&&(d.results||d))||[];
+            if(!l.length){document.getElementById('bord-grid').innerHTML='<div class="info-box info-blue"><i class="fas fa-info-circle"></i> Aucun bordereau envoyé pour l\'instant.</div>';return;}
+            var statusMap={
+                en_attente:{icon:'<i class="fas fa-clock"></i>',color:'var(--accent)',label:'En attente'},
+                valide:{icon:'<i class="fas fa-check-circle"></i>',color:'var(--accent)',label:'Validé'},
+                rejete:{icon:'<i class="fas fa-times-circle"></i>',color:'var(--blue2)',label:'Rejeté'}
+            };
+            document.getElementById('bord-grid').innerHTML='<div class="bord-grid-wrap">'+l.map(b=>{
+                var s=statusMap[b.statut]||statusMap.en_attente;
+                var imgHtml=b.photo_url
+                    ?`<img class="bord-img" src="${b.photo_url}" alt="Bordereau" loading="lazy" onerror="this.parentElement.innerHTML='<div class=bord-img-placeholder><i class=\'fas fa-file-image\'></i></div>'">`
+                    :`<div class="bord-img-placeholder"><i class="fas fa-file-image"></i></div>`;
+                return`<div class="bord-card" onclick="viewBordereau('${b.photo_url||''}','${esc(b.loyer_libelle||'—')}','${b.statut}','${esc(b.commentaire_admin||'')}')">
+                    ${imgHtml}
+                    <div class="bord-info">
+                        <div class="bord-label">${b.loyer_libelle||'Bordereau'}</div>
+                        <div style="display:flex;align-items:center;gap:4px;margin-top:4px">
+                            <span style="font-size:11px;color:${s.color};font-weight:700">${s.icon} ${s.label}</span>
+                        </div>
+                        <div class="bord-date">${new Date(b.created_at).toLocaleDateString('fr-FR')}</div>
+                    </div>
+                </div>`;}).join('')+'</div>';
+        }catch(e){document.getElementById('bord-grid').innerHTML=err('Erreur: '+e.message);}
+    }
+
+    function viewBordereau(url,libelle,statut,commentaire){
+        var statusMap={en_attente:'<i class="fas fa-clock"></i> En attente de validation',valide:'<i class="fas fa-check-circle"></i> Validé par l\'administration',rejete:'<i class="fas fa-times-circle"></i> Rejeté'};
+        var statusColors={en_attente:'info-warn',valide:'info-ok',rejete:'info-err'};
+        document.getElementById('bv-subtitle').textContent=libelle;
+        document.getElementById('bv-content').innerHTML=
+            `<div class="info-box ${statusColors[statut]||'info-blue'}">${statusMap[statut]||statut}</div>`+
+            (commentaire?`<div class="info-box info-blue"><i class="fas fa-comment"></i> Commentaire admin: ${commentaire}</div>`:'')+
+            (url?`<img src="${url}" style="width:100%;border-radius:10px;margin-top:6px" alt="Bordereau">`:'<div class="loader">Aucune image disponible</div>');
+        openModal('m-bord-view');
+    }
+
+    // ══════════════════════════════════════════════
+    //  CHAT
+    // ══════════════════════════════════════════════
+    var _chatGroupId=null,_chatPoll=null;
+    async function loadChat(){
+        document.getElementById('chat-no-group').classList.add('hidden');
+        document.getElementById('chat-panel').classList.add('hidden');
+        try{
+            var d=await api('/chat/?page_size=10');
+            var l=(d&&(d.results||d))||[];
+            if(!l.length){document.getElementById('chat-no-group').classList.remove('hidden');return;}
+            var group=l[0];_chatGroupId=group.id;
+            document.getElementById('chat-group-name').textContent=group.immeuble_nom||group.nom||'Groupe';
+            document.getElementById('chat-group-sub').textContent='Chat de l\'immeuble · '+group.nb_messages+' message(s)';
+            document.getElementById('chat-panel').classList.remove('hidden');
+            await refreshChatMsgs();
+            if(_chatPoll)clearInterval(_chatPoll);
+            _chatPoll=setInterval(refreshChatMsgs,5000);
+        }catch(e){document.getElementById('chat-no-group').classList.remove('hidden');}
+    }
+    async function refreshChatMsgs(){
+        if(!_chatGroupId)return;
+        try{
+            var msgs=await api('/chat/'+_chatGroupId+'/messages/');if(!msgs)return;
+            var box=document.getElementById('chat-msgs');
+            var atBottom=box.scrollTop+box.clientHeight>=box.scrollHeight-30;
+            box.innerHTML=msgs.length?msgs.map(m=>{
+                var mine=String(m.auteur)===String(S.userId)||m.auteur_role==='locataire';
+                return`<div class="chat-msg ${mine?'mine':'other'}">
+                    <div class="chat-meta">${m.auteur_nom} · ${new Date(m.created_at).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
+                    <div class="chat-bubble">${m.contenu.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+                </div>`;}).join('')
+                :'<div style="text-align:center;padding:40px;color:var(--text3);font-size:12.5px">Aucun message — soyez le premier à écrire !</div>';
+            if(atBottom)box.scrollTop=box.scrollHeight;
+        }catch(e){}
+    }
+    async function sendMsg(){
+        if(!_chatGroupId)return;
+        var inp=document.getElementById('chat-input');var txt=inp.value.trim();if(!txt)return;
+        inp.value='';
+        try{
+            await api('/chat/'+_chatGroupId+'/messages/',{method:'POST',body:JSON.stringify({contenu:txt})});
+            await refreshChatMsgs();
+            document.getElementById('chat-msgs').scrollTop=document.getElementById('chat-msgs').scrollHeight;
+        }catch(e){inp.value=txt;}
+    }
+
+    // ══════════════════════════════════════════════
+    //  NOTIFICATIONS
+    // ══════════════════════════════════════════════
+    async function loadNotifications(){
+        document.getElementById('notif-list').innerHTML='<div class="loader">Chargement...</div>';
+        try{
+            var d=await api('/notifications/?page_size=50');
+            var l=(d&&(d.results||d))||[];
+            var icons={paiement:'<i class="fas fa-coin"></i>',bordereau:'<i class="fas fa-receipt"></i>',rappel:'<i class="fas fa-exclamation-triangle"></i>',message:'<i class="fas fa-comment"></i>',avertissement:'<i class="fas fa-exclamation-circle"></i>'};
+            if(!l.length){document.getElementById('notif-list').innerHTML='<div class="loader">Aucune notification.</div>';return;}
+            var unread=l.filter(n=>!n.lu).length;
+            document.getElementById('badge-notif').textContent=unread||0;
+            var dot=document.getElementById('notif-dot');
+            if(unread>0)dot.style.display='';else dot.style.display='none';
+            document.getElementById('notif-list').innerHTML=l.map(n=>`
+                <div class="notif-item" id="notif-${n.id}">
+                    <div class="notif-dot ${n.type_notif} ${!n.lu?'unread':''}">${icons[n.type_notif]||'<i class="fas fa-bell"></i>'}</div>
+                    <div style="flex:1">
+                        <div class="notif-title" style="color:${!n.lu?'var(--text)':'var(--text2)'}">${n.titre}</div>
+                        <div class="notif-msg">${n.message}</div>
+                        <div class="notif-time">${new Date(n.created_at).toLocaleString('fr-FR')}</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end">
+                        ${n.loyer?`<button class="btn btn-sm btn-primary" onclick="showQuit(${n.loyer})"><i class="fas fa-file-invoice-dollar"></i> Quittance</button>`:''}
+                        ${!n.lu?`<button class="btn btn-sm" onclick="marquerLu(${n.id},this)"><i class="fas fa-check"></i> Lu</button>`:'<span style="font-size:10px;color:var(--text3)">Lu</span>'}
+                    </div>
+                </div>`).join('');
+        }catch(e){document.getElementById('notif-list').innerHTML=err('Erreur: '+e.message);}
+    }
+    async function marquerLu(id,btn){
+        try{
+            await api('/notifications/'+id+'/lire/',{method:'POST'});
+            if(btn){var item=document.getElementById('notif-'+id);if(item){item.querySelector('.notif-dot').classList.remove('unread');btn.remove();}}
+            var badge=document.getElementById('badge-notif');
+            badge.textContent=Math.max(0,parseInt(badge.textContent)||0-1)||0;
+        }catch(e){}
+    }
+    async function marquerTousLus(){
+        document.querySelectorAll('.notif-item [onclick^="marquerLu"]').forEach(btn=>btn.click());
+    }
+
+    // ══════════════════════════════════════════════
+    //  MON CONTRAT
+    // ══════════════════════════════════════════════
+    async function loadMonContrat(){
+        document.getElementById('contrat-detail').innerHTML='<div class="loader">Chargement...</div>';
+        try{
+            var d=await api('/contrats/?statut=actif&page_size=5');
+            var l=(d&&(d.results||d))||[];
+            if(!l.length){var all=await api('/contrats/?page_size=5');l=(all&&(all.results||all))||[];}
+            if(!l.length){document.getElementById('contrat-detail').innerHTML='<div class="info-box info-warn">Aucun contrat trouvé.</div>';return;}
+            var c=l[0];
+            document.getElementById('contrat-detail').innerHTML=`
+                <div class="kpi-row" style="margin-bottom:15px">
+                    <div class="kpi"><div class="kpi-label">N° Contrat</div><div style="font-size:16px;font-weight:800;color:var(--text);margin-top:5px">${c.numero}</div></div>
+                    <div class="kpi"><div class="kpi-label">Statut</div><div class="kpi-val" style="font-size:14px;margin-top:5px"><span class="bs ${c.statut==='actif'?'bs-paye':c.statut==='resilie'?'bs-retard':'bs-attente'}">${c.statut_display}</span></div></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;font-size:12.5px">
+                    <div class="kpi"><div class="kpi-label">Local</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${c.local_reference}</div></div>
+                    <div class="kpi"><div class="kpi-label">Loyer HC</div><div style="font-size:16px;font-weight:800;color:var(--accent);margin-top:5px">${f(c.loyer_hors_charges)} BIF</div></div>
+                    <div class="kpi"><div class="kpi-label">Provisions charges</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${f(c.provisions_charges)} BIF</div></div>
+                    <div class="kpi"><div class="kpi-label">Périodicité</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${c.periodicite_display}</div></div>
+                    <div class="kpi"><div class="kpi-label">Date d'entrée</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${fd(c.date_entree)}</div></div>
+                    <div class="kpi"><div class="kpi-label">Dépôt de garantie</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-top:5px">${f(c.depot_garantie)} BIF</div></div>
+                </div>
+                ${c.informations_complementaires?`<div class="info-box info-blue" style="margin-top:13px"><i class="fas fa-sticky-note"></i> ${c.informations_complementaires}</div>`:''}`;
+        }catch(e){document.getElementById('contrat-detail').innerHTML=err('Erreur: '+e.message);}
+    }
+
+    // ══════════════════════════════════════════════
+    //  MODALS
+    // ══════════════════════════════════════════════
+    function openModal(id){document.getElementById(id).classList.add('open');}
+    function closeModal(id){document.getElementById(id).classList.remove('open');}
+    document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+
+    var uz=document.getElementById('bord-upload-zone');
+    uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag')});
+    uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+    uz.addEventListener('drop',e=>{
+        e.preventDefault();uz.classList.remove('drag');
+        var file=e.dataTransfer.files[0];
+        if(file){document.getElementById('file-input').files=e.dataTransfer.files;handleFileBord({target:{files:e.dataTransfer.files}});}
     });
 
-    alEl.innerHTML = `<div class="info-box info-ok">
-      <i class="fas fa-check-circle"></i>
-      Mot de passe mis à jour ! Vous allez être déconnecté dans 3 secondes...
-    </div>`;
+    // ══════════════════════════════════════════════
+    //  MON COMPTE — CHANGER MOT DE PASSE
+    // ══════════════════════════════════════════════
+    async function loadMonCompte() {
+        var ini = (S.fullname || S.username || 'L').charAt(0).toUpperCase();
+        document.getElementById('profil-avatar').textContent   = ini;
+        document.getElementById('profil-nom').textContent      = S.fullname || S.username || '—';
+        document.getElementById('profil-username').textContent = S.username || '—';
 
-    resetPwdForm();
-    setTimeout(() => doLogout(), 3000);
+        try {
+            var d = await api('/auth/me/');
+            if (!d) return;
+            document.getElementById('profil-email').textContent = d.email     || '—';
+            document.getElementById('profil-tel').textContent   = d.telephone || '—';
+            if (d.locataire_profile) {
+                var loc = await api('/locataires/' + d.locataire_profile + '/');
+                if (loc && loc.local_actuel) {
+                    document.getElementById('profil-local').textContent = loc.local_actuel.reference || '—';
+                }
+            }
+        } catch(e) {}
+    }
 
-  } catch(e) {
-    var msg = e.message;
-    try {
-      var parsed = JSON.parse(msg);
-      msg = Object.values(parsed).flat().join(' ');
-    } catch(_) {}
-    alEl.innerHTML = err(msg || 'Mot de passe actuel incorrect.');
-  } finally {
-    btn.disabled  = false;
-    btn.innerHTML = '<i class="fas fa-key"></i> Mettre à jour le mot de passe';
-  }
-}
-// ══════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════
-loadMe().then(()=>loadDashboard());
+    function toggleVis(inputId, btn) {
+        var inp = document.getElementById(inputId);
+        var icon = btn.querySelector('i');
+        if (inp.type === 'password') {
+            inp.type = 'text';
+            if (icon) icon.className = 'fas fa-eye-slash';
+        } else {
+            inp.type = 'password';
+            if (icon) icon.className = 'fas fa-eye';
+        }
+    }
+
+    function checkPwdStrength(pwd) {
+        var bar = document.getElementById('pwd-strength-bar');
+        var txt = document.getElementById('pwd-strength-txt');
+        if (!pwd) { bar.style.width = '0%'; txt.textContent = ''; return; }
+
+        var score = 0;
+        if (pwd.length >= 6)  score++;
+        if (pwd.length >= 10) score++;
+        if (/[A-Z]/.test(pwd)) score++;
+        if (/[0-9]/.test(pwd)) score++;
+        if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+        var levels = [
+            { w:'20%', color:'var(--blue2)',   label:'Très faible' },
+            { w:'40%', color:'var(--blue2)',   label:'Faible'      },
+            { w:'60%', color:'var(--accent)', label:'Moyen'       },
+            { w:'80%', color:'var(--accent)', label:'Fort'        },
+            { w:'100%',color:'var(--accent)', label:'Très fort'   },
+        ];
+        var lv = levels[Math.min(score - 1, 4)] || levels[0];
+        bar.style.width      = lv.w;
+        bar.style.background = lv.color;
+        txt.style.color      = lv.color;
+        txt.textContent      = lv.label;
+    }
+
+    function resetPwdForm() {
+        ['pwd-ancien','pwd-nouveau','pwd-confirm'].forEach(id => {
+            var el = document.getElementById(id);
+            el.value = '';
+            el.type  = 'password';
+            var btn = el.nextElementSibling;
+            if (btn) { var icon = btn.querySelector('i'); if (icon) icon.className = 'fas fa-eye'; }
+        });
+        document.getElementById('al-pwd').innerHTML = '';
+        document.getElementById('pwd-strength-bar').style.width = '0%';
+        document.getElementById('pwd-strength-txt').textContent = '';
+    }
+
+    async function savePwd() {
+        var alEl    = document.getElementById('al-pwd');
+        var ancien  = document.getElementById('pwd-ancien').value.trim();
+        var nouveau = document.getElementById('pwd-nouveau').value.trim();
+        var confirm = document.getElementById('pwd-confirm').value.trim();
+
+        alEl.innerHTML = '';
+
+        if (!ancien || !nouveau || !confirm) {
+            alEl.innerHTML = err('Tous les champs sont obligatoires.');
+            return;
+        }
+        if (nouveau.length < 6) {
+            alEl.innerHTML = err('Le nouveau mot de passe doit faire au moins 6 caractères.');
+            return;
+        }
+        if (nouveau !== confirm) {
+            alEl.innerHTML = err('Les deux mots de passe ne correspondent pas.');
+            document.getElementById('pwd-confirm').focus();
+            return;
+        }
+        if (ancien === nouveau) {
+            alEl.innerHTML = `<div class="info-box info-warn"><i class="fas fa-exclamation-triangle"></i> Le nouveau mot de passe doit être différent de l'ancien.</div>`;
+            return;
+        }
+
+        var btn = document.getElementById('btn-save-pwd');
+        btn.disabled    = true;
+        btn.innerHTML   = '<i class="fas fa-spinner fa-spin"></i> Mise à jour...';
+
+        try {
+            await api('/auth/change-password/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    old_password: ancien,
+                    new_password: nouveau,
+                })
+            });
+
+            alEl.innerHTML = `<div class="info-box info-ok">
+                <i class="fas fa-check-circle"></i>
+                Mot de passe mis à jour ! Vous allez être déconnecté dans 3 secondes...
+            </div>`;
+
+            resetPwdForm();
+            setTimeout(() => doLogout(), 3000);
+
+        } catch(e) {
+            var msg = e.message;
+            try {
+                var parsed = JSON.parse(msg);
+                msg = Object.values(parsed).flat().join(' ');
+            } catch(_) {}
+            alEl.innerHTML = err(msg || 'Mot de passe actuel incorrect.');
+        } finally {
+            btn.disabled  = false;
+            btn.innerHTML = '<i class="fas fa-key"></i> Mettre à jour le mot de passe';
+        }
+    }
+
+    // ══════════════════════════════════════════════
+    //  INIT
+    // ══════════════════════════════════════════════
+    loadMe().then(()=>loadDashboard());
 </script>
 </body>
 </html>

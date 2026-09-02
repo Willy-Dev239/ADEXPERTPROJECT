@@ -162,7 +162,7 @@ def lier_locataire(request, user_id):
         return Response({'error': str(e)}, status=400)
  
  
-from .serializers import RegisterSerializer  # à côté des autres imports de serializers
+from .serializers import RegisterSerializer  
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
