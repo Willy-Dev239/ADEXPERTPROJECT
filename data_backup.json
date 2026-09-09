@@ -413,7 +413,8 @@
       "annee_construction": null,
       "meuble": true,
       "informations_complementaires": "",
-      "created_at": "2026-05-09T19:06:28.672Z"
+      "created_at": "2026-05-09T19:06:28.672Z",
+      "update_at": "2026-05-09T19:06:28.672Z"
     }
   },
   {
@@ -431,7 +432,8 @@
       "annee_construction": null,
       "meuble": true,
       "informations_complementaires": "",
-      "created_at": "2026-05-10T19:00:02.951Z"
+      "created_at": "2026-05-10T19:00:02.951Z",
+      "update_at": "2026-05-10T19:00:02.951Z"
     }
   },
   {
@@ -449,7 +451,8 @@
       "annee_construction": 2018,
       "meuble": true,
       "informations_complementaires": "",
-      "created_at": "2026-05-12T15:30:49.420Z"
+      "created_at": "2026-05-12T15:30:49.420Z",
+      "update_at": "2026-05-12T15:30:49.420Z"
     }
   },
   {
@@ -467,7 +470,8 @@
       "annee_construction": null,
       "meuble": true,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T10:22:58.373Z"
+      "created_at": "2026-06-03T10:22:58.373Z",
+      "update_at": "2026-06-03T10:22:58.373Z"
     }
   },
   {
@@ -485,7 +489,8 @@
       "annee_construction": 2015,
       "meuble": true,
       "informations_complementaires": "kiriri",
-      "created_at": "2026-07-06T08:34:30.003Z"
+      "created_at": "2026-07-06T08:34:30.003Z",
+      "update_at": "2026-07-06T08:34:30.003Z"
     }
   },
   {
@@ -503,7 +508,8 @@
       "annee_construction": 2015,
       "meuble": true,
       "informations_complementaires": "",
-      "created_at": "2026-07-06T08:35:53.309Z"
+      "created_at": "2026-07-06T08:35:53.309Z",
+      "update_at": "2026-07-06T08:35:53.309Z"
     }
   },
   {
@@ -535,7 +541,7 @@
     "pk": 3,
     "fields": {
       "nom_prenom": "Eva Ntibantunganya",
-      "telephone": "",
+      "telephone": "__EMPTY_DUP_2",
       "email": "evnet@gmail.com",
       "adresse_postale": "",
       "informations_complementaires": "",
@@ -559,8 +565,8 @@
     "pk": 5,
     "fields": {
       "nom_prenom": "Hilaire Ngenzebuhoro",
-      "telephone": "",
-      "email": "",
+      "telephone": "__EMPTY_DUP_3",
+      "email": "__EMPTY_DUP_1",
       "adresse_postale": "",
       "informations_complementaires": "",
       "created_at": "2026-06-04T11:35:40.517Z"
@@ -581,7 +587,8 @@
       "date_entree": "2026-01-01",
       "date_sortie": null,
       "informations_complementaires": "",
-      "created_at": "2026-05-09T19:06:29.890Z"
+      "created_at": "2026-05-09T19:06:29.890Z",
+      "update_at": "2026-05-09T19:06:29.890Z"
     }
   },
   {
@@ -599,7 +606,8 @@
       "date_entree": "2026-05-10",
       "date_sortie": null,
       "informations_complementaires": "",
-      "created_at": "2026-05-10T19:02:44.857Z"
+      "created_at": "2026-05-10T19:02:44.857Z",
+      "update_at": "2026-05-10T19:02:44.857Z"
     }
   },
   {
@@ -617,7 +625,8 @@
       "date_entree": "2026-05-12",
       "date_sortie": null,
       "informations_complementaires": "",
-      "created_at": "2026-05-12T15:33:11.093Z"
+      "created_at": "2026-05-12T15:33:11.093Z",
+      "update_at": "2026-05-12T15:33:11.093Z"
     }
   },
   {
@@ -635,7 +644,8 @@
       "date_entree": "2026-06-03",
       "date_sortie": null,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T10:24:31.033Z"
+      "created_at": "2026-06-03T10:24:31.033Z",
+      "update_at": "2026-06-03T10:24:31.033Z"
     }
   },
   {
@@ -653,7 +663,8 @@
       "date_entree": "2026-06-04",
       "date_sortie": "2027-06-04",
       "informations_complementaires": "",
-      "created_at": "2026-06-04T11:37:33.159Z"
+      "created_at": "2026-06-04T11:37:33.159Z",
+      "update_at": "2026-06-04T11:37:33.159Z"
     }
   },
   {
@@ -724,7 +735,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T12:40:59.181Z"
+      "created_at": "2026-06-02T12:40:59.181Z",
+      "update_at": "2026-06-02T12:40:59.181Z"
     }
   },
   {
@@ -743,7 +755,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.142Z"
+      "created_at": "2026-06-02T14:30:49.142Z",
+      "update_at": "2026-06-02T14:30:49.142Z"
     }
   },
   {
@@ -762,7 +775,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.231Z"
+      "created_at": "2026-06-02T14:30:49.231Z",
+      "update_at": "2026-06-02T14:30:49.231Z"
     }
   },
   {
@@ -781,7 +795,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.402Z"
+      "created_at": "2026-06-02T14:30:49.402Z",
+      "update_at": "2026-06-02T14:30:49.402Z"
     }
   },
   {
@@ -800,7 +815,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.500Z"
+      "created_at": "2026-06-02T14:30:49.500Z",
+      "update_at": "2026-06-02T14:30:49.500Z"
     }
   },
   {
@@ -819,7 +835,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.572Z"
+      "created_at": "2026-06-02T14:30:49.572Z",
+      "update_at": "2026-06-02T14:30:49.572Z"
     }
   },
   {
@@ -838,7 +855,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.623Z"
+      "created_at": "2026-06-02T14:30:49.623Z",
+      "update_at": "2026-06-02T14:30:49.623Z"
     }
   },
   {
@@ -857,7 +875,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.671Z"
+      "created_at": "2026-06-02T14:30:49.671Z",
+      "update_at": "2026-06-02T14:30:49.671Z"
     }
   },
   {
@@ -876,7 +895,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.729Z"
+      "created_at": "2026-06-02T14:30:49.729Z",
+      "update_at": "2026-06-02T14:30:49.729Z"
     }
   },
   {
@@ -895,7 +915,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.777Z"
+      "created_at": "2026-06-02T14:30:49.777Z",
+      "update_at": "2026-06-02T14:30:49.777Z"
     }
   },
   {
@@ -914,7 +935,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.843Z"
+      "created_at": "2026-06-02T14:30:49.843Z",
+      "update_at": "2026-06-02T14:30:49.843Z"
     }
   },
   {
@@ -933,7 +955,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.910Z"
+      "created_at": "2026-06-02T14:30:49.910Z",
+      "update_at": "2026-06-02T14:30:49.910Z"
     }
   },
   {
@@ -952,7 +975,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-02T14:30:49.987Z"
+      "created_at": "2026-06-02T14:30:49.987Z",
+      "update_at": "2026-06-02T14:30:49.987Z"
     }
   },
   {
@@ -971,7 +995,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:53.669Z"
+      "created_at": "2026-06-03T14:39:53.669Z",
+      "update_at": "2026-06-03T14:39:53.669Z"
     }
   },
   {
@@ -990,7 +1015,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:53.753Z"
+      "created_at": "2026-06-03T14:39:53.753Z",
+      "update_at": "2026-06-03T14:39:53.753Z"
     }
   },
   {
@@ -1009,7 +1035,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:53.835Z"
+      "created_at": "2026-06-03T14:39:53.835Z",
+      "update_at": "2026-06-03T14:39:53.835Z"
     }
   },
   {
@@ -1028,7 +1055,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:53.877Z"
+      "created_at": "2026-06-03T14:39:53.877Z",
+      "update_at": "2026-06-03T14:39:53.877Z"
     }
   },
   {
@@ -1047,7 +1075,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:53.905Z"
+      "created_at": "2026-06-03T14:39:53.905Z",
+      "update_at": "2026-06-03T14:39:53.905Z"
     }
   },
   {
@@ -1066,7 +1095,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:53.937Z"
+      "created_at": "2026-06-03T14:39:53.937Z",
+      "update_at": "2026-06-03T14:39:53.937Z"
     }
   },
   {
@@ -1085,7 +1115,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:54.009Z"
+      "created_at": "2026-06-03T14:39:54.009Z",
+      "update_at": "2026-06-03T14:39:54.009Z"
     }
   },
   {
@@ -1104,7 +1135,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:54.048Z"
+      "created_at": "2026-06-03T14:39:54.048Z",
+      "update_at": "2026-06-03T14:39:54.048Z"
     }
   },
   {
@@ -1123,7 +1155,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:54.059Z"
+      "created_at": "2026-06-03T14:39:54.059Z",
+      "update_at": "2026-06-03T14:39:54.059Z"
     }
   },
   {
@@ -1142,7 +1175,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:54.070Z"
+      "created_at": "2026-06-03T14:39:54.070Z",
+      "update_at": "2026-06-03T14:39:54.070Z"
     }
   },
   {
@@ -1161,7 +1195,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:54.082Z"
+      "created_at": "2026-06-03T14:39:54.082Z",
+      "update_at": "2026-06-03T14:39:54.082Z"
     }
   },
   {
@@ -1180,7 +1215,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-03T14:39:54.092Z"
+      "created_at": "2026-06-03T14:39:54.092Z",
+      "update_at": "2026-06-03T14:39:54.092Z"
     }
   },
   {
@@ -1199,7 +1235,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-05T12:10:27.715Z"
+      "created_at": "2026-06-05T12:10:27.715Z",
+      "update_at": "2026-06-05T12:10:27.715Z"
     }
   },
   {
@@ -1218,7 +1255,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-05T12:10:27.801Z"
+      "created_at": "2026-06-05T12:10:27.801Z",
+      "update_at": "2026-06-05T12:10:27.801Z"
     }
   },
   {
@@ -1237,7 +1275,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-05T12:10:27.817Z"
+      "created_at": "2026-06-05T12:10:27.817Z",
+      "update_at": "2026-06-05T12:10:27.817Z"
     }
   },
   {
@@ -1256,7 +1295,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-05T12:10:27.827Z"
+      "created_at": "2026-06-05T12:10:27.827Z",
+      "update_at": "2026-06-05T12:10:27.827Z"
     }
   },
   {
@@ -1275,7 +1315,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.445Z"
+      "created_at": "2026-06-08T09:52:28.445Z",
+      "update_at": "2026-06-08T09:52:28.445Z"
     }
   },
   {
@@ -1294,7 +1335,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.497Z"
+      "created_at": "2026-06-08T09:52:28.497Z",
+      "update_at": "2026-06-08T09:52:28.497Z"
     }
   },
   {
@@ -1313,7 +1355,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.513Z"
+      "created_at": "2026-06-08T09:52:28.513Z",
+      "update_at": "2026-06-08T09:52:28.513Z"
     }
   },
   {
@@ -1332,7 +1375,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.606Z"
+      "created_at": "2026-06-08T09:52:28.606Z",
+      "update_at": "2026-06-08T09:52:28.606Z"
     }
   },
   {
@@ -1351,7 +1395,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.650Z"
+      "created_at": "2026-06-08T09:52:28.650Z",
+      "update_at": "2026-06-08T09:52:28.650Z"
     }
   },
   {
@@ -1370,7 +1415,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.780Z"
+      "created_at": "2026-06-08T09:52:28.780Z",
+      "update_at": "2026-06-08T09:52:28.780Z"
     }
   },
   {
@@ -1389,7 +1435,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.813Z"
+      "created_at": "2026-06-08T09:52:28.813Z",
+      "update_at": "2026-06-08T09:52:28.813Z"
     }
   },
   {
@@ -1408,7 +1455,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.852Z"
+      "created_at": "2026-06-08T09:52:28.852Z",
+      "update_at": "2026-06-08T09:52:28.852Z"
     }
   },
   {
@@ -1427,7 +1475,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.879Z"
+      "created_at": "2026-06-08T09:52:28.879Z",
+      "update_at": "2026-06-08T09:52:28.879Z"
     }
   },
   {
@@ -1446,7 +1495,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.901Z"
+      "created_at": "2026-06-08T09:52:28.901Z",
+      "update_at": "2026-06-08T09:52:28.901Z"
     }
   },
   {
@@ -1465,7 +1515,8 @@
       "statut": "attente",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.956Z"
+      "created_at": "2026-06-08T09:52:28.956Z",
+      "update_at": "2026-06-08T09:52:28.956Z"
     }
   },
   {
@@ -1484,7 +1535,8 @@
       "statut": "paye",
       "quittance_envoyee": false,
       "informations_complementaires": "",
-      "created_at": "2026-06-08T09:52:28.978Z"
+      "created_at": "2026-06-08T09:52:28.978Z",
+      "update_at": "2026-06-08T09:52:28.978Z"
     }
   },
   {
@@ -1499,7 +1551,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-06-02T12:41:09.835Z"
+      "created_at": "2026-06-02T12:41:09.835Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-06-02T12:41:09.835Z"
     }
   },
   {
@@ -1514,7 +1571,12 @@
       "created_by": [
         "gestionnaire1"
       ],
-      "created_at": "2026-06-02T14:33:07.833Z"
+      "created_at": "2026-06-02T14:33:07.833Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-06-02T14:33:07.833Z"
     }
   },
   {
@@ -1529,7 +1591,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-06-03T10:29:08.678Z"
+      "created_at": "2026-06-03T10:29:08.678Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-06-03T10:29:08.678Z"
     }
   },
   {
@@ -1544,7 +1611,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-06-03T15:19:14.225Z"
+      "created_at": "2026-06-03T15:19:14.225Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-06-03T15:19:14.225Z"
     }
   },
   {
@@ -1559,7 +1631,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-06-03T15:22:51.877Z"
+      "created_at": "2026-06-03T15:22:51.877Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-06-03T15:22:51.877Z"
     }
   },
   {
@@ -1574,7 +1651,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-06-05T15:55:18.299Z"
+      "created_at": "2026-06-05T15:55:18.299Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-06-05T15:55:18.299Z"
     }
   },
   {
@@ -1589,7 +1671,12 @@
       "created_by": [
         "gestionnaire1"
       ],
-      "created_at": "2026-06-08T10:54:45.585Z"
+      "created_at": "2026-06-08T10:54:45.585Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-06-08T10:54:45.585Z"
     }
   },
   {
@@ -1604,7 +1691,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-06-09T09:28:51.173Z"
+      "created_at": "2026-06-09T09:28:51.173Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-06-09T09:28:51.173Z"
     }
   },
   {
@@ -1619,7 +1711,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-07-06T12:03:43.750Z"
+      "created_at": "2026-07-06T12:03:43.750Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-07-06T12:03:43.750Z"
     }
   },
   {
@@ -1634,7 +1731,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-07-06T12:03:58.406Z"
+      "created_at": "2026-07-06T12:03:58.406Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-07-06T12:03:58.406Z"
     }
   },
   {
@@ -1649,7 +1751,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-07-06T12:04:03.258Z"
+      "created_at": "2026-07-06T12:04:03.258Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-07-06T12:04:03.258Z"
     }
   },
   {
@@ -1664,7 +1771,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-07-06T12:04:07.482Z"
+      "created_at": "2026-07-06T12:04:07.482Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-07-06T12:04:07.482Z"
     }
   },
   {
@@ -1679,7 +1791,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-07-06T12:04:11.190Z"
+      "created_at": "2026-07-06T12:04:11.190Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-07-06T12:04:11.190Z"
     }
   },
   {
@@ -1694,7 +1811,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-07-06T12:04:16.671Z"
+      "created_at": "2026-07-06T12:04:16.671Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-07-06T12:04:16.671Z"
     }
   },
   {
@@ -1709,7 +1831,12 @@
       "created_by": [
         "admin"
       ],
-      "created_at": "2026-07-06T12:04:24.532Z"
+      "created_at": "2026-07-06T12:04:24.532Z",
+      "reference_transaction": "",
+      "banque_operateur": "",
+      "commentaire": "",
+      "motif_annulation": "",
+      "update_at": "2026-07-06T12:04:24.532Z"
     }
   },
   {
@@ -1722,7 +1849,8 @@
       "notes": "",
       "statut": "valide",
       "commentaire_admin": "",
-      "created_at": "2026-05-10T07:11:31.171Z"
+      "created_at": "2026-05-10T07:11:31.171Z",
+      "reference_client": ""
     }
   },
   {
@@ -1735,7 +1863,8 @@
       "notes": "",
       "statut": "valide",
       "commentaire_admin": "",
-      "created_at": "2026-05-11T08:52:44.931Z"
+      "created_at": "2026-05-11T08:52:44.931Z",
+      "reference_client": ""
     }
   },
   {
@@ -1748,7 +1877,8 @@
       "notes": "",
       "statut": "valide",
       "commentaire_admin": "",
-      "created_at": "2026-05-22T14:08:13.075Z"
+      "created_at": "2026-05-22T14:08:13.075Z",
+      "reference_client": ""
     }
   },
   {
@@ -1761,7 +1891,8 @@
       "notes": "",
       "statut": "valide",
       "commentaire_admin": "",
-      "created_at": "2026-06-02T14:30:01.578Z"
+      "created_at": "2026-06-02T14:30:01.578Z",
+      "reference_client": ""
     }
   },
   {
@@ -1774,7 +1905,8 @@
       "notes": "",
       "statut": "valide",
       "commentaire_admin": "",
-      "created_at": "2026-06-02T14:32:06.060Z"
+      "created_at": "2026-06-02T14:32:06.060Z",
+      "reference_client": ""
     }
   },
   {
@@ -1787,7 +1919,8 @@
       "notes": "2020200",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-06-30T07:22:32.886Z"
+      "created_at": "2026-06-30T07:22:32.886Z",
+      "reference_client": ""
     }
   },
   {
@@ -1800,7 +1933,8 @@
       "notes": "200522",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-06-30T15:53:42.721Z"
+      "created_at": "2026-06-30T15:53:42.721Z",
+      "reference_client": ""
     }
   },
   {
@@ -1813,7 +1947,8 @@
       "notes": "20000001111",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-06-30T17:04:01.946Z"
+      "created_at": "2026-06-30T17:04:01.946Z",
+      "reference_client": ""
     }
   },
   {
@@ -1826,7 +1961,8 @@
       "notes": "502222222",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-07-02T08:14:25.958Z"
+      "created_at": "2026-07-02T08:14:25.958Z",
+      "reference_client": ""
     }
   },
   {
@@ -1839,7 +1975,8 @@
       "notes": "55555555",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-07-02T09:15:00.052Z"
+      "created_at": "2026-07-02T09:15:00.052Z",
+      "reference_client": ""
     }
   },
   {
@@ -1852,7 +1989,8 @@
       "notes": "888888888",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-07-02T09:20:47.066Z"
+      "created_at": "2026-07-02T09:20:47.066Z",
+      "reference_client": ""
     }
   },
   {
@@ -1865,7 +2003,8 @@
       "notes": "77777777777777",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-07-02T10:30:16.638Z"
+      "created_at": "2026-07-02T10:30:16.638Z",
+      "reference_client": ""
     }
   },
   {
@@ -1878,7 +2017,8 @@
       "notes": "6666666666666",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-07-02T11:05:48.354Z"
+      "created_at": "2026-07-02T11:05:48.354Z",
+      "reference_client": ""
     }
   },
   {
@@ -1891,7 +2031,8 @@
       "notes": "22222222222222222",
       "statut": "en_attente",
       "commentaire_admin": "",
-      "created_at": "2026-07-02T11:20:38.523Z"
+      "created_at": "2026-07-02T11:20:38.523Z",
+      "reference_client": ""
     }
   },
   {
@@ -1904,7 +2045,8 @@
       "notes": "11111111111111111111111111111",
       "statut": "valide",
       "commentaire_admin": "",
-      "created_at": "2026-07-02T11:33:00.167Z"
+      "created_at": "2026-07-02T11:33:00.167Z",
+      "reference_client": ""
     }
   },
   {
@@ -1914,11 +2056,12 @@
       "libelle": "traveaux entretien",
       "type_charge": "travaux",
       "local": 1,
-      "immeuble": 1,
+      "immeuble": null,
       "montant_ttc": "450000.00",
       "date_charge": "2026-05-10",
       "notes": "",
-      "created_at": "2026-05-10T14:17:35.704Z"
+      "created_at": "2026-05-10T14:17:35.704Z",
+      "update_at": "2026-05-10T14:17:35.704Z"
     }
   },
   {
@@ -1928,11 +2071,12 @@
       "libelle": "L00099",
       "type_charge": "impot_foncier",
       "local": 1,
-      "immeuble": 2,
+      "immeuble": null,
       "montant_ttc": "6000000.00",
       "date_charge": "2026-05-14",
       "notes": "",
-      "created_at": "2026-05-14T14:15:30.956Z"
+      "created_at": "2026-05-14T14:15:30.956Z",
+      "update_at": "2026-05-14T14:15:30.956Z"
     }
   },
   {
@@ -1942,11 +2086,12 @@
       "libelle": "L00099",
       "type_charge": "impot_foncier",
       "local": 1,
-      "immeuble": 2,
+      "immeuble": null,
       "montant_ttc": "6000000.00",
       "date_charge": "2026-05-14",
       "notes": "",
-      "created_at": "2026-05-14T14:15:33.282Z"
+      "created_at": "2026-05-14T14:15:33.282Z",
+      "update_at": "2026-05-14T14:15:33.282Z"
     }
   },
   {
@@ -1956,11 +2101,12 @@
       "libelle": "L00099",
       "type_charge": "impot_foncier",
       "local": 1,
-      "immeuble": 2,
+      "immeuble": null,
       "montant_ttc": "6000000.00",
       "date_charge": "2026-05-14",
       "notes": "",
-      "created_at": "2026-05-14T14:15:33.722Z"
+      "created_at": "2026-05-14T14:15:33.722Z",
+      "update_at": "2026-05-14T14:15:33.722Z"
     }
   },
   {
@@ -1970,11 +2116,12 @@
       "libelle": "L00099",
       "type_charge": "impot_foncier",
       "local": 1,
-      "immeuble": 2,
+      "immeuble": null,
       "montant_ttc": "6000000.00",
       "date_charge": "2026-05-14",
       "notes": "",
-      "created_at": "2026-05-14T14:15:34.346Z"
+      "created_at": "2026-05-14T14:15:34.346Z",
+      "update_at": "2026-05-14T14:15:34.346Z"
     }
   },
   {
