@@ -3,7 +3,6 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import TemplateView
-from django.views.generic import TemplateView 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,8 +21,9 @@ urlpatterns = [
     path('locataire/', TemplateView.as_view(template_name='locataire_dashboard.html')),
     path('proprietaire/', TemplateView.as_view(template_name='proprietaire_dashboard.html')),
     path('identifiants/', TemplateView.as_view(template_name='identifiants.html')),
-    path('', TemplateView.as_view(template_name='index.html'), name='home'),
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('register/', TemplateView.as_view(template_name='register.html'), name='register'),
-   path('dashboard.html', TemplateView.as_view(template_name='dashboard.html'), name='dashboard'),
+    path('index.html', TemplateView.as_view(template_name='index.html'), name='index'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

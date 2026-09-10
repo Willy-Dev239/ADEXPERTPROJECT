@@ -225,11 +225,11 @@ async function doLogin() {
           break;
         case 'admin':
         case 'gestionnaire':
-          window.location.href = '/';
+          window.location.href = '/index.html';
           break;
         default:
           // Lecteur ou rôle non reconnu → dashboard
-          window.location.href = '/dashboard.html';
+          window.location.href = '/';
           break;
       }
     }, 600);

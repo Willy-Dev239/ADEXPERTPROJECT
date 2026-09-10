@@ -250,7 +250,7 @@
       localStorage.setItem('estAdmin', data.estAdmin);
 
       const role = (data.role || "").toLowerCase();
-      let target = "/dashboard.html";
+      let target = "/";
 
       if(role === "locataire"){
         target = "/locataire/";
