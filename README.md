@@ -1,18 +1,12 @@
 # A — Gestion Locative
 
-Système complet de gestion locative basé sur Django REST Framework.
-
-
-
-
+Système complet de gestion locative basé sur Django REST Framework
 1. Créer la base de données MySQL
 
 CREATE DATABASE adexpert_recouvrement_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER 'adexpert'@'localhost' IDENTIFIED BY 'adexpert2121';
 GRANT ALL PRIVILEGES ON adexpert_recouvrement_db.* TO 'adexpert'@'localhost';
 FLUSH PRIVILEGES;
-
-
 
 2. Configurer infinityhome/settings.py
 
@@ -46,16 +40,7 @@ python manage.py runserver
 - **Connexion** → http://localhost:8000/login/
 - **API** → http://localhost:8000/api/
 
-## Créer un utilisateur propriétaire
 
-```bash
-python manage.py shell
->>> from apps.auth_app.models import User
->>> from apps.proprietaires.models import Proprietaire
->>> p = Proprietaire.objects.create(nom="NDAYISHIMIYE Jean")
->>> u = User.objects.create_user('jean.prop', password='pass1234', role='proprietaire')
->>> u.proprietaire_profile = p; u.save()
-```
 
 ## 9 Fonctionnalités implémentées
 
