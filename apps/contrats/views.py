@@ -6,7 +6,8 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework import viewsets
 from django.utils import timezone
 from datetime import timedelta
-from .models import Contrat, ContratSociete, BordereauVirement
+from .models import Contrat, ContratSociete
+from .models import  BordereauVirement
 from .serializers import ContratSerializer, ContratSocieteSerializer, BordereauVirementSerializer
 class ContratListCreate(generics.ListCreateAPIView):
     serializer_class = ContratSerializer

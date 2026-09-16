@@ -549,9 +549,9 @@
                     </div>
                 </div>
                 <div class="table-wrap"><table>
-                        <thead><tr><th>Nom complet</th><th>Téléphone</th><th>Email</th><th>Province</th><th>Commune</th><th>Quartier</th><th>Locaux</th><th>Actions</th></tr></thead>
-                        <tbody id="tb-prop"><tr><td colspan="8" class="loader"></td></tr></tbody>
-                    </table></div>
+        <thead><tr><th>Nom complet</th><th>Téléphone</th><th>Email</th><th>NIF</th><th>Province</th><th>Commune</th><th>Quartier</th><th>Locaux</th><th>Actions</th></tr></thead>
+        <tbody id="tb-prop"><tr><td colspan="9" class="loader"></td></tr></tbody>
+    </table></div>
             </div>
         </div>
 
@@ -892,6 +892,10 @@
             </div>
             <div class="form-grid">
                 <div class="fg"><label>Email</label><input id="prop-email" type="email" placeholder="email@exemple.com"></div>
+                <div class="fg"><label>NIF</label><input id="prop-nif" placeholder="4001514787"></div>
+            </div>
+            <div class="form-grid">
+                <div class="fg"><label>N° CNI</label><input id="prop-cni" placeholder="CI/..."></div>
                 <div class="fg"><label>Province</label>
                     <select id="prop-prov" onchange="updateCommunes('prop-prov','prop-com')">
                         <option value="">— Province —</option>
@@ -1368,10 +1372,31 @@
                 <div class="fg"><label>Statut</label><select id="cs-statut"><option value="actif">✅ Actif</option><option value="expire">⏰ Expiré</option><option value="resilie">❌ Résilié</option></select></div>
             </div>
             <div class="sep"></div>
+            <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px"><i class="bi bi-house-door-fill"></i> Bien loué</div>
+            <div class="form-grid">
+                <div class="fg"><label>Type de bien</label>
+                    <select id="cs-type-bien">
+                        <option value="">— Type —</option>
+                        <option value="appartement">Appartement</option>
+                        <option value="maison">Maison</option>
+                        <option value="bureau">Bureau</option>
+                        <option value="commerce">Commerce</option>
+                        <option value="garage">Garage</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+                <div class="fg"><label>Nombre de pièces</label><input id="cs-nb-pieces" type="number" placeholder="4"></div>
+            </div>
+            <div class="fg"><label>Loyer mensuel HC (BIF)</label><input id="cs-loyer-mensuel" type="number" placeholder="250000"></div>
+            <div class="sep"></div>
             <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px"><i class="bi bi-cash-coin"></i> Conditions financières</div>
             <div class="form-grid">
                 <div class="fg"><label>Taux de commission (%) *</label><input id="cs-taux" type="number" step="0.5" value="9"></div>
                 <div class="fg"><label>Périodicité de reversement</label><select id="cs-period"><option value="mensuel">Mensuel</option><option value="trimestriel">Trimestriel</option><option value="semestriel">Semestriel</option></select></div>
+            </div>
+            <div class="form-grid">
+                <div class="fg"><label>Frais de mise en location (%)</label><input id="cs-frais-mise" type="number" step="0.5" placeholder="50"></div>
+                <div class="fg"><label>Frais travaux (%)</label><input id="cs-frais-travaux" type="number" step="0.5" placeholder="10"></div>
             </div>
             <div class="fg"><label>Frais d'entrée (BIF)</label><input id="cs-entree" type="number" placeholder="0"></div>
             <div class="sep"></div>
@@ -1390,7 +1415,6 @@
         </div>
     </div>
 </div>
-
 <!-- Modal Aperçu Contrat Imprimable -->
 <div class="modal-overlay" id="m-cs-print">
     <div class="modal modal-lg">
@@ -1596,23 +1620,6 @@
         notifications:loadNotifications,
         utilisateurs:loadUsers
     };
-    var TITLES={dashboard:'Tableau de bord',proprietaires:'Propriétaires',immeubles:'Immeubles',locaux:'Locaux',locataires:'Locataires',contrats:'Contrats Location',contrats_societe:'Contrats Société',loyers:'Loyers & Paiements',charges:'Charges & Frais',bordereaux:'Bordereaux',virements:'Virements Propriétaires',rapports:'Rapports',portefeuille:'Portefeuille cabinet',chat:'Chat Immeubles',notifications:'Notifications',utilisateurs:'Utilisateurs'};
-    var LOADERS={
-        proprietaires:loadProp,
-        immeubles:loadImm,
-        locaux:loadLocaux,
-        locataires:loadLocas,
-        contrats:loadCont,
-        contrats_societe:loadCS,
-        loyers:()=>{ loadLoyerFilters(); loadLoyers('tous'); },
-        charges:loadCh,
-        bordereaux:loadBordereaux,
-        virements:loadVirements,
-        portefeuille:loadPortf,
-        chat:loadChatInit,
-        notifications:loadNotifications,
-        utilisateurs:loadUsers
-    };
     function goSection(id,el){
         if(id!=='chat'&&_chatPollInterval){
             clearInterval(_chatPollInterval);
@@ -1643,50 +1650,174 @@
     //  PROPRIÉTAIRES
     // ═══════════════════════════════════════════
     var _props=[];
-    async function loadProp(){
-        var tb=document.getElementById('tb-prop');tb.innerHTML='<tr><td colspan="8" class="loader"></td></tr>';
-        try{var d=await api('/proprietaires/?page_size=300');if(!d)return;_props=d.results||d;renderProp(_props);}
-        catch(e){tb.innerHTML=`<tr><td colspan="8" style="color:var(--text3);text-align:center;padding:20px">Erreur</td></tr>`;}
-    }
-    function renderProp(l){
-        var tb=document.getElementById('tb-prop');
-        if(!l.length){tb.innerHTML='<tr><td colspan="8" class="loader">Aucun propriétaire</td></tr>';return;}
-        tb.innerHTML=l.map(p=>`<tr><td><strong style="color:var(--text)">${p.nom}</strong></td><td>${p.telephone||'—'}</td><td>${p.email||'—'}</td><td>${p.adresse_province||'—'}</td><td>${p.adresse_commune||'—'}</td><td>${p.adresse_quartier||'—'}</td><td><span class="bs bs-actif">${p.nb_locaux} local(s)</span></td><td>${S.write?`<button class="btn btn-sm" onclick="openModalProp(${p.id})"><i class="bi bi-pencil-fill"></i></button>`:'—'}</td></tr>`).join('');
-    }
-    function filtProp(){var q=document.getElementById('s-prop').value.toLowerCase();renderProp(_props.filter(p=>(p.nom+(p.telephone||'')+(p.email||'')).toLowerCase().includes(q)));}
+async function loadProp(){
+    var tb=document.getElementById('tb-prop');tb.innerHTML='<tr><td colspan="9" class="loader"></td></tr>';
+    try{var d=await api('/proprietaires/?page_size=300');if(!d)return;_props=d.results||d;renderProp(_props);}
+    catch(e){tb.innerHTML=`<tr><td colspan="9" style="color:var(--text3);text-align:center;padding:20px">Erreur</td></tr>`;}
+}
+function renderProp(l){
+    var tb=document.getElementById('tb-prop');
+    if(!l.length){tb.innerHTML='<tr><td colspan="9" class="loader">Aucun propriétaire</td></tr>';return;}
+    tb.innerHTML=l.map(p=>`<tr><td><strong style="color:var(--text)">${p.nom}</strong></td><td>${p.telephone||'—'}</td><td>${p.email||'—'}</td><td>${p.nif||'—'}</td><td>${p.adresse_province||'—'}</td><td>${p.adresse_commune||'—'}</td><td>${p.adresse_quartier||'—'}</td><td><span class="bs bs-actif">${p.nb_locaux} local(s)</span></td><td>${S.write?`<button class="btn btn-sm" onclick="openModalProp(${p.id})"><i class="bi bi-pencil-fill"></i></button>`:'—'}</td></tr>`).join('');
+}
+function filtProp(){var q=document.getElementById('s-prop').value.toLowerCase();renderProp(_props.filter(p=>(p.nom+(p.telephone||'')+(p.email||'')+(p.nif||'')).toLowerCase().includes(q)));}
+    async function openModalProp(id) {
+    document.getElementById('mt-prop').textContent = id ? 'Modifier le propriétaire' : 'Nouveau propriétaire';
+    document.getElementById('prop-id').value = id || '';
+    document.getElementById('al-prop').innerHTML = '';
+    document.getElementById('del-prop').classList.toggle('hidden', !id);
+    ['prop-nom','prop-tel','prop-email','prop-nif','prop-cni','prop-quart','prop-info'].forEach(x => document.getElementById(x).value = '');
+    await loadProvinces();
+    document.getElementById('prop-prov').value = '';
+    document.getElementById('prop-com').innerHTML = '<option value="">— Commune —</option>';
 
-    async function openModalProp(id){
-        document.getElementById('mt-prop').textContent=id?'Modifier le propriétaire':'Nouveau propriétaire';
-        document.getElementById('prop-id').value=id||'';document.getElementById('al-prop').innerHTML='';
-        document.getElementById('del-prop').classList.toggle('hidden',!id);
-        ['prop-nom','prop-tel','prop-email','prop-quart','prop-info'].forEach(x=>document.getElementById(x).value='');
-        await loadProvinces();
-        document.getElementById('prop-prov').value='';
-        document.getElementById('prop-com').innerHTML='<option value="">— Commune —</option>';
-        if(id){
-            try{
-                var p=await api('/proprietaires/'+id+'/');
-                document.getElementById('prop-nom').value=p.nom;document.getElementById('prop-tel').value=p.telephone||'';
-                document.getElementById('prop-email').value=p.email||'';
-                document.getElementById('prop-prov').value=p.adresse_province||'';
-                if(p.adresse_province)updateCommunes('prop-prov','prop-com');
-                document.getElementById('prop-com').value=p.adresse_commune||'';
-                document.getElementById('prop-quart').value=p.adresse_quartier||'';
-                document.getElementById('prop-info').value=p.informations_complementaires||'';
-            }catch(e){}
+    try {
+        var users = await api('/auth/users/?role=proprietaire');
+        var l = Array.isArray(users) ? users : (users.results || []);
+        var libres = l.filter(u => !u.proprietaire_profile);
+        document.getElementById('prop-user-sel').innerHTML =
+            '<option value="">— Sélectionner un utilisateur (optionnel) —</option>' +
+            libres.map(u => `<option value="${u.id}">${u.username} — ${u.full_name || ''}</option>`).join('');
+    } catch(e) {}
+
+    if (id) {
+        try {
+            var p = await api('/proprietaires/' + id + '/');
+            document.getElementById('prop-nom').value = p.nom;
+            document.getElementById('prop-tel').value = p.telephone || '';
+            document.getElementById('prop-email').value = p.email || '';
+            document.getElementById('prop-nif').value = p.nif || '';
+            document.getElementById('prop-cni').value = p.cni || '';
+            document.getElementById('prop-prov').value = p.adresse_province || '';
+            if (p.adresse_province) updateCommunes('prop-prov', 'prop-com');
+            document.getElementById('prop-com').value = p.adresse_commune || '';
+            document.getElementById('prop-quart').value = p.adresse_quartier || '';
+            document.getElementById('prop-info').value = p.informations_complementaires || '';
+        } catch(e) {}
+    }
+    openModal('m-prop');
+}
+
+
+async function saveProp() {
+    var id = document.getElementById('prop-id').value;
+    var data = {
+        nom: document.getElementById('prop-nom').value,
+        telephone: document.getElementById('prop-tel').value,
+        email: document.getElementById('prop-email').value,
+        nif: document.getElementById('prop-nif').value,
+        cni: document.getElementById('prop-cni').value,
+        adresse_province: document.getElementById('prop-prov').value,
+        adresse_commune: document.getElementById('prop-com').value,
+        adresse_quartier: document.getElementById('prop-quart').value,
+        informations_complementaires: document.getElementById('prop-info').value
+    };
+    if (!data.nom.trim()) { document.getElementById('al-prop').innerHTML = err('Le nom est requis.'); return; }
+    try {
+        var result;
+        if (id) result = await api('/proprietaires/' + id + '/', {method:'PUT', body:JSON.stringify(data)});
+        else result = await api('/proprietaires/', {method:'POST', body:JSON.stringify(data)});
+
+        var userId = document.getElementById('prop-user-sel').value;
+        if (userId && result && result.id) {
+            await api('/auth/users/' + userId + '/lier-proprietaire/', {
+                method: 'POST',
+                body: JSON.stringify({ proprietaire_id: result.id })
+            });
         }
-        openModal('m-prop');
+
+        closeModal('m-prop');
+        loadProp();
+    } catch(e) {
+        document.getElementById('al-prop').innerHTML = err(e.message);
     }
-    async function saveProp(){
-        var id=document.getElementById('prop-id').value;
-        var data={nom:document.getElementById('prop-nom').value,telephone:document.getElementById('prop-tel').value,email:document.getElementById('prop-email').value,adresse_province:document.getElementById('prop-prov').value,adresse_commune:document.getElementById('prop-com').value,adresse_quartier:document.getElementById('prop-quart').value,informations_complementaires:document.getElementById('prop-info').value};
-        if(!data.nom.trim()){document.getElementById('al-prop').innerHTML=err('Le nom est requis.');return;}
+}
+
+async function openModalCS(id){
+    document.getElementById('al-cs').innerHTML='';document.getElementById('cs-id').value=id||'';
+    document.getElementById('mt-cs').textContent=id?'Modifier le contrat société':'Nouveau contrat société';
+    document.getElementById('del-cs').classList.toggle('hidden',!id);document.getElementById('print-cs').classList.toggle('hidden',!id);
+    renderCSServices();await selProp('cs-prop');
+    var today=new Date().toISOString().split('T')[0];
+    document.getElementById('cs-sign').value=today;document.getElementById('cs-debut').value=today;
+    document.getElementById('cs-fin').value='';document.getElementById('cs-taux').value='9';
+    document.getElementById('cs-period').value='mensuel';document.getElementById('cs-statut').value='actif';
+    document.getElementById('cs-entree').value='';document.getElementById('cs-clauses').value='';document.getElementById('cs-notes').value='';
+    document.getElementById('cs-type-bien').value='';document.getElementById('cs-nb-pieces').value='';
+    document.getElementById('cs-loyer-mensuel').value='';document.getElementById('cs-frais-mise').value='50';
+    document.getElementById('cs-frais-travaux').value='10';
+    CS_SERVICES.forEach(s=>document.getElementById('cs-'+s.id).checked=s.default);
+    if(id){
         try{
-            if(id)await api('/proprietaires/'+id+'/',{method:'PUT',body:JSON.stringify(data)});
-            else await api('/proprietaires/',{method:'POST',body:JSON.stringify(data)});
-            closeModal('m-prop');loadProp();
-        }catch(e){document.getElementById('al-prop').innerHTML=err(e.message);}
+            var c=await api('/contrats/societe/'+id+'/');
+            document.getElementById('cs-num').value=c.numero;document.getElementById('cs-prop').value=c.proprietaire;
+            document.getElementById('cs-sign').value=c.date_signature;document.getElementById('cs-debut').value=c.date_effet;
+            document.getElementById('cs-fin').value=c.date_expiration||'';document.getElementById('cs-statut').value=c.statut;
+            document.getElementById('cs-taux').value=c.taux_commission;document.getElementById('cs-period').value=c.periodicite_reversement;
+            document.getElementById('cs-entree').value=c.frais_entree||'';document.getElementById('cs-clauses').value=c.clauses_particulieres||'';
+            document.getElementById('cs-notes').value=c.notes_internes||'';
+            document.getElementById('cs-type-bien').value=c.type_bien||'';
+            document.getElementById('cs-nb-pieces').value=c.nombre_pieces||'';
+            document.getElementById('cs-loyer-mensuel').value=c.loyer_mensuel||'';
+            document.getElementById('cs-frais-mise').value=c.frais_mise_location||'50';
+            document.getElementById('cs-frais-travaux').value=c.frais_travaux_pct||'10';
+            CS_SERVICES.forEach(s=>{var el=document.getElementById('cs-'+s.id);if(el)el.checked=!!c[s.id];});
+        }catch(e){}
+    }else{
+        var year=new Date().getFullYear();
+        document.getElementById('cs-num').value='CS-'+year+'-001';
     }
+    openModal('m-cs');
+}
+
+async function saveCS(){
+    var num = document.getElementById('cs-num').value.trim();
+    var propEl = document.getElementById('cs-prop'); var propId = propEl.value;
+    var sign = document.getElementById('cs-sign').value;
+    var debut = document.getElementById('cs-debut').value;
+    var taux = document.getElementById('cs-taux').value;
+
+    if(!num || !propId || !sign || !debut || !taux){
+        document.getElementById('al-cs').innerHTML = err('Champs obligatoires manquants (*).');
+        return;
+    }
+
+    if(sign && debut && new Date(debut) < new Date(sign)){
+        document.getElementById('al-cs').innerHTML = err("La date d'effet ne peut pas être antérieure à la date de signature.");
+        return;
+    }
+    var fin = document.getElementById('cs-fin').value;
+    if(fin && debut && new Date(fin) <= new Date(debut)){
+        document.getElementById('al-cs').innerHTML = err("La date d'expiration doit être postérieure à la date d'effet.");
+        return;
+    }
+
+    var id = document.getElementById('cs-id').value;
+    var data = {
+        numero: num, proprietaire: propId, date_signature: sign, date_effet: debut,
+        date_expiration: fin || null, statut: document.getElementById('cs-statut').value,
+        taux_commission: taux, periodicite_reversement: document.getElementById('cs-period').value,
+        frais_entree: document.getElementById('cs-entree').value || 0,
+        type_bien: document.getElementById('cs-type-bien').value,
+        nombre_pieces: document.getElementById('cs-nb-pieces').value || null,
+        loyer_mensuel: document.getElementById('cs-loyer-mensuel').value || null,
+        frais_mise_location: document.getElementById('cs-frais-mise').value || 50,
+        frais_travaux_pct: document.getElementById('cs-frais-travaux').value || 10,
+        clauses_particulieres: document.getElementById('cs-clauses').value,
+        notes_internes: document.getElementById('cs-notes').value
+    };
+    CS_SERVICES.forEach(s => { var el = document.getElementById('cs-'+s.id); if(el) data[s.id] = el.checked; });
+
+    try{
+        if(id) await api('/contrats/societe/'+id+'/', {method:'PUT', body:JSON.stringify(data)});
+        else await api('/contrats/societe/', {method:'POST', body:JSON.stringify(data)});
+        closeModal('m-cs'); loadCS();
+        loadDash();
+        loadPortf();
+    } catch(e){
+        document.getElementById('al-cs').innerHTML = err(e.message);
+    }
+}
     async function delProp(){
         if(!confirm('Supprimer ce propriétaire ?'))return;
         var id=document.getElementById('prop-id').value;
@@ -2085,223 +2216,178 @@
     }
 
     async function loadCS(){
-        var filtre=document.getElementById('f-st-cs').value;
-        var grid=document.getElementById('cs-grid');
-        try{
-            var d=await api('/contrats/societe/?page_size=200'+(filtre?'&statut='+filtre:''));if(!d)return;
-            var l=d.results||d;
-            var actifs=l.filter(c=>c.statut==='actif').length,expires=l.filter(c=>c.statut==='expire').length;
-            document.getElementById('kpi-cs').innerHTML=`<div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${l.length}</div></div><div class="kpi"><div class="kpi-label">Actifs</div><div class="kpi-val" style="color:var(--accent)">${actifs}</div></div><div class="kpi"><div class="kpi-label">Expirés</div><div class="kpi-val" style="color:var(--blue2)">${expires}</div></div><div class="kpi"><div class="kpi-label">Commission moy.</div><div class="kpi-val">${l.length?Math.round(l.reduce((a,c)=>a+parseFloat(c.taux_commission||9),0)/l.length):9}%</div></div>`;
-            if(!l.length){grid.innerHTML='<div class="info-box info-blue" style="grid-column:1/-1"><i class="bi bi-info-circle-fill"></i> Aucun contrat société. Cliquez sur <strong>+ Nouveau contrat</strong>.</div>';return;}
-            var sm={actif:{cls:'bs-paye',label:'✅ Actif',color:'linear-gradient(90deg,var(--accent),var(--accent2))'},expire:{cls:'bs-retard',label:'⏰ Expiré',color:'linear-gradient(90deg,var(--blue2),#0284c7)'},resilie:{cls:'bs-resilie',label:'❌ Résilié',color:'linear-gradient(90deg,var(--text3),#475569)'}};
-            grid.innerHTML=l.map(c=>{
-                var s=sm[c.statut]||sm.actif;
-                var svcs=CS_SERVICES.filter(sv=>c[sv.id]).map(sv=>sv.label);
-                return `<div class="cs-card" style="--cs-c:${s.color}" onclick="openModalCS(${c.id})">
-                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-                        <div><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase">N° ${c.numero}</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-top:2px">${c.proprietaire_nom}</div></div>
-                        <span class="bs ${s.cls}">${s.label}</span>
-                    </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;font-size:11.5px;margin-bottom:10px">
-                        <div><span style="color:var(--text3)">Commission</span><br><strong style="font-size:14px;color:var(--accent2)">${c.taux_commission}%</strong></div>
-                        <div><span style="color:var(--text3)">Reversement</span><br><strong>${c.periodicite_reversement}</strong></div>
-                        <div><span style="color:var(--text3)">Signé le</span><br><strong>${fd(c.date_signature)}</strong></div>
-                        <div><span style="color:var(--text3)">Expire le</span><br><strong>${c.date_expiration?fd(c.date_expiration):'Indéterminée'}</strong></div>
-                    </div>
-                    ${svcs.length?`<div style="display:flex;flex-wrap:wrap;gap:4px">${svcs.map(sv=>`<span style="background:rgba(14, 165, 233, 0.1);color:var(--accent);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700"><i class="bi bi-check-circle-fill"></i> ${sv}</span>`).join('')}</div>`:''}
-                </div>`;
-            }).join('');
-        }catch(e){grid.innerHTML='<div class="info-box info-err">Erreur de chargement</div>';}
-    }
-
-    async function openModalCS(id){
-        document.getElementById('al-cs').innerHTML='';document.getElementById('cs-id').value=id||'';
-        document.getElementById('mt-cs').textContent=id?'Modifier le contrat société':'Nouveau contrat société';
-        document.getElementById('del-cs').classList.toggle('hidden',!id);document.getElementById('print-cs').classList.toggle('hidden',!id);
-        renderCSServices();await selProp('cs-prop');
-        var today=new Date().toISOString().split('T')[0];
-        document.getElementById('cs-sign').value=today;document.getElementById('cs-debut').value=today;
-        document.getElementById('cs-fin').value='';document.getElementById('cs-taux').value='9';
-        document.getElementById('cs-period').value='mensuel';document.getElementById('cs-statut').value='actif';
-        document.getElementById('cs-entree').value='';document.getElementById('cs-clauses').value='';document.getElementById('cs-notes').value='';
-        CS_SERVICES.forEach(s=>document.getElementById('cs-'+s.id).checked=s.default);
-        if(id){
-            try{
-                var c=await api('/contrats/societe/'+id+'/');
-                document.getElementById('cs-num').value=c.numero;document.getElementById('cs-prop').value=c.proprietaire;
-                document.getElementById('cs-sign').value=c.date_signature;document.getElementById('cs-debut').value=c.date_effet;
-                document.getElementById('cs-fin').value=c.date_expiration||'';document.getElementById('cs-statut').value=c.statut;
-                document.getElementById('cs-taux').value=c.taux_commission;document.getElementById('cs-period').value=c.periodicite_reversement;
-                document.getElementById('cs-entree').value=c.frais_entree||'';document.getElementById('cs-clauses').value=c.clauses_particulieres||'';
-                document.getElementById('cs-notes').value=c.notes_internes||'';
-                CS_SERVICES.forEach(s=>{var el=document.getElementById('cs-'+s.id);if(el)el.checked=!!c[s.id];});
-            }catch(e){}
-        }else{
-            var year=new Date().getFullYear();
-            document.getElementById('cs-num').value='CS-'+year+'-001';
-        }
-        openModal('m-cs');
-    }
-    async function saveCS(){
-        var num = document.getElementById('cs-num').value.trim();
-        var propEl = document.getElementById('cs-prop'); var propId = propEl.value;
-        var sign = document.getElementById('cs-sign').value;
-        var debut = document.getElementById('cs-debut').value;
-        var taux = document.getElementById('cs-taux').value;
-
-        if(!num || !propId || !sign || !debut || !taux){
-            document.getElementById('al-cs').innerHTML = err('Champs obligatoires manquants (*).');
-            return;
-        }
-
-        if(sign && debut && new Date(debut) < new Date(sign)){
-            document.getElementById('al-cs').innerHTML = err("La date d'effet ne peut pas être antérieure à la date de signature.");
-            return;
-        }
-        var fin = document.getElementById('cs-fin').value;
-        if(fin && debut && new Date(fin) <= new Date(debut)){
-            document.getElementById('al-cs').innerHTML = err("La date d'expiration doit être postérieure à la date d'effet.");
-            return;
-        }
-
-        var id = document.getElementById('cs-id').value;
-        var data = {
-            numero: num, proprietaire: propId, date_signature: sign, date_effet: debut,
-            date_expiration: fin || null, statut: document.getElementById('cs-statut').value,
-            taux_commission: taux, periodicite_reversement: document.getElementById('cs-period').value,
-            frais_entree: document.getElementById('cs-entree').value || 0,
-            clauses_particulieres: document.getElementById('cs-clauses').value,
-            notes_internes: document.getElementById('cs-notes').value
-        };
-        CS_SERVICES.forEach(s => { var el = document.getElementById('cs-'+s.id); if(el) data[s.id] = el.checked; });
-
-        try{
-            if(id) await api('/contrats/societe/'+id+'/', {method:'PUT', body:JSON.stringify(data)});
-            else await api('/contrats/societe/', {method:'POST', body:JSON.stringify(data)});
-            closeModal('m-cs'); loadCS();
-            loadDash();
-            loadPortf();
-        } catch(e){
-            document.getElementById('al-cs').innerHTML = err(e.message);
-        }
-    }
+    var filtre=document.getElementById('f-st-cs').value;
+    var grid=document.getElementById('cs-grid');
+    try{
+        var d=await api('/contrats/societe/?page_size=200'+(filtre?'&statut='+filtre:''));if(!d)return;
+        var l=d.results||d;
+        var actifs=l.filter(c=>c.statut==='actif').length,expires=l.filter(c=>c.statut==='expire').length;
+        document.getElementById('kpi-cs').innerHTML=`<div class="kpi"><div class="kpi-label">Total</div><div class="kpi-val">${l.length}</div></div><div class="kpi"><div class="kpi-label">Actifs</div><div class="kpi-val" style="color:var(--accent)">${actifs}</div></div><div class="kpi"><div class="kpi-label">Expirés</div><div class="kpi-val" style="color:var(--blue2)">${expires}</div></div><div class="kpi"><div class="kpi-label">Commission moy.</div><div class="kpi-val">${l.length?Math.round(l.reduce((a,c)=>a+parseFloat(c.taux_commission||9),0)/l.length):9}%</div></div>`;
+        if(!l.length){grid.innerHTML='<div class="info-box info-blue" style="grid-column:1/-1"><i class="bi bi-info-circle-fill"></i> Aucun contrat société. Cliquez sur <strong>+ Nouveau contrat</strong>.</div>';return;}
+        var sm={actif:{cls:'bs-paye',label:'✅ Actif',color:'linear-gradient(90deg,var(--accent),var(--accent2))'},expire:{cls:'bs-retard',label:'⏰ Expiré',color:'linear-gradient(90deg,var(--blue2),#0284c7)'},resilie:{cls:'bs-resilie',label:'❌ Résilié',color:'linear-gradient(90deg,var(--text3),#475569)'}};
+        grid.innerHTML=l.map(c=>{
+            var s=sm[c.statut]||sm.actif;
+            var svcs=CS_SERVICES.filter(sv=>c[sv.id]).map(sv=>sv.label);
+            return `<div class="cs-card" style="--cs-c:${s.color}" onclick="openModalCS(${c.id})">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+                    <div><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase">N° ${c.numero}</div><div style="font-size:15px;font-weight:800;color:var(--text);margin-top:2px">${c.proprietaire_nom}</div></div>
+                    <span class="bs ${s.cls}">${s.label}</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;font-size:11.5px;margin-bottom:10px">
+                    <div><span style="color:var(--text3)">NIF Propriétaire</span><br><strong>${c.proprietaire_nif||'—'}</strong></div>
+                    <div><span style="color:var(--text3)">CNI</span><br><strong>${c.proprietaire_cni||'—'}</strong></div>
+                    <div><span style="color:var(--text3)">Bien loué</span><br><strong>${c.type_bien||'—'} (${c.nombre_pieces||'?'} pièces)</strong></div>
+                    <div><span style="color:var(--text3)">Loyer mensuel</span><br><strong>${c.loyer_mensuel?c.loyer_mensuel.toLocaleString()+' FBU':'—'}</strong></div>
+                    <div><span style="color:var(--text3)">Commission</span><br><strong style="font-size:14px;color:var(--accent2)">${c.taux_commission}%</strong></div>
+                    <div><span style="color:var(--text3)">Frais mise en location</span><br><strong>${c.frais_mise_location||50}% loyer</strong></div>
+                    <div><span style="color:var(--text3)">Frais travaux</span><br><strong>${c.frais_travaux_pct||10}% gestion</strong></div>
+                    <div><span style="color:var(--text3)">Reversement</span><br><strong>${c.periodicite_reversement}</strong></div>
+                    <div><span style="color:var(--text3)">Signé le</span><br><strong>${fd(c.date_signature)}</strong></div>
+                    <div><span style="color:var(--text3)">Expire le</span><br><strong>${c.date_expiration?fd(c.date_expiration):'Indéterminée'}</strong></div>
+                </div>
+                ${svcs.length?`<div style="display:flex;flex-wrap:wrap;gap:4px">${svcs.map(sv=>`<span style="background:rgba(14, 165, 233, 0.1);color:var(--accent);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700"><i class="bi bi-check-circle-fill"></i> ${sv}</span>`).join('')}</div>`:''}
+            </div>`;
+        }).join('');
+    }catch(e){grid.innerHTML='<div class="info-box info-err">Erreur de chargement</div>';}
+}
     async function delCS(){
         if(!confirm('Supprimer ce contrat société ?'))return;var id=document.getElementById('cs-id').value;
         try{await api('/contrats/societe/'+id+'/',{method:'DELETE'});closeModal('m-cs');loadCS();}
         catch(e){document.getElementById('al-cs').innerHTML=err(e.message);}
     }
     async function printCS(){
-        var id=document.getElementById('cs-id').value;
-        try{
-            var c=await api('/contrats/societe/'+id+'/');
-            var svcs=CS_SERVICES.filter(s=>c[s.id]).map(s=>s.label);
-            var propNom=document.getElementById('cs-prop').options[document.getElementById('cs-prop').selectedIndex]?.text||'—';
+    var id=document.getElementById('cs-id').value;
+    try{
+        var c=await api('/contrats/societe/'+id+'/');
+        var svcs=CS_SERVICES.filter(s=>c[s.id]).map(s=>s.label);
+        var propNom=document.getElementById('cs-prop').options[document.getElementById('cs-prop').selectedIndex]?.text||'—';
 
-            var w=window.open('','_blank');
-            w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-                <title></title>
-                <style>
-                    *{margin:0;padding:0;box-sizing:border-box;}
-                    body{font-family:Arial,sans-serif;font-size:12px;color:#111;background:#fff;padding:20mm 18mm;}
-                    @page{size:A4;margin:0;}
-                    .hd{text-align:center;border-bottom:2px solid #0ea5e9;padding-bottom:10px;margin-bottom:14px;}
-                    .hd .logo{font-size:20px;font-weight:900;color:#0ea5e9;}
-                    .hd .sub{font-size:10px;color:#64748b;margin-top:2px;}
-                    .hd h2{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-top:8px;}
-                    .hd .ref{font-size:10px;color:#64748b;margin-top:3px;}
-                    .parties{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;}
-                    .partie-box{border:1px solid #e2e8f0;border-radius:5px;padding:8px 10px;}
-                    .partie-title{font-size:9px;text-transform:uppercase;color:#94a3b8;font-weight:700;margin-bottom:4px;}
-                    .partie-box strong{font-size:12px;}
-                    .partie-box span{font-size:11px;color:#555;}
-                    .article{margin:10px 0;}
-                    .article-title{font-size:12px;font-weight:700;text-decoration:underline;color:#0ea5e9;margin-bottom:4px;}
-                    .article ul{padding-left:18px;margin-top:4px;}
-                    .article ul li{margin-bottom:2px;font-size:11px;}
-                    .sig-section{margin-top:30px;}
-                    .sig-date{font-size:11px;color:#555;margin-bottom:20px;}
-                    .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
-                    .sig-box{border:1px solid #cbd5e1;border-radius:6px;padding:12px 16px;text-align:center;}
-                    .sig-box .sig-role{font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;}
-                    .sig-box .sig-name{font-size:11px;color:#94a3b8;margin-top:2px;margin-bottom:40px;}
-                    .sig-box .sig-line{border-top:1px dashed #94a3b8;padding-top:5px;font-size:10px;color:#94a3b8;}
-                    .foot{text-align:center;font-size:9px;color:#94a3b8;margin-top:16px;border-top:1px solid #f1f5f9;padding-top:8px;}
-                    .btn-print{display:block;margin:0 auto 16px;padding:8px 28px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;}
-                    @media print{
-                        .btn-print{display:none!important;}
-                        body{padding:15mm 15mm;}
-                    }
-                </style></head><body>
-                    <button class="btn-print" onclick="document.title='';window.print();"><i class="bi bi-printer-fill"></i> Imprimer / Télécharger PDF</button>
-                    <div class="hd">
-                        <div class="logo"><i class="bi bi-building"></i> ADEXPERTRecouvrement</div>
-                        <div class="sub">Bujumbura, Burundi</div>
-                        <h2>Contrat de Gestion Locative</h2>
-                        <div class="ref">Convention entre le Propriétaire et ADEXPERTRecouvrement — N° ${c.numero}</div>
+        var w=window.open('','_blank');
+        w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+            <title></title>
+            <style>
+                *{margin:0;padding:0;box-sizing:border-box;}
+                body{font-family:Arial,sans-serif;font-size:12px;color:#111;background:#fff;padding:20mm 18mm;}
+                @page{size:A4;margin:0;}
+                .hd{text-align:center;border-bottom:2px solid #0ea5e9;padding-bottom:10px;margin-bottom:14px;}
+                .hd .logo{font-size:20px;font-weight:900;color:#0ea5e9;}
+                .hd .sub{font-size:10px;color:#64748b;margin-top:2px;}
+                .hd h2{font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-top:8px;}
+                .hd .ref{font-size:10px;color:#64748b;margin-top:3px;}
+                .parties{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;}
+                .partie-box{border:1px solid #e2e8f0;border-radius:5px;padding:8px 10px;}
+                .partie-title{font-size:9px;text-transform:uppercase;color:#94a3b8;font-weight:700;margin-bottom:4px;}
+                .partie-box strong{font-size:12px;}
+                .partie-box span{font-size:11px;color:#555;display:block;margin-top:2px;}
+                .article{margin:10px 0;}
+                .article-title{font-size:12px;font-weight:700;text-decoration:underline;color:#0ea5e9;margin-bottom:4px;}
+                .article ul{padding-left:18px;margin-top:4px;}
+                .article ul li{margin-bottom:2px;font-size:11px;}
+                .sig-section{margin-top:30px;}
+                .sig-date{font-size:11px;color:#555;margin-bottom:20px;}
+                .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+                .sig-box{border:1px solid #cbd5e1;border-radius:6px;padding:12px 16px;text-align:center;}
+                .sig-box .sig-role{font-size:10px;font-weight:700;color:#475569;text-transform:uppercase;}
+                .sig-box .sig-name{font-size:11px;color:#94a3b8;margin-top:2px;margin-bottom:40px;}
+                .sig-box .sig-line{border-top:1px dashed #94a3b8;padding-top:5px;font-size:10px;color:#94a3b8;}
+                .foot{text-align:center;font-size:9px;color:#94a3b8;margin-top:16px;border-top:1px solid #f1f5f9;padding-top:8px;}
+                .btn-print{display:block;margin:0 auto 16px;padding:8px 28px;background:#0ea5e9;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;}
+                @media print{
+                    .btn-print{display:none!important;}
+                    body{padding:15mm 15mm;}
+                }
+            </style></head><body>
+                <button class="btn-print" onclick="document.title='';window.print();"><i class="bi bi-printer-fill"></i> Imprimer / Télécharger PDF</button>
+                <div class="hd">
+                    <div class="logo"><i class="bi bi-building"></i> ADEXPERT</div>
+                    <div class="sub">Bujumbura, Avenue de Luxembourg n° 11 — SARL — NIF 4001514787</div>
+                    <h2>Formulaire du Contrat de Mandat de Gestion Locative</h2>
+                    <div class="ref">Convention entre le Propriétaire et ADEXPERT — N° ${c.numero}</div>
+                </div>
+                <div class="parties">
+                    <div class="partie-box">
+                        <div class="partie-title">Le Propriétaire / Mandant</div>
+                        <strong>${propNom}</strong>
+                        <span>NIF : ${c.proprietaire_nif||'—'}</span>
+                        <span>CNI n° : ${c.proprietaire_cni||'—'}</span>
                     </div>
-                    <div class="parties">
-                        <div class="partie-box">
-                            <div class="partie-title">Le Mandant (Propriétaire)</div>
-                            <strong>${propNom}</strong>
+                    <div class="partie-box">
+                        <div class="partie-title">Le Cabinet Gestionnaire / Mandataire</div>
+                        <strong>ADEXPERT</strong>
+                        <span>SARL — Bujumbura, Avenue de Luxembourg n° 11</span>
+                        <span>NIF : 4001514787</span>
+                    </div>
+                </div>
+                <div class="article">
+                    <div class="article-title">Article 1 — Objet du mandat</div>
+                    Le Propriétaire donne mandat au Cabinet pour la gestion locative du bien suivant :
+                    ${c.type_bien?' Type : '+c.type_bien+'.':''}
+                    ${c.nombre_pieces?' Nombre de pièces : '+c.nombre_pieces+'.':''}
+                    ${c.loyer_mensuel?' Loyer mensuel hors charges : '+f(c.loyer_mensuel)+' FBU.':''}
+                </div>
+                <div class="article">
+                    <div class="article-title">Article 2 — Durée</div>
+                    Prise d'effet : <strong>${fd(c.date_effet)}</strong>
+                    ${c.date_expiration
+                        ? ' — Expiration : <strong>'+fd(c.date_expiration)+'</strong>, renouvelable par tacite reconduction d\'une année à l\'autre.'
+                        : ' (durée d\'un an renouvelable par tacite reconduction).'}
+                    Résiliation possible avec préavis de 3 mois, par lettre remise en main propre ou par courriel.
+                </div>
+                <div class="article">
+                    <div class="article-title">Article 3 — Missions du Cabinet ADEXPERT</div>
+                    <ul>${svcs.map(s=>`<li>${s}</li>`).join('')}</ul>
+                </div>
+                <div class="article">
+                    <div class="article-title">Article 4 — Honoraires</div>
+                    Honoraires de gestion : <strong>${c.taux_commission}%</strong> HT des loyers, reversement <strong>${c.periodicite_reversement}</strong>.
+                    Frais de mise en location : <strong>${c.frais_mise_location||50}%</strong> d'un mois de loyer HT, payés une seule fois.
+                    Frais de travaux : facturés au réel, majorés de <strong>${c.frais_travaux_pct||10}%</strong> de frais de gestion.
+                    ${c.frais_entree>0?' Frais d\'entrée : <strong>'+f(c.frais_entree)+' BIF</strong>.':''}
+                </div>
+                <div class="article">
+                    <div class="article-title">Article 5 — Obligations du Propriétaire</div>
+                    <ul>
+                        <li>Délivrer le bien en bon état ;</li>
+                        <li>Fournir au Mandataire les données nécessaires en cas de besoin ;</li>
+                        <li>Payer mensuellement les honoraires convenus sur le compte d'ADEXPERT, même lorsque le locataire paie directement entre ses mains ;</li>
+                        <li>Informer ADEXPERT de tout accord spécifique conclu avec le locataire ;</li>
+                        <li>Communiquer à ADEXPERT tous renseignements ou documents utiles aux procédures de gestion locative ou fiscale.</li>
+                    </ul>
+                </div>
+                ${c.clauses_particulieres?`
+                    <div class="article">
+                        <div class="article-title">Article 6 — Clauses particulières</div>
+                        ${c.clauses_particulieres}
+                    </div>`:''}
+                <div class="article">
+                    <div class="article-title">Article ${c.clauses_particulieres?'7':'6'} — Résiliation</div>
+                    Résiliation possible avec préavis de 3 mois, ou pour faute grave après mise en demeure de 15 jours.
+                </div>
+                <div class="article">
+                    <div class="article-title">Article ${c.clauses_particulieres?'8':'7'} — Droit applicable et tribunaux compétents</div>
+                    La présente convention est régie par le droit burundais. En cas de litige ne pouvant être résolu à l'amiable, les tribunaux de Bujumbura seront seuls compétents.
+                </div>
+                <div class="sig-section">
+                    <div class="sig-date">Fait à Bujumbura, le ${fd(c.date_signature)}</div>
+                    <div class="sig-grid">
+                        <div class="sig-box">
+                            <div class="sig-role">Le Propriétaire</div>
+                            <div class="sig-name">${propNom}</div>
+                            <div class="sig-line">(Signature)</div>
                         </div>
-                        <div class="partie-box">
-                            <div class="partie-title">Le Mandataire (Société)</div>
-                            <strong>ADEXPERTRecouvrement</strong><br>
-                            <span>Bujumbura, Burundi</span>
+                        <div class="sig-box">
+                            <div class="sig-role">Le Mandataire</div>
+                            <div class="sig-name">ADEXPERT</div>
+                            <div class="sig-line">(Signature & Cachet)</div>
                         </div>
                     </div>
-                    <div class="article">
-                        <div class="article-title">Article 1 — Objet</div>
-                        Le présent contrat est conclu entre les soussignés pour la gestion locative des biens immobiliers du Mandant, incluant la recherche de locataires, la perception des loyers, la gestion des charges et l'entretien des locaux.
-                    </div>
-                    <div class="article">
-                        <div class="article-title">Article 2 — Durée</div>
-                        Prise d'effet : <strong>${fd(c.date_effet)}</strong>
-                        ${c.date_expiration
-                            ? ' — Expiration : <strong>'+fd(c.date_expiration)+'</strong>.'
-                            : ' (durée indéterminée, résiliable avec préavis de 30 jours).'}
-                    </div>
-                    <div class="article">
-                        <div class="article-title">Article 3 — Services inclus</div>
-                        <ul>${svcs.map(s=>`<li>${s}</li>`).join('')}</ul>
-                    </div>
-                    <div class="article">
-                        <div class="article-title">Article 4 — Rémunération</div>
-                        Commission de <strong>${c.taux_commission}%</strong> sur loyers bruts,
-                        reversement <strong>${c.periodicite_reversement}</strong>.
-                        ${c.frais_entree>0?'Frais d\'entrée : <strong>'+f(c.frais_entree)+' BIF</strong>.':''}
-                    </div>
-                    ${c.clauses_particulieres?`
-                        <div class="article">
-                            <div class="article-title">Article 5 — Clauses particulières</div>
-                            ${c.clauses_particulieres}
-                        </div>`:''}
-                    <div class="article">
-                        <div class="article-title">Article ${c.clauses_particulieres?'6':'5'} — Résiliation</div>
-                        Toute résiliation doit être notifiée par écrit avec un préavis de 30 jours.
-                    </div>
-                    <div class="sig-section">
-                        <div class="sig-date">Fait à Bujumbura, le ${fd(c.date_signature)}</div>
-                        <div class="sig-grid">
-                            <div class="sig-box">
-                                <div class="sig-role">Le Mandant (Propriétaire)</div>
-                                <div class="sig-name">${propNom}</div>
-                                <div class="sig-line">(Signature)</div>
-                            </div>
-                            <div class="sig-box">
-                                <div class="sig-role">Le Mandataire (Directeur Général)</div>
-                                <div class="sig-name">ADEXPERTRecouvrement</div>
-                                <div class="sig-line">(Signature & Cachet)</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="foot">Document officiel ADEXPERTRecouvrement — Émis le ${fd(new Date().toISOString().slice(0,10))}</div>
-                </body></html>`);
-            w.document.close();
+                </div>
+                <div class="foot">Document officiel ADEXPERT — Émis le ${fd(new Date().toISOString().slice(0,10))}</div>
+            </body></html>`);
+        w.document.close();
 
-        }catch(e){alert('Erreur: '+e.message);}
-    }
-
+    }catch(e){alert('Erreur: '+e.message);}
+}
     // ═══════════════════════════════════════════
     //  LOYERS
     // ═══════════════════════════════════════════
@@ -3368,73 +3454,7 @@
     function closeModal(id){document.getElementById(id).classList.remove('open');}
     document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
-    async function openModalProp(id) {
-        document.getElementById('mt-prop').textContent = id ? 'Modifier le propriétaire' : 'Nouveau propriétaire';
-        document.getElementById('prop-id').value = id || '';
-        document.getElementById('al-prop').innerHTML = '';
-        document.getElementById('del-prop').classList.toggle('hidden', !id);
-        ['prop-nom','prop-tel','prop-email','prop-quart','prop-info'].forEach(x => document.getElementById(x).value = '');
-        await loadProvinces();
-        document.getElementById('prop-prov').value = '';
-        document.getElementById('prop-com').innerHTML = '<option value="">— Commune —</option>';
-
-        try {
-            var users = await api('/auth/users/?role=proprietaire');
-            var l = Array.isArray(users) ? users : (users.results || []);
-            var libres = l.filter(u => !u.proprietaire_profile);
-            document.getElementById('prop-user-sel').innerHTML =
-                '<option value="">— Sélectionner un utilisateur (optionnel) —</option>' +
-                libres.map(u => `<option value="${u.id}">${u.username} — ${u.full_name || ''}</option>`).join('');
-        } catch(e) {}
-
-        if (id) {
-            try {
-                var p = await api('/proprietaires/' + id + '/');
-                document.getElementById('prop-nom').value = p.nom;
-                document.getElementById('prop-tel').value = p.telephone || '';
-                document.getElementById('prop-email').value = p.email || '';
-                document.getElementById('prop-prov').value = p.adresse_province || '';
-                if (p.adresse_province) updateCommunes('prop-prov', 'prop-com');
-                document.getElementById('prop-com').value = p.adresse_commune || '';
-                document.getElementById('prop-quart').value = p.adresse_quartier || '';
-                document.getElementById('prop-info').value = p.informations_complementaires || '';
-            } catch(e) {}
-        }
-        openModal('m-prop');
-    }
-
-    async function saveProp() {
-        var id = document.getElementById('prop-id').value;
-        var data = {
-            nom: document.getElementById('prop-nom').value,
-            telephone: document.getElementById('prop-tel').value,
-            email: document.getElementById('prop-email').value,
-            adresse_province: document.getElementById('prop-prov').value,
-            adresse_commune: document.getElementById('prop-com').value,
-            adresse_quartier: document.getElementById('prop-quart').value,
-            informations_complementaires: document.getElementById('prop-info').value
-        };
-        if (!data.nom.trim()) { document.getElementById('al-prop').innerHTML = err('Le nom est requis.'); return; }
-        try {
-            var result;
-            if (id) result = await api('/proprietaires/' + id + '/', {method:'PUT', body:JSON.stringify(data)});
-            else result = await api('/proprietaires/', {method:'POST', body:JSON.stringify(data)});
-
-            var userId = document.getElementById('prop-user-sel').value;
-            if (userId && result && result.id) {
-                await api('/auth/users/' + userId + '/lier-proprietaire/', {
-                    method: 'POST',
-                    body: JSON.stringify({ proprietaire_id: result.id })
-                });
-            }
-
-            closeModal('m-prop');
-            loadProp();
-        } catch(e) {
-            document.getElementById('al-prop').innerHTML = err(e.message);
-        }
-    }
-
+    
     // ═══════════════════════════════════════════
     //  DASHBOARD FILTERS
     // ═══════════════════════════════════════════

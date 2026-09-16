@@ -1,7 +1,10 @@
+import os
+import re
 from django.db import models
 from django.utils import timezone
-from pyuploadcare.dj.models import ImageField
 from apps.core.models import SoftDeleteModel
+
+
 class Loyer(SoftDeleteModel):
     STATUT = [
         ('attente', 'En attente'),
@@ -70,6 +73,8 @@ class Loyer(SoftDeleteModel):
 
     class Meta:
         ordering = ['-echeance']
+
+
 class Paiement(models.Model):
     MODE = [('especes','Espèces'),('virement','Virement'),('cheque','Chèque'),('mobile_money','Mobile Money'),('autre','Autre')]
     STATUT_VALIDATION = [('en_attente', 'En attente'), ('valide', 'Validé')]
@@ -92,33 +97,47 @@ class Paiement(models.Model):
     created_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='paiements_crees')
     validated_by = models.ForeignKey('auth_app.User', on_delete=models.SET_NULL, null=True, related_name='paiements_valides')
     update_at = models.DateTimeField(auto_now=True)
-
-    
     created_at = models.DateTimeField(auto_now_add=True)
+
     @property
     def montant_paye(self): return sum(p.montant for p in self.paiements.filter(annule=False))
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         self.loyer.update_statut()
 
     class Meta:
         ordering = ['-date_paiement']
-from pyuploadcare.dj.models import ImageField
-import re
 
-UUID_RE = re.compile(
-    r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
-    re.IGNORECASE
-)
+
+def bordereau_upload_path(instance, filename):
+    """
+    Range le fichier dans : bordereaux/<année>/<mois (01-12)>/<filename>
+    Basé sur date_paiement si renseignée, sinon sur la date du jour.
+    Django crée automatiquement les dossiers manquants (nouveau mois, etc.).
+    """
+    date_ref = instance.date_paiement or timezone.now().date()
+    annee = date_ref.strftime('%Y')
+    mois = date_ref.strftime('%m')
+    return os.path.join('bordereaux', annee, mois, filename)
+
+
 class Bordereau(models.Model):
-    STATUT = [('en_attente','En attente'),('valide','Validé'),('rejete','Rejeté')]
+    STATUT = [('en_attente', 'En attente'), ('valide', 'Validé'), ('rejete', 'Rejeté')]
+
     numero = models.CharField(max_length=30, unique=True, blank=True, null=True, editable=False)
     locataire = models.ForeignKey('locataires.Locataire', on_delete=models.CASCADE, related_name='bordereaux')
     loyer = models.ForeignKey(Loyer, on_delete=models.SET_NULL, null=True, blank=True, related_name='bordereaux')
-    photo = ImageField(blank=True, null=True)
+
+    montant = models.DecimalField(max_digits=12, decimal_places=2, unique=False, help_text="Montant payé par le locataire (hors frais de transaction)", null=True, blank=True)
+    date_paiement = models.DateField(default=timezone.now)
+    banque = models.CharField(max_length=100, blank=True)
+
+    photo = models.ImageField(upload_to=bordereau_upload_path, max_length=255)
     notes = models.TextField(blank=True)
     reference_client = models.CharField(
-        max_length=100, blank=True,
+        max_length=100,
+        unique=True,
         help_text="Référence de transaction saisie par le locataire (n° Mobile Money, virement, chèque, etc.)"
     )
     statut = models.CharField(max_length=20, choices=STATUT, default='en_attente')
@@ -138,14 +157,3 @@ class Bordereau(models.Model):
                 dernier_seq = 0
             self.numero = f'BORD-{annee}-{dernier_seq + 1:05d}'
         super().save(*args, **kwargs)
-
-    @classmethod
-    def from_db(cls, db, field_names, values):
-        if 'photo' in field_names:
-            idx = list(field_names).index('photo')
-            val = values[idx]
-            if val and not UUID_RE.match(str(val).strip()):
-                values = list(values)
-                values[idx] = None
-                values = tuple(values)
-        return super().from_db(db, field_names, values)

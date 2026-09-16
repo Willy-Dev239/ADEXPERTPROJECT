@@ -2352,10 +2352,10 @@
                                         <div class="fld"><label>Date du versement <span class="rq">*</span></label>
                                             <div class="ctl"><svg viewBox="0 0 24 24" fill="none" class="lead"><rect x="3" y="4" width="18" height="17" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="bord-date" type="date" class="inp pad"></div>
                                         </div>
-                                        <div class="fld"><label>Banque</label>
+                                        <div class="fld"><label>Banque <span class="rq">*</span></label>
                                             <div class="ctl"><input id="bord-banque" class="inp" placeholder="Ex. Bancobu"></div>
                                         </div>
-                                        <div class="fld"><label>Référence <span class="hint">· optionnel</span></label>
+                                        <div class="fld"><label>Référence <span class="rq">*</span></label>
                                             <div class="ctl"><input id="bord-ref" class="inp" placeholder="Ex. VIR-0925-118"></div>
                                         </div>
                                         <div class="fld full"><label>Pièce jointe — bordereau <span class="rq">*</span></label>
@@ -2957,121 +2957,135 @@
         // ============================================================
         // BORDEREAUX
         // ============================================================
-        async function loadBordLoyers() {
-            try {
-                var d = await api('/loyers/?page_size=200');
-                var l = (d && (d.results || d)) || [];
-                var impayes = l.filter(function(x) { return x.statut !== 'paye'; });
-                var sel = document.getElementById('bord-loyer-sel');
-                sel.innerHTML = '<option value="">-- Sélectionner un loyer --</option>' +
-                    impayes.map(function(x) {
-                        return '<option value="' + x.id + '">' + x.libelle + ' · ' + f(x.solde_restant) + ' BIF · éch. ' + fd(x.echeance) + '</option>';
-                    }).join('');
-            } catch (e) {}
+      async function loadBordLoyers() {
+    var l = [];
+    var bordereaux = [];
+
+    try {
+        var loyersData = await api('/loyers/?page_size=200');
+        l = (loyersData && (loyersData.results || loyersData)) || [];
+    } catch (e) {
+        console.error('Erreur chargement loyers:', e);
+    }
+
+    if (S.locataireId) {
+        try {
+            var bordereauxData = await api('/locataires/' + S.locataireId + '/bordereaux/');
+            bordereaux = Array.isArray(bordereauxData) ? bordereauxData : (bordereauxData && (bordereauxData.results || bordereauxData)) || [];
+        } catch (e) {
+            console.error('Erreur chargement bordereaux:', e);
         }
+    }
+
+    var loyersEnAttenteBordereau = bordereaux
+        .filter(function(b) { return b.statut === 'en_attente' && b.loyer; })
+        .map(function(b) { return b.loyer; });
+
+    var impayes = l.filter(function(x) {
+        return x.statut !== 'paye' && loyersEnAttenteBordereau.indexOf(x.id) === -1;
+    });
+
+    var sel = document.getElementById('bord-loyer-sel');
+    sel.innerHTML = '<option value="">-- Sélectionner un loyer --</option>' +
+        impayes.map(function(x) {
+            return '<option value="' + x.id + '">' + x.libelle + ' · ' + f(x.solde_restant) + ' BIF · éch. ' + fd(x.echeance) + '</option>';
+        }).join('');
+}
+        var fdt = function(d) { return d ? new Date(d).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—'; };
+var currentBordereaux = [];
 
         async function envoyerBordereau() {
-            var alEl = document.getElementById('al-bord');
-            alEl.innerHTML = '';
-            var loyerId = document.getElementById('bord-loyer-sel').value;
-            var montant = document.getElementById('bord-montant').value;
-            var date = document.getElementById('bord-date').value;
-            var banque = document.getElementById('bord-banque').value;
-            var ref = document.getElementById('bord-ref').value;
-            var fichierInput = document.getElementById('bord-fichier');
+    var alEl = document.getElementById('al-bord');
+    alEl.innerHTML = '';
+    var loyerId = document.getElementById('bord-loyer-sel').value;
+    var montant = document.getElementById('bord-montant').value;
+    var date = document.getElementById('bord-date').value;
+    var banque = document.getElementById('bord-banque').value.trim();
+    var ref = document.getElementById('bord-ref').value.trim();
+    var fichierInput = document.getElementById('bord-fichier');
 
-            if (!loyerId || !montant || !date || !fichierInput.files.length) {
-                alEl.innerHTML = '<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Loyer, montant, date et fichier sont obligatoires.</div>';
-                return;
-            }
-            if (!S.locataireId) {
-                alEl.innerHTML = '<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Profil locataire non trouvé.</div>';
-                return;
-            }
+    if (!loyerId || !montant || !date || !banque || !ref || !fichierInput.files.length) {
+        alEl.innerHTML = '<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Loyer, montant, date, banque, référence et fichier sont obligatoires.</div>';
+        return;
+    }
 
-            var btn = document.querySelector('.btn-submit');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
+    var refExiste = currentBordereaux.some(function(b) {
+        return (b.reference_client || '').trim().toLowerCase() === ref.toLowerCase();
+    });
+    if (refExiste) {
+        alEl.innerHTML = '<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Cette référence existe déjà. Veuillez saisir une référence différente.</div>';
+        return;
+    }
 
-            try {
-                var fd = new FormData();
-                fd.append('UPLOADCARE_PUB_KEY', '3be5391c9201b1716150');
-                fd.append('UPLOADCARE_STORE', 'auto');
-                fd.append('file', fichierInput.files[0]);
+    if (!S.locataireId) {
+        alEl.innerHTML = '<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Profil locataire non trouvé.</div>';
+        return;
+    }
 
-                var upRes = await fetch('https://upload.uploadcare.com/base/', { method: 'POST', body: fd });
-                var upData = await upRes.json();
-                var uuid = upData.file;
+    var btn = document.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
 
-                var payload = {
-                    loyer_id: parseInt(loyerId),
-                    montant: parseFloat(montant),
-                    date_paiement: date,
-                    banque: banque || '',
-                    reference_client: ref || '',
-                    photo: uuid
-                };
+    try {
+        var fdBody = new FormData();
+        fdBody.append('loyer_id', loyerId);
+        fdBody.append('montant', montant);
+        fdBody.append('date_paiement', date);
+        fdBody.append('banque', banque);
+        fdBody.append('reference_client', ref);
+        fdBody.append('photo', fichierInput.files[0]);
 
-                var r = await fetch(BASE + '/locataires/' + S.locataireId + '/upload-bordereau/', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': 'Token ' + S.token,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
+        var r = await fetch(BASE + '/locataires/' + S.locataireId + '/upload-bordereau/', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Token ' + S.token
+                // Pas de Content-Type ici : le navigateur ajoute automatiquement
+                // "multipart/form-data; boundary=..." nécessaire pour l'upload du fichier
+            },
+            body: fdBody
+        });
 
-                if (!r.ok) {
-                    var e = await r.json().catch(function() { return {}; });
-                    throw new Error(JSON.stringify(e));
-                }
-
-                alEl.innerHTML = '<div class="info-box info-ok"><i class="fas fa-check-circle"></i> Bordereau envoyé ! L\'administration le vérifiera bientôt.</div>';
-                document.getElementById('bord-fichier').value = '';
-                document.querySelector('.drop .dd').textContent = 'PDF, JPG ou PNG · 10 Mo maximum';
-                loadBordereaux();
-            } catch (e) {
-                alEl.innerHTML = '<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Erreur: ' + e.message + '</div>';
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Envoyer le bordereau';
-            }
+        if (!r.ok) {
+            var e = await r.json().catch(function() { return {}; });
+            throw new Error(JSON.stringify(e));
         }
 
-        function resetBordForm() {
-            document.getElementById('bord-montant').value = '';
-            document.getElementById('bord-date').value = '';
-            document.getElementById('bord-banque').value = '';
-            document.getElementById('bord-ref').value = '';
-            document.getElementById('bord-fichier').value = '';
-            document.querySelector('.drop .dd').textContent = 'PDF, JPG ou PNG · 10 Mo maximum';
-            document.getElementById('al-bord').innerHTML = '';
-        }
-
+        alEl.innerHTML = '<div class="info-box info-ok"><i class="fas fa-check-circle"></i> Bordereau envoyé ! L\'administration le vérifiera bientôt.</div>';
+        document.getElementById('bord-fichier').value = '';
+        document.querySelector('.drop .dd').textContent = 'PDF, JPG ou PNG · 10 Mo maximum';
+        loadBordereaux();
+        loadBordLoyers();
+    } catch (e) {
+        alEl.innerHTML = '<div class="info-box info-err"><i class="fas fa-exclamation-triangle"></i> Erreur: ' + e.message + '</div>';
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Envoyer le bordereau';
+    }
+}
         async function loadBordereaux() {
-            document.getElementById('tb-bordereaux').innerHTML = '<tr><td colspan="3" class="loader">Chargement...</td></tr>';
-            if (!S.locataireId) return;
-            try {
-                var d = await api('/locataires/' + S.locataireId + '/bordereaux/');
-                var l = Array.isArray(d) ? d : (d && (d.results || d)) || [];
-                if (!l.length) {
-                    document.getElementById('tb-bordereaux').innerHTML = '<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--ink-3)">Aucun bordereau envoyé</td></tr>';
-                    return;
-                }
-                var statusMap = {
-                    en_attente: { cls: 'wait', label: 'En attente' },
-                    valide: { cls: 'ok', label: 'Validé' },
-                    rejete: { cls: 'bad', label: 'Annulé' }
-                };
-                document.getElementById('tb-bordereaux').innerHTML = l.map(function(b) {
-                    var s = statusMap[b.statut] || statusMap.en_attente;
-                    return '<tr><td class="num">' + fd(b.created_at) + '</td><td class="mono num">' + f(b.montant) + ' BIF</td><td><span class="pill ' + s.cls + '"><span class="i"></span>' + s.label + '</span></td></tr>';
-                }).join('');
-            } catch (e) {
-                document.getElementById('tb-bordereaux').innerHTML = '<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--red)">Erreur de chargement</td></tr>';
-            }
+    document.getElementById('tb-bordereaux').innerHTML = '<tr><td colspan="3" class="loader">Chargement...</td></tr>';
+    if (!S.locataireId) return;
+    try {
+        var d = await api('/locataires/' + S.locataireId + '/bordereaux/');
+        var l = Array.isArray(d) ? d : (d && (d.results || d)) || [];
+        currentBordereaux = l;
+        if (!l.length) {
+            document.getElementById('tb-bordereaux').innerHTML = '<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--ink-3)">Aucun bordereau envoyé</td></tr>';
+            return;
         }
-
+        var statusMap = {
+            en_attente: { cls: 'wait', label: 'En attente' },
+            valide: { cls: 'ok', label: 'Validé' },
+            rejete: { cls: 'bad', label: 'Annulé' }
+        };
+        document.getElementById('tb-bordereaux').innerHTML = l.map(function(b) {
+            var s = statusMap[b.statut] || statusMap.en_attente;
+            return '<tr><td class="num">' + fdt(b.created_at) + '</td><td class="mono num">' + f(b.montant) + ' BIF</td><td><span class="pill ' + s.cls + '"><span class="i"></span>' + s.label + '</span></td></tr>';
+        }).join('');
+    } catch (e) {
+        document.getElementById('tb-bordereaux').innerHTML = '<tr><td colspan="3" style="text-align:center;padding:20px;color:var(--red)">Erreur de chargement</td></tr>';
+    }
+}
         // ============================================================
         // CHAT
         // ============================================================

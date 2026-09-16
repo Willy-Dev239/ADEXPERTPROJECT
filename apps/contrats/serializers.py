@@ -25,7 +25,10 @@ class ContratSerializer(serializers.ModelSerializer):
 
 class ContratSocieteSerializer(serializers.ModelSerializer):
     proprietaire_nom = serializers.ReadOnlyField()
+    proprietaire_nif = serializers.ReadOnlyField()
+    proprietaire_cni = serializers.ReadOnlyField()
     statut_display = serializers.ReadOnlyField()
+    type_bien_display = serializers.ReadOnlyField()
 
     class Meta:
         model = ContratSociete

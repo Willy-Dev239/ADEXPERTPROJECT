@@ -7,6 +7,8 @@ class Proprietaire(models.Model):
     nom = models.CharField(max_length=200)
     telephone = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    nif = models.CharField(max_length=30, blank=True, null=True, unique=True)
+    cni = models.CharField(max_length=30, blank=True, null=True)
     adresse_province = models.CharField(max_length=100, blank=True)
     adresse_commune = models.CharField(max_length=100, blank=True)
     adresse_quartier = models.CharField(max_length=100, blank=True)
@@ -46,6 +48,8 @@ class Proprietaire(models.Model):
             self.telephone.strip().replace(' ', '').replace('-', '')
             if self.telephone else None
         )
+        self.nif = self.nif.strip() if self.nif else None
+        self.cni = self.cni.strip() if self.cni else None
 
         if self.email:
             conflit = Proprietaire.objects.filter(email=self.email).exclude(pk=self.pk)
@@ -56,6 +60,11 @@ class Proprietaire(models.Model):
             conflit = Proprietaire.objects.filter(telephone=self.telephone).exclude(pk=self.pk)
             if conflit.exists():
                 raise ValidationError({'telephone': "Un propriétaire utilise déjà ce téléphone."})
+
+        if self.nif:
+            conflit = Proprietaire.objects.filter(nif=self.nif).exclude(pk=self.pk)
+            if conflit.exists():
+                raise ValidationError({'nif': "Un propriétaire utilise déjà ce NIF."})
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -68,4 +77,5 @@ class Proprietaire(models.Model):
         constraints = [
             UniqueConstraint(fields=['email'], name='uniq_proprietaire_email'),
             UniqueConstraint(fields=['telephone'], name='uniq_proprietaire_telephone'),
+            UniqueConstraint(fields=['nif'], name='uniq_proprietaire_nif'),
         ]

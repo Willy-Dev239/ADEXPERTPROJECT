@@ -73,35 +73,40 @@ def locataire_historique(request, pk):
 #         statut='en_attente'
 #     )
 #     return Response({'id': b.id, 'statut': b.statut}, status=201)
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_bordereau(request, pk):
-    from apps.loyers.models import Bordereau
-    import re
-    photo_uuid = request.data.get('photo')
-    if not photo_uuid:
-        return Response({'error': 'Photo requise.'}, status=400)
+    from apps.locataires.models import Locataire
+    from apps.loyers.serializers import BordereauCreateSerializer, BordereauSerializer
 
-    # Extraire uniquement l'UUID si une URL complète est envoyée
-    uuid_match = re.search(
-        r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}',
-        str(photo_uuid), re.IGNORECASE
-    )
-    if uuid_match:
-        photo_uuid = uuid_match.group(0)
+    try:
+        locataire = Locataire.objects.get(pk=pk)
+    except Locataire.DoesNotExist:
+        return Response({'error': 'Locataire introuvable.'}, status=404)
 
-    b = Bordereau.objects.create(
-        locataire_id=pk,
-        loyer_id=request.data.get('loyer_id'),
-        photo=photo_uuid,
-        notes=request.data.get('notes', ''),
-        reference_client=request.data.get('reference_client', ''),  # ✅ nouveau
-        statut='en_attente'
-    )
-    return Response({'id': b.id, 'numero': b.numero, 'statut': b.statut}, status=201)
+    # Sécurité : un locataire ne peut envoyer un bordereau que pour lui-même
+    if request.user.role == 'locataire' and getattr(request.user, 'locataire_profile', None) != locataire:
+        return Response({'error': "Vous n'êtes pas autorisé à effectuer cette action."}, status=403)
 
+    serializer = BordereauCreateSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
 
+    bordereau = serializer.save(locataire=locataire, statut='en_attente')
+
+    try:
+        from apps.notifications.models import Notification
+        Notification.objects.create(
+            destinataire_locataire=locataire,
+            loyer=bordereau.loyer,
+            titre='📤 Bordereau reçu',
+            message=f'Votre bordereau «{bordereau.numero}» de {float(bordereau.montant):,.0f} BIF a bien été reçu et sera vérifié par l\'administration.',
+            type_notif='bordereau'
+        )
+    except Exception:
+        pass
+
+    return Response(BordereauSerializer(bordereau, context={'request': request}).data, status=201)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def list_bordereaux(request, pk):
@@ -211,7 +216,7 @@ def locataire_historique_pdf(request, pk):
 
     # ── En-tête avec logos (Burundi à gauche, ADEXPERT à droite) ──
     logo_burundi_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'armoiries_burundi.png')
-    logo_adexpert_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'logo_adexpert.png')
+    logo_adexpert_path = os.path.join(settings.BASE_DIR, 'static', 'images', 'favicon.png')
 
     logo_bi = Image(logo_burundi_path, width=20 * mm, height=20 * mm) if os.path.exists(logo_burundi_path) else Paragraph('', sub_style)
     logo_ax = Image(logo_adexpert_path, width=20 * mm, height=20 * mm) if os.path.exists(logo_adexpert_path) else Paragraph('', sub_style)

@@ -1,41 +1,45 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from django.utils import timezone
 from django.http import HttpResponse
 from datetime import date
 from .models import Loyer, Paiement, Bordereau
-from .serializers import LoyerSerializer, PaiementSerializer, BordereauSerializer
+from .serializers import LoyerSerializer, PaiementSerializer, BordereauSerializer, BordereauCreateSerializer
 import json
+
+
 class LoyerListCreate(generics.ListCreateAPIView):
     serializer_class = LoyerSerializer
     permission_classes = [IsAuthenticated]
-    
+
     def get_queryset(self):
         user = self.request.user
         qs = Loyer.objects.select_related('locataire', 'local', 'contrat')
-        
-        # Filtres rôle
+
         if user.role == 'locataire' and user.locataire_profile:
             qs = qs.filter(locataire=user.locataire_profile)
         elif user.role == 'proprietaire' and user.proprietaire_profile:
             qs = qs.filter(local__proprietaire=user.proprietaire_profile)
-        
-        # ✅ Filtres dashboard (admin/gestionnaire)
+
         proprietaire_id = self.request.query_params.get('proprietaire')
         immeuble_id = self.request.query_params.get('immeuble')
-        
+
         if proprietaire_id:
             qs = qs.filter(local__proprietaire_id=proprietaire_id)
         if immeuble_id:
             qs = qs.filter(local__immeuble_id=immeuble_id)
-        
+
         return qs
+
+
 class LoyerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Loyer.objects.all()
     serializer_class = LoyerSerializer
     permission_classes = [IsAuthenticated]
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -43,13 +47,11 @@ def loyers_en_retard(request):
     qs = Loyer.objects.filter(statut='retard')
     user = request.user
 
-    # ✅ Filtre automatique si l'utilisateur est un propriétaire
     if user.role == 'proprietaire' and user.proprietaire_profile:
         qs = qs.filter(local__proprietaire=user.proprietaire_profile)
     elif user.role == 'locataire' and user.locataire_profile:
         qs = qs.filter(locataire=user.locataire_profile)
 
-    # Filtres dashboard (admin/gestionnaire)
     proprietaire_id = request.query_params.get('proprietaire')
     immeuble_id = request.query_params.get('immeuble')
     if proprietaire_id:
@@ -66,13 +68,11 @@ def loyers_impayes(request):
     qs = Loyer.objects.filter(statut__in=['attente', 'partiel'])
     user = request.user
 
-    # Filtre automatique si l'utilisateur est un propriétaire
     if user.role == 'proprietaire' and user.proprietaire_profile:
         qs = qs.filter(local__proprietaire=user.proprietaire_profile)
     elif user.role == 'locataire' and user.locataire_profile:
         qs = qs.filter(locataire=user.locataire_profile)
 
-    # Filtres dashboard (admin/gestionnaire)
     proprietaire_id = request.query_params.get('proprietaire')
     immeuble_id = request.query_params.get('immeuble')
     if proprietaire_id:
@@ -89,13 +89,11 @@ def loyers_paiements_annules(request):
     qs = Loyer.objects.filter(paiements__annule=True).distinct()
     user = request.user
 
-    # Filtre automatique si l'utilisateur est un propriétaire
     if user.role == 'proprietaire' and user.proprietaire_profile:
         qs = qs.filter(local__proprietaire=user.proprietaire_profile)
     elif user.role == 'locataire' and user.locataire_profile:
         qs = qs.filter(locataire=user.locataire_profile)
 
-    # Filtres dashboard (admin/gestionnaire)
     proprietaire_id = request.query_params.get('proprietaire')
     immeuble_id = request.query_params.get('immeuble')
     if proprietaire_id:
@@ -104,6 +102,8 @@ def loyers_paiements_annules(request):
         qs = qs.filter(local__immeuble_id=immeuble_id)
 
     return Response(LoyerSerializer(qs, many=True).data)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def enregistrer_paiement(request, pk):
@@ -117,8 +117,8 @@ def enregistrer_paiement(request, pk):
     paiement = Paiement.objects.create(
         loyer=loyer, montant=montant,
         date_paiement=request.data.get('date_paiement', timezone.now().date()),
-        mode_paiement=request.data.get('mode_paiement','especes'),
-        reference=request.data.get('reference',''), created_by=request.user)
+        mode_paiement=request.data.get('mode_paiement', 'especes'),
+        reference=request.data.get('reference', ''), created_by=request.user)
     try:
         from apps.notifications.models import Notification
         Notification.objects.create(
@@ -129,7 +129,6 @@ def enregistrer_paiement(request, pk):
     except Exception:
         pass
     return Response({'detail': 'Paiement enregistré.', 'loyer': LoyerSerializer(loyer).data})
-
 
 
 @api_view(['GET'])
@@ -153,11 +152,10 @@ def lister_paiements_loyer(request, pk):
     return Response(data)
 
 
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def annuler_paiement(request, pk):
-    from apps.notifications.models import Notification  # adapte le chemin d'import si besoin
+    from apps.notifications.models import Notification
 
     if not (request.user.role in ('admin', 'gestionnaire')):
         return Response({'error': 'Accès réservé aux admins/gestionnaires.'}, status=403)
@@ -176,7 +174,6 @@ def annuler_paiement(request, pk):
 
     paiement.loyer.update_statut()
 
-    # ✅ Notifier le locataire
     Notification.objects.create(
         destinataire_locataire=paiement.loyer.locataire,
         loyer=paiement.loyer,
@@ -189,7 +186,6 @@ def annuler_paiement(request, pk):
     )
 
     return Response({'message': 'Paiement annulé avec succès.'})
-
 
 
 @api_view(['GET'])
@@ -210,17 +206,16 @@ def quittance_html(request, pk):
         for p in loyer.paiements.all()
     )
     solde_color = '#10b981' if solde <= 0 else '#ef4444'
-    badge_bg    = '#d1fae5' if solde <= 0 else '#fef3c7'
+    badge_bg = '#d1fae5' if solde <= 0 else '#fef3c7'
     badge_color = '#065f46' if solde <= 0 else '#78350f'
     badge_label = '✅ CONFIRMÉ' if solde <= 0 else '⚠️ PARTIEL'
 
-    # ── QR code : nom locataire, montant payé, référence bancaire ──
     dernier_paiement = loyer.paiements.order_by('-date_paiement').first()
     if dernier_paiement:
         banque_ref = dernier_paiement.reference or dernier_paiement.get_mode_paiement_display()
     else:
         banque_ref = '—'
-        
+
     verification_path = request.build_absolute_uri(f'/api/loyers/{loyer.id}/verifier-quittance/')
     qr_content = verification_path
     from urllib.parse import quote
@@ -307,7 +302,6 @@ td.r {{ text-align: right; }}
 .totals .paye {{ color: #10b981; }}
 .totals .solde {{ color: {solde_color}; font-size: 12px; }}
 
-/* ── bloc QR (remplace la signature) ── */
 .qr-box {{
   margin-top: 8px;
   text-align: center;
@@ -375,9 +369,6 @@ td.r {{ text-align: right; }}
 </body></html>"""
     return HttpResponse(html, content_type='text/html; charset=utf-8')
 
-from django.shortcuts import render
-from rest_framework.decorators import permission_classes as drf_permission_classes
-from rest_framework.permissions import AllowAny
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
@@ -443,26 +434,27 @@ body{{font-family:'Segoe UI',sans-serif;background:#f1f5f9;display:flex;align-it
 </body></html>"""
     return HttpResponse(html, content_type='text/html; charset=utf-8')
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def rapport_mensuel_loyers(request):
     mois = int(request.query_params.get('mois', timezone.now().month))
     annee = int(request.query_params.get('annee', timezone.now().year))
     qs = Loyer.objects.filter(echeance__month=mois, echeance__year=annee)
-    # ✅ Filtre propriétaire
     user = request.user
     if user.role == 'proprietaire' and user.proprietaire_profile:
         qs = qs.filter(local__proprietaire=user.proprietaire_profile)
     total = qs.count(); payes = qs.filter(statut='paye').count(); retard = qs.filter(statut='retard').count()
     enc = sum(float(l.montant_paye) for l in qs); imp = sum(float(l.solde_restant) for l in qs)
-    return Response({'total_loyers':total,'loyers_payes':payes,'loyers_retard':retard,
-        'taux_paiement':round(payes/total*100,1) if total else 0,'montant_encaisse':enc,'montant_impaye':imp})
+    return Response({'total_loyers': total, 'loyers_payes': payes, 'loyers_retard': retard,
+        'taux_paiement': round(payes / total * 100, 1) if total else 0, 'montant_encaisse': enc, 'montant_impaye': imp})
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def rapport_journalier(request):
     d = request.query_params.get('date', str(timezone.now().date()))
     paiements = Paiement.objects.filter(date_paiement=d)
-    # ✅ Filtre propriétaire
     user = request.user
     if user.role == 'proprietaire' and user.proprietaire_profile:
         paiements = paiements.filter(loyer__local__proprietaire=user.proprietaire_profile)
@@ -470,66 +462,67 @@ def rapport_journalier(request):
     for p in paiements:
         k = p.get_mode_paiement_display()
         rep[k] = rep.get(k, 0) + float(p.montant)
-    return Response({'date':d,'nombre_paiements':paiements.count(),'total_encaisse':sum(float(p.montant) for p in paiements),'repartition_par_mode':rep})
-# class BordereauListView(generics.ListAPIView):
-#     serializer_class = BordereauSerializer
-#     permission_classes = [IsAuthenticated]
-#     def get_queryset(self): return Bordereau.objects.all().order_by('-created_at')
+    return Response({'date': d, 'nombre_paiements': paiements.count(), 'total_encaisse': sum(float(p.montant) for p in paiements), 'repartition_par_mode': rep})
 
-
-# APRÈS
-import re
-UUID_RE = re.compile(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', re.IGNORECASE)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def bordereau_list(request):
-    from django.db import connection
+    """
+    Liste des bordereaux, filtrable par statut.
+    Utilise l'ORM (photo est maintenant un ImageField Django : photo_url
+    est calculé proprement dans BordereauSerializer via obj.photo.url).
+    """
+    qs = Bordereau.objects.select_related('locataire', 'loyer').order_by('-created_at')
+
     statut = request.query_params.get('statut')
-    
-    query = "SELECT id, locataire_id, loyer_id, photo, notes, statut, commentaire_admin, created_at FROM loyers_bordereau"
-    params = []
     if statut:
-        query += " WHERE statut = %s"
-        params.append(statut)
-    query += " ORDER BY created_at DESC"
-    
-    with connection.cursor() as cursor:
-        cursor.execute(query, params)
-        columns = [col[0] for col in cursor.description]
-        rows = cursor.fetchall()
-    
-    results = []
-    for row in rows:
-        b = dict(zip(columns, row))
-        try:
-            from apps.locataires.models import Locataire
-            loc = Locataire.objects.get(pk=b['locataire_id'])
-            b['locataire_nom'] = loc.nom_prenom
-        except Exception:
-            b['locataire_nom'] = '—'
-        try:
-            from apps.loyers.models import Loyer
-            loyer = Loyer.objects.get(pk=b['loyer_id']) if b['loyer_id'] else None
-            b['loyer_libelle'] = loyer.libelle if loyer else '—'
-        except Exception:
-            b['loyer_libelle'] = '—'
+        qs = qs.filter(statut=statut)
 
-        # Construire photo_url correctement
-        raw = b.get('photo', '') or ''
-        if not raw:
-            b['photo_url'] = None
-        else:
-            match = UUID_RE.search(raw)
-            if match:
-                b['photo_url'] = f'https://2uw2o5rfke.ucarecd.net/{match.group(0)}/'
-            else:
-                b['photo_url'] = None
+    return Response(BordereauSerializer(qs, many=True, context={'request': request}).data)
 
-        b['created_at'] = str(b['created_at'])
-        results.append(b)
-    
-    return Response(results)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
+def upload_bordereau(request, pk):
+    """
+    Création d'un bordereau par le locataire (upload multipart).
+    URL attendue : POST /api/locataires/<pk>/upload-bordereau/
+    pk = id du Locataire (correspond à S.locataireId côté frontend).
+    """
+    from apps.locataires.models import Locataire
+
+    try:
+        locataire = Locataire.objects.get(pk=pk)
+    except Locataire.DoesNotExist:
+        return Response({'error': 'Locataire introuvable.'}, status=404)
+
+    # Sécurité : un locataire ne peut envoyer un bordereau que pour lui-même
+    if request.user.role == 'locataire' and getattr(request.user, 'locataire_profile', None) != locataire:
+        return Response({'error': "Vous n'êtes pas autorisé à effectuer cette action."}, status=403)
+
+    serializer = BordereauCreateSerializer(data=request.data)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=400)
+
+    bordereau = serializer.save(locataire=locataire)
+
+    try:
+        from apps.notifications.models import Notification
+        Notification.objects.create(
+            destinataire_locataire=locataire,
+            loyer=bordereau.loyer,
+            titre='📤 Bordereau reçu',
+            message=f'Votre bordereau «{bordereau.numero}» de {float(bordereau.montant):,.0f} BIF a bien été reçu et sera vérifié par l\'administration.',
+            type_notif='bordereau'
+        )
+    except Exception:
+        pass
+
+    return Response(BordereauSerializer(bordereau, context={'request': request}).data, status=201)
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def envoyer_quittance(request, pk):
@@ -559,7 +552,6 @@ def envoyer_quittance(request, pk):
     return Response({'detail': 'Quittance envoyée au locataire.'})
 
 
-
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def valider_bordereau(request, pk):
@@ -584,11 +576,11 @@ def valider_bordereau(request, pk):
                 date_paiement=timezone.now().date(),
                 mode_paiement='autre',
                 reference=ref,
-                reference_transaction=b.reference_client,  # ✅ transmet la réf. saisie par le locataire
+                reference_transaction=b.reference_client,
                 statut_validation='valide',
                 date_validation=timezone.now(),
                 created_by=request.user,
                 validated_by=request.user,
             )
 
-    return Response(BordereauSerializer(b).data)
+    return Response(BordereauSerializer(b, context={'request': request}).data)

@@ -1,11 +1,13 @@
 from rest_framework import serializers
 from .models import Loyer, Paiement, Bordereau
 
+
 class PaiementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Paiement
         fields = '__all__'
         read_only_fields = ['created_by', 'created_at']
+
 
 class LoyerSerializer(serializers.ModelSerializer):
     locataire_nom = serializers.ReadOnlyField()
@@ -23,6 +25,7 @@ class LoyerSerializer(serializers.ModelSerializer):
         model = Loyer
         fields = '__all__'
 
+
 class BordereauSerializer(serializers.ModelSerializer):
     photo_url = serializers.SerializerMethodField()
     locataire_nom = serializers.SerializerMethodField()
@@ -31,11 +34,9 @@ class BordereauSerializer(serializers.ModelSerializer):
     def get_photo_url(self, obj):
         if not obj.photo:
             return None
-        try:
-            uuid = str(obj.photo).strip('/')
-            return f'https://ucarecdn.com/{uuid}/'
-        except Exception:
-            return None
+        request = self.context.get('request')
+        url = obj.photo.url
+        return request.build_absolute_uri(url) if request else url
 
     def get_locataire_nom(self, obj):
         return obj.locataire.nom_prenom
@@ -46,3 +47,34 @@ class BordereauSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bordereau
         fields = '__all__'
+        read_only_fields = ['numero', 'created_at', 'statut', 'commentaire_admin']
+
+
+class BordereauCreateSerializer(serializers.ModelSerializer):
+    """
+    Serializer dédié à la création d'un bordereau par le locataire
+    (upload multipart : photo directement stockée dans media/bordereaux/<annee>/<mois>/).
+    """
+    loyer_id = serializers.PrimaryKeyRelatedField(
+        queryset=Loyer.objects.all(), source='loyer', write_only=True
+    )
+
+    class Meta:
+        model = Bordereau
+        fields = ['loyer_id', 'montant', 'date_paiement', 'banque', 'reference_client', 'photo', 'notes']
+
+    def validate_reference_client(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("La référence est obligatoire.")
+        if Bordereau.objects.filter(reference_client__iexact=value).exists():
+            raise serializers.ValidationError(
+                "Cette référence existe déjà. Veuillez saisir une référence différente."
+            )
+        return value
+
+    def validate_banque(self, value):
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("La banque est obligatoire.")
+        return value
