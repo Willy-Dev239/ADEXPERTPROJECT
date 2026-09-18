@@ -1344,7 +1344,7 @@ function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
-function confirmLogout(){if(confirm('Se déconnecter ?')){localStorage.clear();window.location.href='../login.html';}}
+function confirmLogout(){if(confirm('Se déconnecter ?')){localStorage.clear();window.location.href='/';}}
 function err(m){return '<div class="info-box err">'+m+'</div>';}
 
 function initUI(){
