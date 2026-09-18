@@ -5,10 +5,53 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 
+
+
 from .models import Immeuble, PROVINCES_COMMUNES
 from .serializers import ImmeubleSerializer
 from .permissions import IsAdminOrGestionnaire
+from .models import PROVINCES_COMMUNES_QUARTIERS
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def geo_provinces(request):
+    """Retourne la liste des provinces"""
+    return Response(list(PROVINCES_COMMUNES_QUARTIERS.keys()))
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def geo_communes(request):
+    """Retourne les communes d'une province donnée"""
+    province = request.GET.get('province', '')
+    if not province:
+        return Response([])
+    communes = list(PROVINCES_COMMUNES_QUARTIERS.get(province, {}).keys())
+    return Response(communes)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def geo_quartiers(request):
+    """Retourne les quartiers d'une commune donnée"""
+    province = request.GET.get('province', '')
+    commune = request.GET.get('commune', '')
+    if not province or not commune:
+        return Response([])
+    quartiers = (
+        PROVINCES_COMMUNES_QUARTIERS
+        .get(province, {})
+        .get(commune, [])
+    )
+    return Response(quartiers)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def geo_complet(request):
+    """Retourne la structure complète"""
+    return Response(PROVINCES_COMMUNES_QUARTIERS)
 
 class ImmeubleViewSet(viewsets.ModelViewSet):
     serializer_class = ImmeubleSerializer

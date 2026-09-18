@@ -394,7 +394,47 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      perspective: 1300px;
+    }
+
+      /* ===== HERO ===== */
+    .hero-in {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 24px;
+      align-items: stretch;   /* ← IMPORTANT : étire les colonnes */
+    }
+
+    /* ===== HERO RIGHT ===== */
+    .hero-r {
+      position: relative;
+      display: flex;
+      justify-content: stretch;
+      align-items: stretch;
+      width: 100%;            /* ← prend toute la largeur de sa colonne */
+      height: 100%;
+      min-height: 520px;      /* ← force une hauteur minimum */
+    }
+
+    /* ===== IMAGE IMMEUBLE ===== */
+    .hero-r .hero-img {
+      width: 100%;            /* ← remplit toute la largeur */
+      height: 100%;           /* ← remplit toute la hauteur */
+      max-width: none;        /* ← SUPPRIME la limite de largeur */
+      max-height: none;       /* ← SUPPRIME la limite de hauteur */
+      display: block;
+      border-radius: 24px;
+      box-shadow: var(--sh-lg);
+      border: 1px solid var(--gold-line);
+      object-fit: cover;      /* ← recadre pour remplir sans déformer */
+      object-position: center;
+      transition: transform .5s cubic-bezier(.16,1,.3,1), box-shadow .5s;
+    }
+
+    .hero-r .hero-img:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 50px 90px -44px rgba(28,24,16,.5);
     }
 
     /* ===== STRIP ===== */
@@ -1291,116 +1331,6 @@
       gap: 10px;
     }
 
-    /* ===== SCENE ===== */
-    .hero-r {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      perspective: 1300px;
-      min-height: 460px;
-    }
-    .scene {
-      position: relative;
-      width: 380px;
-      height: 420px;
-    }
-    .ground {
-      position: absolute;
-      left: 52%;
-      bottom: 34px;
-      width: 250px;
-      height: 56px;
-      transform: translateX(-50%) rotateX(72deg);
-      background: radial-gradient(ellipse, rgba(0, 0, 0, .3), transparent 66%);
-      filter: blur(7px);
-    }
-    .bld {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 150px;
-      height: 280px;
-      transform-style: preserve-3d;
-      transform: translate(-50%, -50%) rotateX(8deg) rotateY(-32deg);
-      animation: sway 8s ease-in-out infinite;
-    }
-    @keyframes sway {
-      0%, 100% { transform: translate(-50%, -50%) rotateX(8deg) rotateY(-32deg); }
-      50% { transform: translate(-50%, -50%) rotateX(8deg) rotateY(-26deg); }
-    }
-    .face {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .front {
-      width: 150px;
-      height: 280px;
-      background: linear-gradient(180deg, #fffdf8, #f2ead6);
-      border: 1px solid #e2d6b4;
-      transform: translateZ(45px);
-      border-radius: 2px;
-    }
-    .side {
-      width: 90px;
-      height: 280px;
-      background: linear-gradient(180deg, #e6dcc0, #d4c69e);
-      border: 1px solid #c9b98f;
-      left: 150px;
-      transform-origin: left center;
-      transform: rotateY(90deg) translateZ(-45px);
-      border-radius: 2px;
-    }
-    .roof {
-      width: 150px;
-      height: 90px;
-      background: linear-gradient(140deg, #fffdf8, #efe6cf);
-      border: 1px solid #e2d6b4;
-      transform-origin: top center;
-      transform: rotateX(-90deg) translateZ(-45px);
-      border-radius: 2px;
-    }
-    .wins {
-      position: absolute;
-      inset: 24px 18px 30px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(4, 1fr);
-      gap: 11px;
-    }
-    .wins.side-w {
-      inset: 24px 14px 30px;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .wins i {
-      border-radius: 3px;
-      background: #d9cba6;
-      border: 1px solid #c9b98f;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, .06);
-      transition: background .4s, box-shadow .4s;
-    }
-    .scene.in .front .wins i.lit {
-      background: linear-gradient(160deg, #fff3c4, var(--gold));
-      border-color: var(--gold-deep);
-      box-shadow: 0 0 16px rgba(245, 197, 24, .7), inset 0 1px 2px rgba(255, 255, 255, .6);
-    }
-    .side .wins i {
-      background: #cbbb90;
-      border-color: #bda879;
-    }
-    .door {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      width: 32px;
-      height: 42px;
-      background: var(--ink);
-      border-radius: 5px 5px 0 0;
-    }
-
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1080px) {
       .hero-in,
@@ -1431,14 +1361,14 @@
       .nlinks {
         display: none;
       }
-      .scene {
-        transform: scale(.86);
-      }
       .feat-showcase {
         grid-template-columns: 1fr;
       }
       .feat-side {
         grid-template-columns: 1fr 1fr;
+      }
+      .hero-r .hero-img {
+        max-width: 100%;
       }
     }
     @media (max-width: 680px) {
@@ -1477,6 +1407,9 @@
       }
       .hero-meta .dot {
         display: none;
+      }
+      .hero-r .hero-img {
+        border-radius: 18px;
       }
     }
   </style>
@@ -1526,29 +1459,8 @@
         </div>
       </div>
       <div class="hero-r rv">
-        <div class="scene" id="scene">
-          <span class="ground"></span>
-          <div class="bld">
-            <div class="face front">
-              <span class="door"></span>
-              <div class="wins" id="wins">
-                <i></i><i></i><i></i>
-                <i></i><i></i><i></i>
-                <i></i><i></i><i></i>
-                <i></i><i></i><i></i>
-              </div>
-            </div>
-            <div class="face side">
-              <div class="wins side-w">
-                <i></i><i></i>
-                <i></i><i></i>
-                <i></i><i></i>
-                <i></i><i></i>
-              </div>
-            </div>
-            <div class="face roof"></div>
-          </div>
-        </div>
+        <!-- Image réelle de l'immeuble -->
+        <img src="{% static 'images/immeuble.png' %}" alt="Immeuble moderne géré avec ADEXPERT" class="hero-img">
       </div>
     </div>
   </section>
@@ -1885,33 +1797,6 @@
       document.querySelectorAll('.fq').forEach(function(f) { f.classList.remove('open'); });
       if (!isOpen) item.classList.add('open');
     });
-
-    // ===== SCENE ANIMATION =====
-    const scene = document.getElementById('scene');
-    if (scene) {
-      new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (!e.isIntersecting) return;
-          scene.classList.add('in');
-          const wins = Array.prototype.slice.call(document.querySelectorAll('#wins i'));
-          const order = wins.map(function(_, i) { return i; }).sort(function() { return Math.random() - .5; });
-          order.forEach(function(idx, k) {
-            setTimeout(function() {
-              wins[idx].classList.add('lit');
-            }, 700 + k * 180);
-          });
-          setTimeout(function() {
-            setInterval(function() {
-              const lit = wins.filter(function(w) { return w.classList.contains('lit'); });
-              if (!lit.length) return;
-              const w = lit[Math.floor(Math.random() * lit.length)];
-              w.classList.remove('lit');
-              setTimeout(function() { w.classList.add('lit'); }, 500);
-            }, 2600);
-          }, 700 + wins.length * 180 + 600);
-        });
-      }, { threshold: .3 }).observe(scene);
-    }
   </script>
 </body>
 </html>

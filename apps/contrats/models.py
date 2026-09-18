@@ -72,19 +72,38 @@ class Contrat(SoftDeleteModel):
                 name='chk_contrat_dates',
             ),
         ]
-
 class ContratSociete(models.Model):
     STATUT = [('actif','Actif'),('expire','Expiré'),('resilie','Résilié')]
     PERIOD = [('mensuel','Mensuel'),('trimestriel','Trimestriel'),('semestriel','Semestriel')]
+    TYPE_BIEN = [
+        ('appartement', 'Appartement'),
+        ('maison', 'Maison'),
+        ('bureau', 'Bureau'),
+        ('commerce', 'Commerce'),
+        ('garage', 'Garage'),
+        ('autre', 'Autre'),
+    ]
+    
     numero = models.CharField(max_length=50, unique=True)
     proprietaire = models.ForeignKey('proprietaires.Proprietaire', on_delete=models.PROTECT, related_name='contrats_societe')
     date_signature = models.DateField()
     date_effet = models.DateField()
     date_expiration = models.DateField(null=True, blank=True)
     statut = models.CharField(max_length=20, choices=STATUT, default='actif')
+    
+    # ⚡ CHAMPS DU BIEN LOUÉ (MANQUANTS)
+    type_bien = models.CharField(max_length=30, choices=TYPE_BIEN, blank=True)
+    nombre_pieces = models.IntegerField(null=True, blank=True)
+    loyer_mensuel = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    
+    # ⚡ CONDITIONS FINANCIÈRES
     taux_commission = models.DecimalField(max_digits=5, decimal_places=2, default=9)
     periodicite_reversement = models.CharField(max_length=20, choices=PERIOD, default='mensuel')
     frais_entree = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    frais_mise_location = models.DecimalField(max_digits=5, decimal_places=2, default=50)
+    frais_travaux_pct = models.DecimalField(max_digits=5, decimal_places=2, default=10)
+    
+    # ⚡ SERVICES INCLUS
     service_gestion_loyers = models.BooleanField(default=True)
     service_quittances = models.BooleanField(default=True)
     service_recherche_locataires = models.BooleanField(default=False)
@@ -99,15 +118,23 @@ class ContratSociete(models.Model):
     service_touristique = models.BooleanField(default=False)
     constat_lieu = models.BooleanField(default=False)
     inventaire_immeuble = models.BooleanField(default=False)
+    
+    # ⚡ TEXTES
     clauses_particulieres = models.TextField(blank=True)
     notes_internes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # ⚡ PROPRIÉTÉS (pour le serializer)
     @property
     def proprietaire_nom(self): return self.proprietaire.nom
-
+    @property
+    def proprietaire_nif(self): return getattr(self.proprietaire, 'nif', None) or '—'
+    @property
+    def proprietaire_cni(self): return getattr(self.proprietaire, 'cni', None) or '—'
     @property
     def statut_display(self): return dict(self.STATUT).get(self.statut, self.statut)
+    @property
+    def type_bien_display(self): return dict(self.TYPE_BIEN).get(self.type_bien, self.type_bien or '—')
 
     def clean(self):
         if self.date_expiration and self.date_effet:
@@ -123,8 +150,6 @@ class ContratSociete(models.Model):
 
     class Meta:
         ordering = ['-created_at']
-
-
 class BordereauVirement(models.Model):
     STATUT_CHOICES = [
         ('en_attente', 'En attente de validation'),
