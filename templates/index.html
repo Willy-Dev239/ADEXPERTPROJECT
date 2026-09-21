@@ -9,163 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-  :root{
-    --gold:#f5c518; --gold-deep:#d9a908; --gold-wash:#fdf6df; --gold-line:#efd98a;
-    --ink:#17140d; --ink-2:#57503f; --ink-3:#928a76; --ink-4:#b4ac96;
-    --paper:#faf6ec; --paper-2:#f4eedd; --card:#fffdf8; --line:#e7dfcb; --line-2:#f0e9d8;
-    --red:#e0512a; --red-wash:#fbe7de; --green:#3c7d53; --green-wash:#e7f0e6;
-    --r:18px; --r-sm:12px;
-    --sh:0 1px 0 rgba(23,20,13,.03), 0 12px 30px -18px rgba(23,20,13,.22);
-    --sh-gold:0 16px 40px -20px rgba(217,169,8,.55);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;line-height:1.55}
-  .num{font-variant-numeric:tabular-nums}
-  h1,h2,h3,h4{font-weight:800;letter-spacing:-.03em;line-height:1.1}
-  a{text-decoration:none;color:inherit}
-  .app{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
-  .side{background:var(--paper);border-right:1px solid var(--line);padding:30px 22px 22px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
-  .side::-webkit-scrollbar{width:7px}.side::-webkit-scrollbar-thumb{background:var(--line);border-radius:7px}
-  .brand{display:flex;align-items:center;gap:13px;padding:0 4px 30px}
-  .badge{width:46px;height:46px;border-radius:50%;flex:none;background:radial-gradient(120% 120% at 30% 25%,#ffd94a,#f5c518 55%,#e9b800);display:grid;place-items:center;position:relative;box-shadow:inset 0 0 0 3px #fffdf8,0 6px 14px -6px rgba(217,169,8,.7)}
-  .badge b{font-weight:900;font-size:12.5px;letter-spacing:-.04em;z-index:1}
-  .badge::after{content:"";position:absolute;left:7px;right:7px;top:53%;height:3px;background:var(--red);transform:rotate(-20deg);border-radius:3px}
-  .brand-name{font-weight:800;font-size:18px}
-  .brand-sub{font-size:11px;color:var(--ink-3);margin-top:1px}
-  .nav-label{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-4);padding:20px 12px 10px;font-weight:700}
-  .nav-item{display:flex;align-items:center;gap:13px;padding:10px 13px;border-radius:11px;color:var(--ink-2);font-size:13.5px;font-weight:500;cursor:pointer;transition:.16s;margin-bottom:1px;position:relative;white-space:nowrap}
-  .nav-item svg{width:18px;height:18px;flex:none;opacity:.62}
-  .nav-item:hover{background:var(--gold-wash);color:var(--ink)}
-  .nav-item:hover svg{opacity:1}
-  .nav-item.active{background:var(--ink);color:var(--paper);font-weight:600;box-shadow:0 10px 22px -12px rgba(23,20,13,.6)}
-  .nav-item.active svg{opacity:1}
-  .nav-item.active .accent{position:absolute;left:0;top:9px;bottom:9px;width:3px;background:var(--gold);border-radius:0 3px 3px 0}
-  .nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:10.5px;font-weight:700;min-width:20px;height:20px;border-radius:20px;display:grid;place-items:center;padding:0 6px}
-  .side-foot{margin-top:auto;padding-top:16px;flex:none}
-  .user{display:flex;align-items:center;gap:12px;padding:11px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
-  .avatar{width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;font-weight:800;font-size:14px;background:linear-gradient(140deg,#ffd94a,#f5c518)}
-  .user-name{font-size:13px;font-weight:700;line-height:1.2}
-  .user-role{font-size:11px;color:var(--ink-3)}
-  .power{margin-left:auto;color:var(--ink-3);width:18px;height:18px;cursor:pointer}
-  .main{min-width:0}
-  .masthead{padding:24px 48px 0;position:sticky;top:0;background:linear-gradient(var(--paper) 82%,rgba(250,246,236,0));z-index:9}
-  .mast-top{display:flex;align-items:center;gap:18px;padding-bottom:22px}
-  .search{flex:1;max-width:360px;display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 15px;color:var(--ink-3);font-size:13px}
-  .search:focus-within{border-color:var(--gold-line);box-shadow:0 0 0 4px var(--gold-wash)}
-  .search svg{width:17px;height:17px}
-  .search input{border:none;outline:none;background:none;font-family:inherit;font-size:13px;color:var(--ink);flex:1}
-  .mast-right{margin-left:auto;display:flex;align-items:center;gap:11px}
-  .lang{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:12px;font-weight:700;background:var(--card)}
-  .lang span{padding:7px 12px;cursor:pointer;color:var(--ink-3)}
-  .lang span.on{background:var(--ink);color:var(--paper)}
-  .icon-btn{width:40px;height:40px;border-radius:11px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;cursor:pointer;color:var(--ink-2);position:relative}
-  .icon-btn svg{width:18px;height:18px}
-  .icon-btn .n{position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--red);border:2px solid var(--card)}
-  .btn-add{background:var(--ink);color:var(--paper);border:none;padding:11px 19px;border-radius:11px;font-size:13.5px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:9px;font-family:inherit;transition:.16s}
-  .btn-add:hover{background:#000}
-  .btn-add .k{width:18px;height:18px;border-radius:50%;background:var(--gold);display:grid;place-items:center}
-  .btn-add .k svg{width:12px;height:12px;color:var(--ink)}
-  .rule{height:1px;background:var(--line)}
-  .content{padding:0 48px 64px}
-  .hero{display:grid;grid-template-columns:1.12fr .88fr;gap:52px;padding:40px 0 36px;border-bottom:1px solid var(--line);align-items:end}
-  .hero h1{font-size:34px}
-  .hero p{font-size:14.5px;color:var(--ink-2);margin-top:8px;max-width:560px}
-  .eyebrow{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap}
-  .eyebrow .sep{font-size:12.5px;color:var(--ink-3);font-weight:500}
-  .hero-label{font-size:15px;font-weight:500;color:var(--ink-2);margin-bottom:10px}
-  .hero-num{font-weight:800;font-size:66px;letter-spacing:-.045em;line-height:.95}
-  .hero-num .cur{font-size:22px;font-weight:700;color:var(--ink-3);margin-left:12px}
-  .hero-sub{margin-top:20px;font-size:14px;color:var(--ink-2);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .delta{display:inline-flex;align-items:center;gap:6px;background:var(--green-wash);color:var(--green);font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:20px}
-  .hero-panel{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card);box-shadow:var(--sh)}
-  .hp-row{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line-2)}
-  .hp-row:last-child{border-bottom:none}
-  .hp-row.gold{background:var(--gold);border-color:var(--gold-line)}
-  .hp-row .k{font-size:13px;color:var(--ink-2);font-weight:500;display:flex;align-items:center;gap:9px}
-  .hp-row .dot{width:7px;height:7px;border-radius:50%}
-  .hp-row .v{font-weight:800;font-size:17px}
-  .stats4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:28px 0}
-  .stat-card{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:20px 22px;box-shadow:var(--sh)}
-  .stat-card.gold{background:linear-gradient(145deg,#ffdf5e,#f5c518 60%,#ecbb04);border-color:var(--gold-line);box-shadow:var(--sh-gold)}
-  .stat-card .k{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);display:flex;align-items:center;gap:9px;margin-bottom:12px}
-  .stat-card.gold .k{color:var(--ink);opacity:.72}
-  .stat-card .k .i{width:28px;height:28px;border-radius:8px;background:var(--gold-wash);color:var(--gold-deep);display:grid;place-items:center}
-  .stat-card.gold .k .i{background:rgba(23,20,13,.1);color:var(--ink)}
-  .stat-card .k .i svg{width:15px;height:15px}
-  .stat-card .v{font-weight:800;font-size:28px}
-  .stat-card .s{font-size:12.5px;color:var(--ink-2);margin-top:4px}
-  .stat-card.gold .s{color:var(--ink);opacity:.75}
-  .pane{border:1px solid var(--line);border-radius:var(--r);background:var(--card);box-shadow:var(--sh);overflow:hidden;margin-top:26px}
-  .pane .tbl-scroll{overflow-x:auto}
-  .pane-h{display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-  .pane-h .tt h3{font-size:16.5px;font-weight:800}
-  .pane-h .tt .s{font-size:12px;color:var(--ink-3);margin-top:2px}
-  .pane-h .sp{margin-left:auto}
-  .toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-  .tfind{display:flex;align-items:center;gap:8px;background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:12.5px;color:var(--ink-3)}
-  .tfind svg{width:15px;height:15px}.tfind input{border:none;outline:none;background:none;font-family:inherit;font-size:12.5px;width:150px;color:var(--ink)}
-  .tbl{width:100%;min-width:760px;border-collapse:collapse}
-  .tbl thead th{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:700;text-align:left;padding:13px 22px;background:var(--paper-2);border-bottom:1px solid var(--line)}
-  .tbl thead th.r{text-align:right}
-  .tbl tbody td{padding:15px 22px;border-bottom:1px solid var(--line-2);font-size:13.5px;vertical-align:middle;white-space:nowrap}
-  .tbl tbody tr{transition:.13s}
-  .tbl tbody tr:hover{background:var(--gold-wash)}
-  .tbl tbody tr:last-child td{border-bottom:none}
-  .ent{display:flex;align-items:center;gap:12px}
-  .ent .av{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-weight:800;font-size:13px;background:linear-gradient(140deg,#ffd94a,#f5c518);flex:none}
-  .ent .nm{font-weight:700}.ent .sub{font-size:11.5px;color:var(--ink-3)}
-  .mono{font-weight:800}.mono small{font-size:10.5px;color:var(--ink-3);font-weight:600}
-  .r{text-align:right}
-  .ref{font-weight:700;font-size:12px;color:var(--ink-2);background:var(--paper-2);border:1px solid var(--line);padding:3px 9px;border-radius:7px}
-  .pill{font-size:10.5px;font-weight:700;padding:5px 12px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
-  .pill .i{width:6px;height:6px;border-radius:50%}
-  .pill.ok{background:var(--green-wash);color:var(--green)}.pill.ok .i{background:var(--green)}
-  .pill.wait{background:var(--gold-wash);color:var(--gold-deep)}.pill.wait .i{background:var(--gold-deep)}
-  .pill.bad{background:var(--red-wash);color:var(--red)}.pill.bad .i{background:var(--red)}
-  .pill.info{background:#eef1f7;color:#4a5878}.pill.info .i{background:#4a5878}
-  .pill.neutral{background:var(--paper-2);color:var(--ink-2);border:1px solid var(--line)}.pill.neutral .i{background:var(--ink-3)}
-  .rowact{display:flex;gap:6px;justify-content:flex-end}
-  .ra{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;color:var(--ink-2);cursor:pointer;transition:.15s}
-  .ra:hover{border-color:var(--gold-line);color:var(--ink);background:var(--gold-wash)}
-  .ra svg{width:15px;height:15px}
-  .ra.pay{background:var(--ink);border-color:var(--ink);color:var(--gold);width:auto;padding:0 12px;font-size:11.5px;font-weight:700;gap:6px;height:32px}
-  .empty{padding:40px 24px;text-align:center;color:var(--ink-3)}
-  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(23,20,13,0.55);z-index:500;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-  .modal-overlay.open{display:flex;animation:fadeIn .18s}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  .modal{background:var(--card);border-radius:20px;width:560px;max-width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 40px 100px rgba(23,20,13,.35);animation:modalIn .22s;border:1px solid var(--line)}
-  @keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
-  .modal-lg{width:700px}.modal-xl{width:820px}
-  .modal-header{padding:22px 26px 0;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:20px}
-  .mh-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex:none;background:var(--gold-wash);color:var(--gold-deep);border:1px solid var(--gold-line)}
-  .modal-title{font-size:16px;font-weight:800}
-  .modal-subtitle{font-size:11.5px;color:var(--ink-3);margin-top:2px}
-  .modal-close{background:none;border:none;cursor:pointer;color:var(--ink-3);font-size:22px;line-height:1;padding:6px;border-radius:8px;transition:.15s;margin-left:auto}
-  .modal-close:hover{background:var(--paper-2);color:var(--ink)}
-  .modal-body{padding:0 26px}
-  .modal-footer{padding:16px 26px 22px;display:flex;gap:9px;justify-content:flex-end;border-top:1px solid var(--line);margin-top:20px;flex-wrap:wrap}
-  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
-  .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-  .fg label{font-size:11px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.5px}
-  .fg input,.fg select,.fg textarea{padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font-size:13.5px;font-family:inherit;transition:.15s;width:100%;font-weight:500}
-  .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--gold-line);box-shadow:0 0 0 4px var(--gold-wash)}
-  .fg textarea{resize:vertical;min-height:60px}
-  .btn{padding:10px 18px;border-radius:10px;font-size:13px;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink-2);transition:.15s;font-family:inherit;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:7px}
-  .btn:hover{border-color:var(--ink);color:var(--ink)}
-  .btn-primary{background:var(--gold);color:var(--ink);border-color:var(--gold-line);font-weight:700}
-  .btn-primary:hover{background:var(--gold-deep);color:var(--ink)}
-  .btn-danger{background:var(--red-wash);color:var(--red);border-color:var(--red-wash)}
-  .btn-danger:hover{background:var(--red);color:#fff}
-  .info-box{padding:11px 15px;border-radius:10px;font-size:12.5px;margin-bottom:14px;line-height:1.5}
-  .info-box.err{background:var(--red-wash);color:var(--red)}
-  .info-box.ok{background:var(--green-wash);color:var(--green)}
-  .info-box.warn{background:var(--gold-wash);color:var(--gold-deep)}
-  .hidden{display:none!important}
-  .sep{height:1px;background:var(--line);margin:16px 0}
-  @media (max-width:1080px){.hero{grid-template-columns:1fr}.stats4{grid-template-columns:1fr 1fr}}
-  @media (max-width:820px){.app{grid-template-columns:1fr}.side{display:none}.masthead,.content{padding-left:16px;padding-right:16px}.stats4{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}}
-</style>
+   <link rel="stylesheet" href="{% static 'css/styledash.css' %}" />
 </head>
 <body>
 
@@ -184,7 +28,7 @@ if(!localStorage.getItem('authToken')){
   <aside class="side">
     <div class="brand">
       <div class="badge"><b>ADEX</b></div>
-      <div><div class="brand-name">ADEXPERT</div><div class="brand-sub">Admin Panel</div></div>
+      <div><div class="brand-name">ADEXPER</div><div class="brand-sub">Admin Panel</div></div>
     </div>
     <div class="nav-label">Principal</div>
     <a class="nav-item" href="#" data-nav="index"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="8" rx="1.6" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="3" width="7" height="5" rx="1.6" stroke="currentColor" stroke-width="1.7"/><rect x="14" y="11" width="7" height="10" rx="1.6" stroke="currentColor" stroke-width="1.7"/><rect x="3" y="15" width="7" height="6" rx="1.6" stroke="currentColor" stroke-width="1.7"/></svg>Tableau de bord</a>
@@ -214,6 +58,30 @@ if(!localStorage.getItem('authToken')){
   <main class="main" data-panel="index">
     <div class="masthead"><div class="mast-top">
       <div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/></svg><input placeholder="Rechercher…"></div>
+
+      <!-- ⬇️⬇️ FILTRE PROPRIÉTAIRE / IMMEUBLE ⬇️⬇️ -->
+      <div class="filter-group">
+        <div class="filter-item">
+          <label for="dash-filter-prop">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/></svg>
+            Propriétaire
+          </label>
+          <select id="dash-filter-prop" onchange="onDashFilterChange()">
+            <option value="">Tous</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label for="dash-filter-imm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/></svg>
+            Immeuble
+          </label>
+            <select id="dash-filter-imm" onchange="onDashImmChange()">
+            <option value="">Tous</option>
+          </select>
+        </div>
+      </div>
+      <!-- ⬆️⬆️ FIN FILTRE ⬆️⬆️ -->
+
       <div class="mast-right"><div class="lang"><span class="on">FR</span><span>EN</span></div>
         <a class="btn-add" href="#" onclick="openModalLoyer();return false;"><span class="k"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6"/></svg></span>Encaisser un loyer</a>
       </div>
@@ -410,6 +278,30 @@ if(!localStorage.getItem('authToken')){
   <main class="main" data-panel="loyers" style="display:none">
     <div class="masthead"><div class="mast-top">
       <div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/></svg><input placeholder="Rechercher…"></div>
+
+      <!-- ⬇️⬇️ FILTRE PROPRIÉTAIRE / IMMEUBLE ⬇️⬇️ -->
+      <div class="filter-group">
+        <div class="filter-item">
+          <label for="ly-filter-prop">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/></svg>
+            Propriétaire
+          </label>
+          <select id="ly-filter-prop" onchange="onLoyersFilterChange()">
+            <option value="">Tous</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label for="ly-filter-imm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/></svg>
+            Immeuble
+          </label>
+          <select id="ly-filter-imm" onchange="onLoyersImmChange()">
+            <option value="">Tous</option>
+          </select>
+        </div>
+      </div>
+      <!-- ⬆️⬆️ FIN FILTRE ⬆️⬆️ -->
+
       <div class="mast-right"><a class="btn-add" href="#" onclick="openModalLoyer();return false;"><span class="k"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6"/></svg></span>Nouveau loyer</a></div>
     </div><div class="rule"></div></div>
     <div class="content">
@@ -423,7 +315,7 @@ if(!localStorage.getItem('authToken')){
         <div class="pane-h">
           <div class="tt"><h3>Loyers &amp; Paiements</h3></div>
           <div class="sp"></div>
-          <div class="toolbar"><select id="f-ly" onchange="loadLoyers(this.value)" style="padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:12.5px;font-family:inherit"><option value="tous">Tous</option><option value="retard">En retard</option><option value="attente">Impayés</option><option value="annules">Annulés</option></select></div>
+          <div class="toolbar"><select id="f-ly" onchange="onLoyersFilterChange()" style="padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:12.5px;font-family:inherit"><option value="tous">Tous</option><option value="retard">En retard</option><option value="attente">Impayés</option><option value="annules">Annulés</option></select></div>
         </div>
         <div class="tbl-scroll"><table class="tbl">
           <thead><tr><th>Locataire</th><th>Local</th><th>Libellé</th><th class="r">Total</th><th class="r">Payé</th><th class="r">Solde</th><th>Échéance</th><th>Statut</th><th class="r">Actions</th></tr></thead>
@@ -889,8 +781,12 @@ if(!localStorage.getItem('authToken')){
     <div class="form-grid"><div class="fg"><label>Date entrée *</label><input id="cont-entree" type="date"></div><div class="fg"><label>Date sortie</label><input id="cont-sortie" type="date"></div></div>
     <div class="fg"><label>Informations</label><textarea id="cont-info" rows="2"></textarea></div>
   </div>
-  <div class="modal-footer">
+   <div class="modal-footer">
     <button class="btn btn-danger hidden" id="res-cont" onclick="resilier()">Résilier</button>
+    <button class="btn hidden" id="gen-cont" onclick="genererLoyersContrat()" style="background:var(--gold-wash);border-color:var(--gold-line);color:var(--gold-deep);font-weight:700">
+      <svg viewBox="0 0 24 24" fill="none" style="width:14px;height:14px"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      Générer les loyers
+    </button>
     <button class="btn" onclick="closeModal('m-cont')">Annuler</button>
     <button class="btn btn-primary" onclick="saveCont()">Enregistrer</button>
   </div>
@@ -942,7 +838,7 @@ if(!localStorage.getItem('authToken')){
     <div class="modal modal-xl">
         <div class="modal-header">
           <div class="mh-icon"><svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px"><path d="M8 13l-3-3 3-3 3 3M16 11l3-3-3-3-3 3" stroke="currentColor" stroke-width="1.7"/></svg></div>
-          <div><div class="modal-title" id="mt-cs">Nouveau contrat société</div><div class="modal-subtitle">Convention de gestion locative — ADEXPERT</div></div>
+          <div><div class="modal-title" id="mt-cs">Nouveau contrat société</div><div class="modal-subtitle">Convention de gestion locative — ADEXPER</div></div>
           <button class="modal-close" onclick="closeModal('m-cs')">×</button>
         </div>
         <div class="modal-body">
@@ -1008,7 +904,7 @@ if(!localStorage.getItem('authToken')){
     <div class="modal modal-lg">
         <div class="modal-header">
           <div class="mh-icon"><svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/></svg></div>
-          <div><div class="modal-title">Aperçu du contrat</div><div class="modal-subtitle">Contrat de gestion locative — ADEXPERT</div></div>
+          <div><div class="modal-title">Aperçu du contrat</div><div class="modal-subtitle">Contrat de gestion locative — ADEXPER</div></div>
           <button class="modal-close" onclick="closeModal('m-cs-print')">×</button>
         </div>
         <div class="modal-body"><div id="mc-cs-print"></div></div>
@@ -1346,7 +1242,202 @@ document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click
 
 function confirmLogout(){if(confirm('Se déconnecter ?')){localStorage.clear();window.location.href='/';}}
 function err(m){return '<div class="info-box err">'+m+'</div>';}
+// ═══════════════════════════════════════════
+//  FILTRE PROPRIÉTAIRE / IMMEUBLE
+//  (Tableau de bord + Loyers & Paiements)
+// ═══════════════════════════════════════════
+var _filterPropsLoaded = false;
 
+async function initFilters(){
+  try{
+    // Charger la liste des propriétaires
+    var d = await api('/proprietaires/?page_size=300');
+    var props = (d && (d.results || d)) || [];
+
+    // Remplir les 2 selects Propriétaire (dashboard + loyers)
+    ['dash-filter-prop','ly-filter-prop'].forEach(function(id){
+      var sel = document.getElementById(id);
+      if(!sel) return;
+      sel.innerHTML = '<option value="">Tous</option>' +
+        props.map(function(p){
+          return '<option value="' + p.id + '">' + p.nom + '</option>';
+        }).join('');
+    });
+    _filterPropsLoaded = true;
+  }catch(e){
+    console.warn('Init filters:', e);
+  }
+}
+
+// Charge les immeubles en cascade selon le propriétaire sélectionné
+async function loadImmeublesForFilter(propSelectId, immSelectId){
+  var propId = document.getElementById(propSelectId).value;
+  var immSel = document.getElementById(immSelectId);
+  if(!immSel) return;
+
+  if(!propId){
+    immSel.innerHTML = '<option value="">Tous</option>';
+    return;
+  }
+  immSel.innerHTML = '<option value="">Chargement…</option>';
+  try{
+    var d = await api('/immeubles/?proprietaire=' + propId + '&page_size=200');
+    var imms = (d && (d.results || d)) || [];
+    immSel.innerHTML = '<option value="">Tous</option>' +
+      imms.map(function(i){
+        return '<option value="' + i.id + '">' + i.nom + '</option>';
+      }).join('');
+  }catch(e){
+    immSel.innerHTML = '<option value="">Tous</option>';
+  }
+}
+
+// Filtre appliqué sur le TABLEAU DE BORD
+function onDashFilterChange(){
+  var propId = document.getElementById('dash-filter-prop').value;
+  // 1. Mettre à jour les immeubles
+  loadImmeublesForFilter('dash-filter-prop','dash-filter-imm').then(function(){
+    // 2. Recharger le dashboard avec filtre
+    loadDashWithFilter(propId, document.getElementById('dash-filter-imm').value);
+  });
+}
+
+// Quand on change l'IMMEUBLE (après avoir choisi un propriétaire)
+function onDashImmChange(){
+  var propId = document.getElementById('dash-filter-prop').value;
+  var immId  = document.getElementById('dash-filter-imm').value;
+  console.log('🔄 Filtre dashboard:', {propId:propId, immId:immId});
+  loadDashWithFilter(propId, immId);
+}
+
+function onLoyersImmChange(){
+  var propId = document.getElementById('ly-filter-prop').value;
+  var immId  = document.getElementById('ly-filter-imm').value;
+  console.log('🔄 Filtre loyers:', {propId:propId, immId:immId});
+  loadLoyersWithFilter(
+    document.getElementById('f-ly').value || 'tous',
+    propId,
+    immId
+  );
+}
+
+async function loadDashWithFilter(propId, immId){
+  var url = '/dashboard/';
+  var params = [];
+  if(propId) params.push('proprietaire='+propId);
+  if(immId)  params.push('immeuble='+immId);
+  if(params.length) url += '?'+params.join('&');
+
+  try{
+    var d = await api(url);
+    if(!d) return;
+    // Réutilise le rendu existant
+    document.getElementById('d-revenus').textContent = f(d.finances.revenus_mois);
+    document.getElementById('d-bruts').textContent = f(d.finances.revenus_mois);
+    document.getElementById('d-commission').textContent = f(d.finances.commission_cabinet);
+    document.getElementById('d-net').textContent = f(d.finances.revenus_mois - d.finances.commission_cabinet);
+    document.getElementById('d-locaux').textContent = f(d.locaux.total);
+    document.getElementById('d-locaux-sub').textContent = d.locaux.occupes+' occupés · '+d.locaux.libres+' libres';
+    document.getElementById('d-props').textContent = d.nb_proprietaires || 0;
+    document.getElementById('d-annuel').textContent = f(d.finances.revenus_annee);
+    document.getElementById('d-charges').textContent = f(d.finances.charges_mois);
+    document.getElementById('badge-loyers').textContent = d.loyers_mois.retard;
+  }catch(e){ console.warn('Load dash filtered:', e); }
+}
+
+// Filtre appliqué sur LOYERS & PAIEMENTS
+function onLoyersFilterChange(){
+  var propId = document.getElementById('ly-filter-prop').value;
+  loadImmeublesForFilter('ly-filter-prop','ly-filter-imm').then(function(){
+    loadLoyersWithFilter(
+      document.getElementById('f-ly').value || 'tous',
+      propId,
+      document.getElementById('ly-filter-imm').value
+    );
+  });
+}
+
+function onLoyersImmChange(){
+  var propId = document.getElementById('ly-filter-prop').value;
+  var immId  = document.getElementById('ly-filter-imm').value;
+  console.log('🔄 Filtre loyers imm:', {propId:propId, immId:immId});
+  loadLoyersWithFilter(
+    document.getElementById('f-ly').value || 'tous',
+    propId,
+    immId
+  );
+}
+async function loadLoyersWithFilter(filtre, propId, immId){
+  filtre = filtre || 'tous';
+  var tb = document.getElementById('tb-loyers');
+  tb.innerHTML = '<tr><td colspan="9" class="empty">Chargement…</td></tr>';
+
+  // ═══ 1. Construire l'URL selon le filtre statut ═══
+  var url = '/loyers/?page_size=300';
+  if(filtre === 'retard')        url = '/loyers/en-retard/?page_size=300';
+  else if(filtre === 'attente')  url = '/loyers/impayes/?page_size=300';
+  else if(filtre === 'annules')  url = '/loyers/paiements-annules/?page_size=300';
+
+  // ═══ 2. Ajouter les filtres propriétaire / immeuble ═══
+  var sep = url.indexOf('?') >= 0 ? '&' : '?';
+  if(propId) url += sep + 'proprietaire=' + propId;
+  if(immId)  url += (propId ? '&' : sep) + 'immeuble=' + immId;
+
+  console.log('📡 Fetch loyers:', url);
+
+  var d = await api(url);
+  var l = Array.isArray(d) ? d : ((d && d.results) || []);
+
+  // ═══ 3. Mettre à jour les stats ═══
+  document.getElementById('ly-total').textContent = l.length;
+  document.getElementById('ly-pay').textContent  = l.filter(function(x){return x.statut==='paye';}).length;
+  document.getElementById('ly-ret').textContent  = l.filter(function(x){return x.statut==='retard';}).length;
+  document.getElementById('ly-taux').textContent =
+    (l.length ? Math.round(l.filter(function(x){return x.statut==='paye';}).length/l.length*100) : 0) + '%';
+  document.getElementById('badge-loyers').textContent = l.filter(function(x){return x.statut==='retard';}).length;
+
+  // ═══ 4. Remplir le tableau ═══
+  if(!l.length){
+    tb.innerHTML = '<tr><td colspan="9" class="empty">Aucun loyer</td></tr>';
+    return;
+  }
+
+  var bm = {paye:'ok', retard:'bad', attente:'wait', partiel:'info'};
+
+  tb.innerHTML = l.map(function(x){
+    var sp = parseFloat(x.solde_restant) || 0;
+    var paye = parseFloat(x.montant_paye) || 0;
+    var actions = '';
+
+    if(x.statut !== 'paye'){
+      actions += '<span class="ra pay" onclick="openPay(' + x.id + ',\'' + esc(x.locataire_nom) + '\',\'' + esc(x.libelle) + '\',' + x.montant_total + ')" title="Encaisser">' +
+        '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12 20 4l-6 16-3-7-7-1z" stroke="currentColor" stroke-width="1.7"/></svg> Encaisser</span>';
+    }
+
+    if(paye > 0){
+      actions += '<span class="ra" onclick="showQuit(' + x.id + ')" title="Quittance">' +
+        '<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="M9 8h6M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>';
+
+      actions += '<span class="ra" onclick="validerPaiement(' + x.id + ')" title="Valider">' +
+        '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="m8 12 2.6 2.6L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+
+      actions += '<span class="ra" onclick="annulerPaiement(' + x.id + ')" title="Annuler" style="color:var(--red);border-color:var(--red-wash)">' +
+        '<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>';
+    }
+
+    return '<tr>' +
+      '<td>' + (x.locataire_nom || '—') + '</td>' +
+      '<td><span class="ref">' + (x.local_reference || '—') + '</span></td>' +
+      '<td>' + (x.libelle || '—') + '</td>' +
+      '<td class="r mono num">' + f(x.montant_total) + '</td>' +
+      '<td class="r mono num" style="color:var(--green)">' + f(x.montant_paye) + '</td>' +
+      '<td class="r mono num" style="color:' + (sp > 0 ? 'var(--red)' : 'var(--green)') + '">' + f(sp) + '</td>' +
+      '<td>' + fd(x.echeance) + '</td>' +
+      '<td><span class="pill ' + (bm[x.statut] || 'wait') + '"><span class="i"></span>' + (x.statut_display || x.statut) + '</span></td>' +
+      '<td><div class="rowact">' + (actions || '—') + '</div></td>' +
+    '</tr>';
+  }).join('');
+}
 function initUI(){
   var u=S.username||'admin';
   document.getElementById('sb-avatar').textContent=u.charAt(0).toUpperCase();
@@ -1663,6 +1754,7 @@ async function openModalCont(id){
   document.getElementById('cont-id').value = id || '';
   document.getElementById('al-cont').innerHTML = '';
   document.getElementById('res-cont').classList.toggle('hidden', !id);
+  document.getElementById('gen-cont').classList.toggle('hidden', !id);   // ⬅️ LIGNE AJOUTÉE
   ['cont-num','cont-loyer','cont-ch','cont-depot','cont-info'].forEach(x=>{
     var el=document.getElementById(x); if(el) el.value='';
   });
@@ -1690,7 +1782,6 @@ async function openModalCont(id){
   }
   openModal('m-cont');
 }
-
 async function saveCont(){
   var id = document.getElementById('cont-id').value;
   var data = {
@@ -1930,10 +2021,10 @@ async function printCS(){
             </style></head><body>
                 <button class="btn-print" onclick="document.title='';window.print();">Imprimer / Télécharger PDF</button>
                 <div class="hd">
-                    <div class="logo">ADEXPERT</div>
+                    <div class="logo">ADEXPER</div>
                     <div class="sub">Bujumbura, Avenue de Luxembourg n° 11 — SARL — NIF 4001514787</div>
                     <h2>Formulaire du Contrat de Mandat de Gestion Locative</h2>
-                    <div class="ref">Convention entre le Propriétaire et ADEXPERT — N° ${c.numero}</div>
+                    <div class="ref">Convention entre le Propriétaire et ADEXPER — N° ${c.numero}</div>
                 </div>
                 <div class="parties">
                     <div class="partie-box">
@@ -1944,7 +2035,7 @@ async function printCS(){
                     </div>
                     <div class="partie-box">
                         <div class="partie-title">Le Cabinet Gestionnaire / Mandataire</div>
-                        <strong>ADEXPERT</strong>
+                        <strong>ADEXPER</strong>
                         <span>SARL — Bujumbura, Avenue de Luxembourg n° 11</span>
                         <span>NIF : 4001514787</span>
                     </div>
@@ -1963,7 +2054,7 @@ async function printCS(){
                     Résiliation possible avec préavis de 3 mois, par lettre remise en main propre ou par courriel.
                 </div>
                 <div class="article">
-                    <div class="article-title">Article 3 — Missions du Cabinet ADEXPERT</div>
+                    <div class="article-title">Article 3 — Missions du Cabinet ADEXPER</div>
                     <ul>${svcs.map(s=>'<li>'+s+'</li>').join('')}</ul>
                 </div>
                 <div class="article">
@@ -1978,9 +2069,9 @@ async function printCS(){
                     <ul>
                         <li>Délivrer le bien en bon état ;</li>
                         <li>Fournir au Mandataire les données nécessaires en cas de besoin ;</li>
-                        <li>Payer mensuellement les honoraires convenus sur le compte d'ADEXPERT, même lorsque le locataire paie directement entre ses mains ;</li>
-                        <li>Informer ADEXPERT de tout accord spécifique conclu avec le locataire ;</li>
-                        <li>Communiquer à ADEXPERT tous renseignements ou documents utiles aux procédures de gestion locative ou fiscale.</li>
+                        <li>Payer mensuellement les honoraires convenus sur le compte d'ADEXPER, même lorsque le locataire paie directement entre ses mains ;</li>
+                        <li>Informer ADEXPER de tout accord spécifique conclu avec le locataire ;</li>
+                        <li>Communiquer à ADEXPER tous renseignements ou documents utiles aux procédures de gestion locative ou fiscale.</li>
                     </ul>
                 </div>
                 ${c.clauses_particulieres?'<div class="article"><div class="article-title">Article 6 — Clauses particulières</div>'+c.clauses_particulieres+'</div>':''}
@@ -2002,12 +2093,12 @@ async function printCS(){
                         </div>
                         <div class="sig-box">
                             <div class="sig-role">Le Mandataire</div>
-                            <div class="sig-name">ADEXPERT</div>
+                            <div class="sig-name">ADEXPER</div>
                             <div class="sig-line">(Signature & Cachet)</div>
                         </div>
                     </div>
                 </div>
-                <div class="foot">Document officiel ADEXPERT — Émis le ${fd(new Date().toISOString().slice(0,10))}</div>
+                <div class="foot">Document officiel ADEXPER — Émis le ${fd(new Date().toISOString().slice(0,10))}</div>
             </body></html>`);
         w.document.close();
     }catch(e){alert('Erreur: '+e.message);}
@@ -2262,6 +2353,7 @@ async function openModalCont(id){
   document.getElementById('cont-id').value=id||'';
   document.getElementById('al-cont').innerHTML='';
   document.getElementById('res-cont').classList.toggle('hidden',!id);
+  document.getElementById('gen-cont').classList.toggle('hidden',!id);   // ⬅️ LIGNE AJOUTÉE
   ['cont-num','cont-loyer','cont-ch','cont-depot','cont-info'].forEach(x=>document.getElementById(x).value='');
   document.getElementById('cont-entree').value=new Date().toISOString().split('T')[0];
   await selLoca('cont-loca');await selLoc('cont-loc');
@@ -2275,6 +2367,79 @@ async function saveCont(){
   if(id)await api('/contrats/'+id+'/',{method:'PUT',body:JSON.stringify(data)});
   else await api('/contrats/',{method:'POST',body:JSON.stringify(data)});
   closeModal('m-cont');loadCont();
+}
+
+// ═══════════════════════════════════════════
+//  GÉNÉRER LES LOYERS D'UN CONTRAT
+// ═══════════════════════════════════════════
+async function genererLoyersContrat(){
+  var id = document.getElementById('cont-id').value;
+  if(!id){alert('Enregistrez d\'abord le contrat');return;}
+
+  var num    = document.getElementById('cont-num').value;
+  var loca   = document.getElementById('cont-loca').value;
+  var loc    = document.getElementById('cont-loc').value;
+  var loyer  = parseFloat(document.getElementById('cont-loyer').value) || 0;
+  var charges= parseFloat(document.getElementById('cont-ch').value) || 0;
+  var debut  = document.getElementById('cont-entree').value;
+  var fin    = document.getElementById('cont-sortie').value;
+
+  if(!debut){alert('Date d\'entrée manquante');return;}
+  if(!loyer || loyer <= 0){alert('Loyer HC manquant');return;}
+  if(!fin){
+    if(!confirm('Aucune date de sortie définie.\nGénérer seulement pour 12 mois ?')) return;
+  }
+
+  // Calculer le nombre de mois à générer
+  var start = new Date(debut);
+  var end   = fin ? new Date(fin) : new Date(start.getFullYear()+1, start.getMonth(), start.getDate());
+  var mois  = (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth());
+  if(mois < 1){alert('Dates invalides');return;}
+  if(mois > 120){alert('Plus de 120 mois à générer, veuillez vérifier les dates.');return;}
+
+  if(!confirm('Générer ' + mois + ' loyer(s) de ' + f(loyer) + ' BIF/mois ?\n\nContrat : ' + num)) return;
+
+  // Boucle de création
+  var ok = 0, err = 0, erreurs = [];
+  for(var i = 0; i < mois; i++){
+    var cur = new Date(start.getFullYear(), start.getMonth() + i, start.getDate());
+    var moisNom = cur.toLocaleDateString('fr-FR', {month:'long', year:'numeric'});
+    var libelle = 'Loyer ' + moisNom.charAt(0).toUpperCase() + moisNom.slice(1);
+
+    var payload = {
+      locataire: parseInt(loca),
+      local: parseInt(loc),
+      contrat: parseInt(id),
+      libelle: libelle,
+      periode_debut: cur.toISOString().slice(0,10),
+      periode_fin:   cur.toISOString().slice(0,10),
+      loyer_hors_charges: loyer,
+      charges: charges,
+      echeance: cur.toISOString().slice(0,10),
+      informations_complementaires: 'Généré automatiquement depuis le contrat ' + num
+    };
+
+    try{
+      await api('/loyers/', {method:'POST', body:JSON.stringify(payload)});
+      ok++;
+    }catch(e){
+      err++;
+      erreurs.push(libelle + ' : ' + e.message);
+      console.warn('Erreur création loyer ' + libelle + ':', e.message);
+    }
+  }
+
+  // Résumé
+  var msg = '✅ ' + ok + ' loyer(s) généré(s) avec succès';
+  if(err){
+    msg += '\n\n⚠️ ' + err + ' erreur(s) :\n' + erreurs.slice(0,5).join('\n');
+    if(erreurs.length > 5) msg += '\n...';
+  }
+  alert(msg);
+
+  closeModal('m-cont');
+  loadLoyers('tous');
+  loadCont();
 }
 async function resilier(){if(!confirm('Résilier ?'))return;var id=document.getElementById('cont-id').value;await api('/contrats/'+id+'/resilier/',{method:'POST',body:'{}'});closeModal('m-cont');loadCont();}
 
@@ -2999,16 +3164,16 @@ function _pdfHeader(doc, titre, sousTitre, logoData, flagData){
     }catch(e){console.warn('Flag addImage:',e);}
   }
 
-  // LOGO ADEXPERT à DROITE (si fourni)
+  // LOGO ADEXPER à DROITE (si fourni)
   if(logoData){
     try{
       doc.addImage(logoData, 'logo_adexpert.png', pageW-40, 3, 28, 20);
     }catch(e){console.warn('Logo addImage:',e);}
   } else {
-    // Sinon texte ADEXPERT à droite
+    // Sinon texte ADEXPER à droite
     doc.setTextColor(23, 20, 13);
     doc.setFontSize(14); doc.setFont('helvetica','bold');
-    doc.text('ADEXPERT', pageW-18, 13, {align:'right'});
+    doc.text('ADEXPER', pageW-18, 13, {align:'right'});
     doc.setFontSize(8); doc.setFont('helvetica','normal');
     doc.text('Gestion Locative', pageW-18, 18, {align:'right'});
   }
@@ -3031,7 +3196,7 @@ function _pdfFooter(doc){
   doc.setTextColor(148,163,184);
   doc.setFontSize(8);
   var date = new Date().toLocaleString('fr-FR');
-  doc.text('Genere par ADEXPERT le '+_pdfClean(date), pageW/2, pageH-9, {align:'center'});
+  doc.text('Genere par ADEXPER le '+_pdfClean(date), pageW/2, pageH-9, {align:'center'});
 }
 
 function _pdfTable(doc, startY, rows){
@@ -3185,7 +3350,146 @@ async function saveLoyer(){
   closeModal('m-loyer-new');loadLoyers('tous');
 }
 
+
+// ═══════════════════════════════════════════
+//  FILTRE PROPRIÉTAIRE / IMMEUBLE
+// ═══════════════════════════════════════════
+var _allLocaux = [];
+var _allImmeubles = [];
+var _filterPropsLoaded = false;
+
+// Charge locaux + immeubles une fois au démarrage
+async function preloadAllImmeubles(){
+  try{
+    var dLoc = await api('/locaux/?page_size=500');
+    var dImm = await api('/immeubles/?page_size=500');
+    _allLocaux = (dLoc && (dLoc.results || dLoc)) || [];
+    _allImmeubles = (dImm && (dImm.results || dImm)) || [];
+    console.log('✅ Locaux chargés:', _allLocaux.length);
+    console.log('✅ Immeubles chargés:', _allImmeubles.length);
+    if(_allLocaux.length) console.log('🔍 Champs local:', Object.keys(_allLocaux[0]));
+    if(_allImmeubles.length) console.log('🔍 Champs immeuble:', Object.keys(_allImmeubles[0]));
+  }catch(e){
+    console.warn('❌ Preload erreur:', e);
+    _allLocaux = [];
+    _allImmeubles = [];
+  }
+}
+
+// Charge les propriétaires dans les 2 filtres
+async function initFilters(){
+  try{
+    var d = await api('/proprietaires/?page_size=300');
+    var props = (d && (d.results || d)) || [];
+
+    ['dash-filter-prop','ly-filter-prop'].forEach(function(id){
+      var sel = document.getElementById(id);
+      if(!sel) return;
+      sel.innerHTML = '<option value="">Tous</option>' +
+        props.map(function(p){
+          return '<option value="' + p.id + '">' + p.nom + '</option>';
+        }).join('');
+    });
+
+    await preloadAllImmeubles();
+    _filterPropsLoaded = true;
+    console.log('✅ Filtres prêts');
+  }catch(e){
+    console.warn('❌ Init filters:', e);
+  }
+}
+
+// Filtre les immeubles selon le propriétaire (via les LOCAUX)
+function loadImmeublesForFilter(propSelectId, immSelectId){
+  var propSel = document.getElementById(propSelectId);
+  var propId  = propSel.value;
+  var immSel  = document.getElementById(immSelectId);
+  if(!immSel) return;
+
+  if(!propId){
+    immSel.innerHTML = '<option value="">Tous</option>';
+    return;
+  }
+
+  // 1. Récupère les locaux du propriétaire sélectionné
+  var locauxDupProp = _allLocaux.filter(function(l){
+    var pid = l.proprietaire_id || l.proprietaire;
+    return String(pid) === String(propId);
+  });
+
+  console.log('📊 Locaux du propriétaire ' + propId + ':', locauxDupProp.length);
+
+  // 2. Extrait les immeubles UNIQUES
+  var seenIds = {};
+  var immeubles = [];
+  locauxDupProp.forEach(function(l){
+    var immId = l.immeuble_id || l.immeuble;
+    if(immId && !seenIds[immId]){
+      seenIds[immId] = true;
+      var found = _allImmeubles.find(function(i){ return String(i.id) === String(immId); });
+      immeubles.push({
+        id: immId,
+        nom: (l.immeuble_nom) || (found ? found.nom : ('Immeuble #' + immId))
+      });
+    }
+  });
+
+  console.log('🏢 Immeubles uniques:', immeubles);
+
+  if(!immeubles.length){
+    immSel.innerHTML = '<option value="">Aucun immeuble</option>';
+  } else {
+    immSel.innerHTML = '<option value="">Tous</option>' +
+      immeubles.map(function(i){
+        return '<option value="' + i.id + '">' + i.nom + '</option>';
+      }).join('');
+  }
+}
+
+// Handlers des filtres
+function onDashFilterChange(){
+  // Charge les immeubles du propriétaire sélectionné
+  loadImmeublesForFilter('dash-filter-prop','dash-filter-imm');
+  // Recharge le dashboard sans immeuble (juste le propriétaire)
+  var propId = document.getElementById('dash-filter-prop').value;
+  loadDashWithFilter(propId, '');
+}
+
+function onLoyersFilterChange(){
+  loadImmeublesForFilter('ly-filter-prop','ly-filter-imm');
+  var propId = document.getElementById('ly-filter-prop').value;
+  loadLoyersWithFilter(
+    document.getElementById('f-ly').value || 'tous',
+    propId,
+    ''
+  );
+}
+// Charge le dashboard filtré
+async function loadDashWithFilter(propId, immId){
+  var url = '/dashboard/';
+  var params = [];
+  if(propId) params.push('proprietaire='+propId);
+  if(immId)  params.push('immeuble='+immId);
+  if(params.length) url += '?'+params.join('&');
+
+  try{
+    var d = await api(url);
+    if(!d) return;
+    document.getElementById('d-revenus').textContent = f(d.finances.revenus_mois);
+    document.getElementById('d-bruts').textContent = f(d.finances.revenus_mois);
+    document.getElementById('d-commission').textContent = f(d.finances.commission_cabinet);
+    document.getElementById('d-net').textContent = f(d.finances.revenus_mois - d.finances.commission_cabinet);
+    document.getElementById('d-locaux').textContent = f(d.locaux.total);
+    document.getElementById('d-locaux-sub').textContent = d.locaux.occupes+' occupés · '+d.locaux.libres+' libres';
+    document.getElementById('d-props').textContent = d.nb_proprietaires || 0;
+    document.getElementById('d-annuel').textContent = f(d.finances.revenus_annee);
+    document.getElementById('d-charges').textContent = f(d.finances.charges_mois);
+    document.getElementById('badge-loyers').textContent = d.loyers_mois.retard;
+  }catch(e){ console.warn('Load dash filtered:', e); }
+}
+
 initUI();
+initFilters();
 </script>
 </body>
 </html>
