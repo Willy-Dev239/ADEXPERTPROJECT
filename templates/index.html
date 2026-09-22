@@ -256,7 +256,7 @@ if(!localStorage.getItem('authToken')){
       <section class="hero" style="grid-template-columns:1fr"><div><h1>Contrats Société</h1><p>Les conventions de mandat.</p></div></section>
       <section class="stats4">
         <div class="stat-card gold"><div class="k">Conventions</div><div class="v num" id="cs-total">0</div><div class="s">actives</div></div>
-        <div class="stat-card"><div class="k">Commission moy.</div><div class="v num" id="cs-comm">9%</div><div class="s">sur revenus bruts</div></div>
+       <div class="stat-card"><div class="k">Commission moy.</div><div class="v num" id="cs-comm">—</div><div class="s">sur revenus bruts</div></div>
         <div class="stat-card"><div class="k">Propriétaires liés</div><div class="v num" id="cs-props">0</div><div class="s">mandants</div></div>
         <div class="stat-card"><div class="k">Net à reverser</div><div class="v num" id="cs-net">0</div><div class="s">BIF ce mois</div></div>
       </section>
@@ -2270,24 +2270,63 @@ async function resilier(){if(!confirm('Résilier ?'))return;var id=document.getE
 
 // CONTRATS SOCIÉTÉ
 async function loadCS(){
-  var tb=document.getElementById('tb-cs');
-  tb.innerHTML='<tr><td colspan="6" class="empty">Chargement…</td></tr>';
-  var st=document.getElementById('f-st-cs').value;
-  var d=await api('/contrats/societe/?page_size=200'+(st?'&statut='+st:''));
-  var l=(d&&(d.results||d))||[];
-  document.getElementById('cs-count').textContent=l.length+' conventions';
-  document.getElementById('cs-total').textContent=l.length;
-  if(!l.length){tb.innerHTML='<tr><td colspan="6" class="empty">Aucune convention</td></tr>';return;}
-  var bm={actif:'ok',expire:'bad',resilie:'neutral'};
-  tb.innerHTML=l.map(c=>`<tr>
-    <td><b>${c.numero}</b></td><td>${c.proprietaire_nom||'—'}</td>
-    <td class="r mono num">${c.taux_commission||9}%</td>
-    <td>${c.periodicite_reversement||'mensuel'}</td>
-    <td><span class="pill ${bm[c.statut]||'ok'}"><span class="i"></span>${c.statut||'actif'}</span></td>
-    <td><div class="rowact"><span class="ra" onclick="openModalCS(${c.id})"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4L18.5 9.5a2 2 0 0 0-3-3L5 17v3z" stroke="currentColor" stroke-width="1.7"/></svg></span></div></td>
-  </tr>`).join('');
-}
+  var tb = document.getElementById('tb-cs');
+  tb.innerHTML = '<tr><td colspan="6" class="empty">Chargement…</td></tr>';
+  var st = document.getElementById('f-st-cs').value;
+  var d = await api('/contrats/societe/?page_size=200' + (st ? '&statut=' + st : ''));
+  var l = (d && (d.results || d)) || [];
 
+  document.getElementById('cs-count').textContent = l.length + ' conventions';
+  document.getElementById('cs-total').textContent = l.length;
+
+  // ═══════════════════════════════════════════
+  //  CALCULS DYNAMIQUES DES STATS
+  // ═══════════════════════════════════════════
+
+  // Commission moyenne (sur les taux_commission non nuls)
+  var contratsAvecTaux = l.filter(function(c){ return parseFloat(c.taux_commission) > 0; });
+  var tauxMoyen = contratsAvecTaux.length
+    ? (contratsAvecTaux.reduce(function(a, c){
+        return a + parseFloat(c.taux_commission || 0);
+      }, 0) / contratsAvecTaux.length).toFixed(1)
+    : 0;
+  document.getElementById('cs-comm').textContent = tauxMoyen + '%';
+
+  // Propriétaires liés (comptage unique)
+  var propsUniques = {};
+  l.forEach(function(c){
+    if(c.proprietaire) propsUniques[c.proprietaire] = true;
+  });
+  document.getElementById('cs-props').textContent = Object.keys(propsUniques).length;
+
+  // Net à reverser (somme des taux si pas d'autres données, sinon adapter)
+  // → si tu as un champ net_a_reverser côté backend, utilise-le ici
+  var netTotal = l.reduce(function(a, c){
+    return a + parseFloat(c.net_a_reverser || c.montant_net || 0);
+  }, 0);
+  document.getElementById('cs-net').textContent = netTotal ? f(netTotal) : 0;
+
+  // ═══════════════════════════════════════════
+  //  RENDU DU TABLEAU
+  // ═══════════════════════════════════════════
+
+  if(!l.length){
+    tb.innerHTML = '<tr><td colspan="6" class="empty">Aucune convention</td></tr>';
+    return;
+  }
+
+  var bm = {actif: 'ok', expire: 'bad', resilie: 'neutral'};
+  tb.innerHTML = l.map(function(c){
+    return '<tr>' +
+      '<td><b>' + (c.numero || '—') + '</b></td>' +
+      '<td>' + (c.proprietaire_nom || '—') + '</td>' +
+      '<td class="r mono num">' + (c.taux_commission || 9) + '%</td>' +
+      '<td>' + (c.periodicite_reversement || 'mensuel') + '</td>' +
+      '<td><span class="pill ' + (bm[c.statut] || 'ok') + '"><span class="i"></span>' + (c.statut || 'actif') + '</span></td>' +
+      '<td><div class="rowact"><span class="ra" onclick="openModalCS(' + c.id + ')"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4L18.5 9.5a2 2 0 0 0-3-3L5 17v3z" stroke="currentColor" stroke-width="1.7"/></svg></span></div></td>' +
+    '</tr>';
+  }).join('');
+}
 async function delCS(){if(!confirm('Supprimer ?'))return;var id=document.getElementById('cs-id').value;await api('/contrats/societe/'+id+'/',{method:'DELETE'});closeModal('m-cs');loadCS();}
 
 // LOYERS
