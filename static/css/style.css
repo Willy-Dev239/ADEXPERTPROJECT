@@ -592,3 +592,82 @@
       .cta-box { padding: 40px 22px; }
       .nav-act .btn { padding: 8px 14px; font-size: 12px; }
     }
+    /* ==========================================================================
+   RENDU UNIFORME SUR TOUS LES ÉCRANS
+   Force la même apparence sur mobile, tablette, desktop
+   ========================================================================== */
+
+/* 1. Largeur minimale de référence (comme un desktop) */
+html, body {
+    min-width: 1280px;
+    overflow-x: auto;
+}
+
+body {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* 2. Empêcher les media queries de casser la mise en page */
+/* On neutralise toutes les media queries mobiles existantes */
+@media screen and (max-width: 1280px) {
+    .nav-in,
+    .hero-main,
+    .hero-copy,
+    .hero-stage,
+    .hero-cta,
+    .hero-meta,
+    .nav-act,
+    .nlinks {
+        /* On garde le layout desktop partout */
+        display: revert !important;
+        flex-direction: revert !important;
+        grid-template-columns: revert !important;
+        width: revert !important;
+        max-width: revert !important;
+        padding: revert !important;
+        margin: revert !important;
+    }
+}
+
+/* 3. Éviter le débordement horizontal moche */
+.hero-bg,
+.hero,
+.nav {
+    overflow: hidden;
+}
+
+/* 4. Images : garder leur taille relative au container desktop */
+.hero-stage img,
+.bld-photo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* 5. Forcer la police à ne pas être agrandie par iOS */
+.nav a, .nlinks a, .hero-copy h1, .lead, .eyebrow, .m, .tt {
+    -webkit-text-size-adjust: none;
+}
+
+/* 6. Scrollbar horizontale propre sur mobile */
+@media screen and (max-width: 1280px) {
+    html {
+        overflow-x: scroll;
+    }
+}
+
+/* Sur tous les écrans, on simule un desktop 1440px */
+body {
+    min-width: 1440px;
+}
+
+.nav-in,
+.hero-main,
+.hero-copy,
+.hero-stage {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+}
