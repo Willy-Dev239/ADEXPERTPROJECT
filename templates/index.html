@@ -605,8 +605,29 @@ if(!localStorage.getItem('authToken')){
     <div id="al-prop"></div><input type="hidden" id="prop-id">
     <div class="form-grid"><div class="fg"><label>Nom *</label><input id="prop-nom"></div><div class="fg"><label>Téléphone</label><input id="prop-tel"></div></div>
     <div class="form-grid"><div class="fg"><label>Email</label><input id="prop-email" type="email"></div><div class="fg"><label>NIF</label><input id="prop-nif"></div></div>
-    <div class="form-grid"><div class="fg"><label>N° CNI</label><input id="prop-cni"></div><div class="fg"><label>Province</label><input id="prop-prov"></div></div>
-    <div class="form-grid"><div class="fg"><label>Commune</label><input id="prop-com"></div><div class="fg"><label>Quartier</label><input id="prop-quart"></div></div>
+    <div class="form-grid">
+  <div class="fg"><label>N° CNI</label><input id="prop-cni"></div>
+  <div class="fg">
+    <label>Province</label>
+    <select id="prop-prov" onchange="updateCommunes('prop-prov','prop-com','prop-quart')">
+      <option value="">— Province —</option>
+    </select>
+  </div>
+</div>
+<div class="form-grid">
+  <div class="fg">
+    <label>Commune</label>
+    <select id="prop-com" onchange="updateQuartiers('prop-prov','prop-com','prop-quart')">
+      <option value="">— Commune —</option>
+    </select>
+  </div>
+  <div class="fg">
+    <label>Quartier</label>
+    <select id="prop-quart">
+      <option value="">— Quartier —</option>
+    </select>
+  </div>
+</div>
     <div class="fg"><label>Informations</label><textarea id="prop-info" rows="2"></textarea></div>
   </div>
   <div class="modal-footer">
@@ -1039,77 +1060,6 @@ var CS_SERVICES = [
   {id:'constat_lieu',                label:'Constatation du lieu',      default:false},
   {id:'inventaire_immeuble',         label:'Inventaire de l\'immeuble', default:false}
 ];
-
-// ═══════════════════════════════════════════
-//  RENDU DES SERVICES (checkboxes)
-// ═══════════════════════════════════════════
-function renderCSServices(){
-  var grid = document.getElementById('cs-services-grid');
-  if(!grid) return;
-  grid.innerHTML = CS_SERVICES.map(function(s){
-    return '<label style="display:flex;align-items:center;gap:8px;font-size:12.5px;cursor:pointer;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper-2)">' +
-      '<input type="checkbox" id="cs-' + s.id + '" ' + (s.default ? 'checked' : '') + ' style="accent-color:var(--gold-deep);width:14px;height:14px"> ' +
-      s.label +
-      '</label>';
-  }).join('');
-}
-// ═══════════════════════════════════════════
-//  PROVINCES / COMMUNES / QUARTIERS DU BURUNDI
-//  Découpage administratif officiel (2018)
-// ═══════════════════════════════════════════
-var PROVINCES_COMMUNES_QUARTIERS = {
-  'Buhumuza': {
-    'Butaganzwa': ['Buhumuza','Gitega','Kinyinya','Mukinya','Nyabikere'],
-    'Butihinda':  ['Butihinda','Kabanga','Kigoma','Muyange'],
-    'Cankuzo':    ['Cankuzo','Gisagara','Kigamba','Nyamugari'],
-    'Gisagara':   ['Gisagara','Kigamba','Mukanda','Nyarusange'],
-    'Gisuru':     ['Gisuru','Kinyinya','Mukuyi','Nyabitare'],
-    'Muyinga':    ['Muyinga','Buhinyuza','Gashoho','Giteranyi','Kigombe'],
-    'Ruyigi':     ['Ruyigi','Bweru','Butezi','Kinyinya']
-  },
-  'Bujumbura': {
-    'Bubanza':      ['Bubanza','Gihanga','Mpanda','Musigati','Rugazi'],
-    'Bukinanyana':  ['Bukinanyana','Mabayi','Mugongomanga','Ruhororo'],
-    'Cibitoke':     ['Cibitoke','Buganda','Bukinanyana','Mabayi','Murwi','Rugombo'],
-    'Isare':        ['Isare','Kabezi','Mubimbi','Mutimbuzi'],
-    'Mpanda':       ['Mpanda','Gihanga','Matongo','Mugongomanga','Murwi'],
-    'Mugere':       ['Mugere','Kanyosha','Kinama','Muha'],
-    'Mugina':       ['Mugina','Kabezi','Mutimbuzi','Nyanza-Lac'],
-    'Muhuta':       ['Muhuta','Kabezi','Mubimbi','Mutimbuzi'],
-    'Mukaza':       ['Rohero','Kiriri','Buyenzi','Bwiza','Nyakabiga'],
-    'Ntahangwa':    ['Ngagara','Cibitoke','Kamenge','Kinama','Gihosha'],
-    'Rwibaga':      ['Rwibaga','Gatumba','Mutimbuzi','Nyanza-Lac']
-  },
-  'Burunga': {
-    'Bururi':     ['Bururi','Matana','Mugamba','Rutovu','Songa','Vyanda'],
-    'Makamba':    ['Makamba','Kayogoro','Kibago','Mabanda','Nyanza-Lac','Vugizo'],
-    'Matana':     ['Matana','Bururi','Mugamba','Rutovu'],
-    'Musongati':  ['Musongati','Nyanza-Lac','Rutana','Vugizo'],
-    'Nyanza':     ['Nyanza','Bugarama','Matana','Nyabihanga'],
-    'Rumonge':    ['Rumonge','Burambi','Buyengero','Muhuta'],
-    'Rutana':     ['Rutana','Bukemba','Giharo','Gitanga','Musongati']
-  },
-  'Butanyerera': {
-    'Busoni':     ['Busoni','Bugabira','Bwambarangwe','Kirundo'],
-    'Kayanza':    ['Kayanza','Gahombo','Gatara','Kabaro','Matongo','Muruta'],
-    'Kiremba':    ['Kiremba','Buhiga','Gahombo','Gatara'],
-    'Kirundo':    ['Kirundo','Bugabira','Busoni','Bwambarangwe','Gitobe','Vumbi'],
-    'Matongo':    ['Matongo','Gahombo','Kayanza','Muruta'],
-    'Muhanga':    ['Muhanga','Bukeye','Kayanza','Rango'],
-    'Ngozi':      ['Ngozi','Gahombo','Kiremba','Marangara','Mwumba','Tangara'],
-    'Tangara':    ['Tangara','Kiremba','Mwumba','Ngozi']
-  },
-  'Gitega': {
-    'Bugendana':  ['Bugendana','Buraza','Gitega','Makebuko'],
-    'Gishubi':    ['Gishubi','Bugendana','Gitega','Nyarusange'],
-    'Gitega':     ['Gitega','Bugendana','Gishubi','Makebuko','Nyarusange'],
-    'Kiganda':    ['Kiganda','Bugendana','Muramvya','Ruyigi'],
-    'Muramvya':   ['Muramvya','Bukeye','Kiganda','Mwaro','Rutegama'],
-    'Mwaro':      ['Mwaro','Bisoro','Gisozi','Kayokwe','Nyabihanga'],
-    'Nyabihanga': ['Nyabihanga','Gitega','Nyanza','Shombo'],
-    'Shombo':     ['Shombo','Buraza','Gitega','Nyarusange']
-  }
-};
 // ═══════════════════════════════════════════
 //  GÉO : provinces / communes / quartiers
 //  (données chargées depuis le backend)
@@ -1248,58 +1198,13 @@ function err(m){return '<div class="info-box err">'+m+'</div>';}
 // ═══════════════════════════════════════════
 var _filterPropsLoaded = false;
 
-async function initFilters(){
-  try{
-    // Charger la liste des propriétaires
-    var d = await api('/proprietaires/?page_size=300');
-    var props = (d && (d.results || d)) || [];
 
-    // Remplir les 2 selects Propriétaire (dashboard + loyers)
-    ['dash-filter-prop','ly-filter-prop'].forEach(function(id){
-      var sel = document.getElementById(id);
-      if(!sel) return;
-      sel.innerHTML = '<option value="">Tous</option>' +
-        props.map(function(p){
-          return '<option value="' + p.id + '">' + p.nom + '</option>';
-        }).join('');
-    });
-    _filterPropsLoaded = true;
-  }catch(e){
-    console.warn('Init filters:', e);
-  }
-}
-
-// Charge les immeubles en cascade selon le propriétaire sélectionné
-async function loadImmeublesForFilter(propSelectId, immSelectId){
-  var propId = document.getElementById(propSelectId).value;
-  var immSel = document.getElementById(immSelectId);
-  if(!immSel) return;
-
-  if(!propId){
-    immSel.innerHTML = '<option value="">Tous</option>';
-    return;
-  }
-  immSel.innerHTML = '<option value="">Chargement…</option>';
-  try{
-    var d = await api('/immeubles/?proprietaire=' + propId + '&page_size=200');
-    var imms = (d && (d.results || d)) || [];
-    immSel.innerHTML = '<option value="">Tous</option>' +
-      imms.map(function(i){
-        return '<option value="' + i.id + '">' + i.nom + '</option>';
-      }).join('');
-  }catch(e){
-    immSel.innerHTML = '<option value="">Tous</option>';
-  }
-}
 
 // Filtre appliqué sur le TABLEAU DE BORD
 function onDashFilterChange(){
   var propId = document.getElementById('dash-filter-prop').value;
-  // 1. Mettre à jour les immeubles
-  loadImmeublesForFilter('dash-filter-prop','dash-filter-imm').then(function(){
-    // 2. Recharger le dashboard avec filtre
-    loadDashWithFilter(propId, document.getElementById('dash-filter-imm').value);
-  });
+  loadImmeublesForFilter('dash-filter-prop','dash-filter-imm');
+  loadDashWithFilter(propId, document.getElementById('dash-filter-imm').value);
 }
 
 // Quand on change l'IMMEUBLE (après avoir choisi un propriétaire)
@@ -1309,64 +1214,28 @@ function onDashImmChange(){
   console.log('🔄 Filtre dashboard:', {propId:propId, immId:immId});
   loadDashWithFilter(propId, immId);
 }
-
-function onLoyersImmChange(){
-  var propId = document.getElementById('ly-filter-prop').value;
-  var immId  = document.getElementById('ly-filter-imm').value;
-  console.log('🔄 Filtre loyers:', {propId:propId, immId:immId});
-  loadLoyersWithFilter(
-    document.getElementById('f-ly').value || 'tous',
-    propId,
-    immId
-  );
-}
-
-async function loadDashWithFilter(propId, immId){
-  var url = '/dashboard/';
-  var params = [];
-  if(propId) params.push('proprietaire='+propId);
-  if(immId)  params.push('immeuble='+immId);
-  if(params.length) url += '?'+params.join('&');
-
-  try{
-    var d = await api(url);
-    if(!d) return;
-    // Réutilise le rendu existant
-    document.getElementById('d-revenus').textContent = f(d.finances.revenus_mois);
-    document.getElementById('d-bruts').textContent = f(d.finances.revenus_mois);
-    document.getElementById('d-commission').textContent = f(d.finances.commission_cabinet);
-    document.getElementById('d-net').textContent = f(d.finances.revenus_mois - d.finances.commission_cabinet);
-    document.getElementById('d-locaux').textContent = f(d.locaux.total);
-    document.getElementById('d-locaux-sub').textContent = d.locaux.occupes+' occupés · '+d.locaux.libres+' libres';
-    document.getElementById('d-props').textContent = d.nb_proprietaires || 0;
-    document.getElementById('d-annuel').textContent = f(d.finances.revenus_annee);
-    document.getElementById('d-charges').textContent = f(d.finances.charges_mois);
-    document.getElementById('badge-loyers').textContent = d.loyers_mois.retard;
-  }catch(e){ console.warn('Load dash filtered:', e); }
-}
-
 // Filtre appliqué sur LOYERS & PAIEMENTS
 function onLoyersFilterChange(){
   var propId = document.getElementById('ly-filter-prop').value;
-  loadImmeublesForFilter('ly-filter-prop','ly-filter-imm').then(function(){
-    loadLoyersWithFilter(
-      document.getElementById('f-ly').value || 'tous',
-      propId,
-      document.getElementById('ly-filter-imm').value
-    );
-  });
+  loadImmeublesForFilter('ly-filter-prop','ly-filter-imm');
+  loadLoyersWithFilter(
+    document.getElementById('f-ly').value || 'tous',
+    propId,
+    document.getElementById('ly-filter-imm').value
+  );
 }
+
 
 function onLoyersImmChange(){
   var propId = document.getElementById('ly-filter-prop').value;
   var immId  = document.getElementById('ly-filter-imm').value;
-  console.log('🔄 Filtre loyers imm:', {propId:propId, immId:immId});
   loadLoyersWithFilter(
     document.getElementById('f-ly').value || 'tous',
     propId,
     immId
   );
 }
+
 async function loadLoyersWithFilter(filtre, propId, immId){
   filtre = filtre || 'tous';
   var tb = document.getElementById('tb-loyers');
@@ -1530,12 +1399,41 @@ function renderProp(l){
 }
 function filtProp(q){q=(q||'').toLowerCase();renderProp(_props.filter(p=>(p.nom+(p.telephone||'')+(p.email||'')).toLowerCase().includes(q)));}
 async function openModalProp(id){
-  document.getElementById('mt-prop').textContent=id?'Modifier':'Nouveau';
-  document.getElementById('prop-id').value=id||'';
-  document.getElementById('al-prop').innerHTML='';
-  document.getElementById('del-prop').classList.toggle('hidden',!id);
-  ['prop-nom','prop-tel','prop-email','prop-nif','prop-cni','prop-prov','prop-com','prop-quart','prop-info'].forEach(x=>document.getElementById(x).value='');
-  if(id){var p=await api('/proprietaires/'+id+'/');if(p){document.getElementById('prop-nom').value=p.nom||'';document.getElementById('prop-tel').value=p.telephone||'';document.getElementById('prop-email').value=p.email||'';document.getElementById('prop-nif').value=p.nif||'';document.getElementById('prop-cni').value=p.cni||'';document.getElementById('prop-prov').value=p.adresse_province||'';document.getElementById('prop-com').value=p.adresse_commune||'';document.getElementById('prop-quart').value=p.adresse_quartier||'';document.getElementById('prop-info').value=p.informations_complementaires||'';}}
+  document.getElementById('mt-prop').textContent = id ? 'Modifier' : 'Nouveau';
+  document.getElementById('prop-id').value = id || '';
+  document.getElementById('al-prop').innerHTML = '';
+  document.getElementById('del-prop').classList.toggle('hidden', !id);
+  ['prop-nom','prop-tel','prop-email','prop-nif','prop-cni','prop-info'].forEach(x => document.getElementById(x).value = '');
+
+  // ⚡ Charge les provinces depuis le backend
+  await loadProvincesInto(['prop-prov']);
+
+  // Réinitialise Commune et Quartier
+  document.getElementById('prop-com').innerHTML = '<option value="">— Commune —</option>';
+  document.getElementById('prop-quart').innerHTML = '<option value="">— Quartier —</option>';
+
+  if(id){
+    var p = await api('/proprietaires/'+id+'/');
+    if(p){
+      document.getElementById('prop-nom').value = p.nom || '';
+      document.getElementById('prop-tel').value = p.telephone || '';
+      document.getElementById('prop-email').value = p.email || '';
+      document.getElementById('prop-nif').value = p.nif || '';
+      document.getElementById('prop-cni').value = p.cni || '';
+      document.getElementById('prop-info').value = p.informations_complementaires || '';
+
+      // ⚡ Province → Commune → Quartier en cascade
+      document.getElementById('prop-prov').value = p.adresse_province || '';
+      if(p.adresse_province){
+        await updateCommunes('prop-prov','prop-com','prop-quart');
+      }
+      document.getElementById('prop-com').value = p.adresse_commune || '';
+      if(p.adresse_commune){
+        await updateQuartiers('prop-prov','prop-com','prop-quart');
+      }
+      document.getElementById('prop-quart').value = p.adresse_quartier || '';
+    }
+  }
   openModal('m-prop');
 }
 async function saveProp(){
@@ -1687,57 +1585,6 @@ async function delLoc(){
   closeModal('m-loc');loadLocaux();
 }
 
-// ═══════════════════════════════════════════
-//  NOUVEAU LOCATAIRE
-// ═══════════════════════════════════════════
-async function openModalLoca(id){
-  document.getElementById('mt-loca').textContent = id ? 'Fiche locataire' : 'Nouveau locataire';
-  document.getElementById('loca-id').value = id || '';
-  document.getElementById('al-loca').innerHTML = '';
-  document.getElementById('del-loca').classList.toggle('hidden', !id);
-  document.getElementById('loca-sit').classList.add('hidden');
-  document.getElementById('loca-historique').classList.add('hidden');
-  ['loca-nom','loca-tel','loca-email','loca-adr','loca-info'].forEach(x=>{
-    var el=document.getElementById(x); if(el) el.value='';
-  });
-
-  if(id){
-    var l = await api('/locataires/'+id+'/');
-    if(l){
-      document.getElementById('loca-nom').value = l.nom_prenom || '';
-      document.getElementById('loca-tel').value = l.telephone || '';
-      document.getElementById('loca-email').value = l.email || '';
-      document.getElementById('loca-adr').value = l.adresse_postale || '';
-      document.getElementById('loca-info').value = l.informations_complementaires || '';
-      var s = l.situation_financiere;
-      if(s){
-        document.getElementById('loca-sit').classList.remove('hidden');
-        document.getElementById('ls-tot').textContent = f(s.total_loyers);
-        document.getElementById('ls-pay').textContent = f(s.montant_paye);
-        document.getElementById('ls-sol').textContent = f(s.solde_restant);
-        document.getElementById('ls-ret').textContent = s.loyers_en_retard || 0;
-      }
-    }
-  }
-  openModal('m-loca');
-}
-
-async function saveLoca(){
-  var id = document.getElementById('loca-id').value;
-  var data = {
-    nom_prenom: document.getElementById('loca-nom').value,
-    telephone: document.getElementById('loca-tel').value,
-    email: document.getElementById('loca-email').value,
-    adresse_postale: document.getElementById('loca-adr').value,
-    informations_complementaires: document.getElementById('loca-info').value
-  };
-  if(!data.nom_prenom.trim()){document.getElementById('al-loca').innerHTML=err('Le nom est requis.');return;}
-  try{
-    if(id) await api('/locataires/'+id+'/',{method:'PUT',body:JSON.stringify(data)});
-    else await api('/locataires/',{method:'POST',body:JSON.stringify(data)});
-    closeModal('m-loca');loadLocas();
-  }catch(e){document.getElementById('al-loca').innerHTML=err(e.message);}
-}
 
 async function delLoca(){
   if(!confirm('Supprimer ce locataire ?'))return;
@@ -1899,6 +1746,7 @@ async function saveCS(){
     document.getElementById('al-cs').innerHTML = err("La date d'expiration doit être postérieure à la date d'effet.");
     return;
   }
+ 
 
   var id = document.getElementById('cs-id').value;
   var data = {
@@ -1938,6 +1786,8 @@ async function saveCS(){
   }
 }
 
+
+
 async function delCS(){
   if(!confirm('Supprimer ce contrat ?'))return;
   var id = document.getElementById('cs-id').value;
@@ -1945,24 +1795,6 @@ async function delCS(){
   closeModal('m-cs');loadCS();
 }
 
-// ═══════════════════════════════════════════
-//  SERVICES PAR DÉFAUT POUR CONTRAT SOCIÉTÉ
-// ═══════════════════════════════════════════
-var CS_SERVICES = [
-    {id:'service_gestion_loyers',label:'Gestion des loyers',default:true},
-    {id:'service_quittances',label:'Quittances & reçus',default:true},
-    {id:'service_recherche_locataires',label:'Recherche de locataires',default:false},
-    {id:'service_gestion_travaux',label:'Gestion des travaux',default:false},
-    {id:'service_suivi_fiscal',label:'Suivi fiscal & comptable',default:false},
-    {id:'service_rapports',label:'Rapports mensuels',default:false},
-    {id:'service_loyers_impayes',label:'Gestion loyers impayés',default:false},
-    {id:'service_assurances',label:'Services des assurances',default:false},
-    {id:'service_judiciaire',label:'Services judiciaires',default:false},
-    {id:'service_impots_locatifs',label:'Services impôts locatifs',default:false},
-    {id:'service_clients',label:'Services clients',default:false},
-    {id:'constat_lieu',label:'Constatation du lieu',default:false},
-    {id:'inventaire_immeuble',label:'Inventaire de l\'immeuble',default:false}
-];
 
 // Génère les checkboxes des services dans le modal
 function renderCSServices(){
@@ -2316,14 +2148,7 @@ async function downloadHistoriquePdf(){
     alert('Erreur: '+e.message);
   }
 }
-async function saveLoca(){
-  var id=document.getElementById('loca-id').value;
-  var data={nom_prenom:document.getElementById('loca-nom').value,telephone:document.getElementById('loca-tel').value,email:document.getElementById('loca-email').value,adresse_postale:document.getElementById('loca-adr').value,informations_complementaires:document.getElementById('loca-info').value};
-  if(!data.nom_prenom.trim()){document.getElementById('al-loca').innerHTML=err('Nom requis');return;}
-  if(id)await api('/locataires/'+id+'/',{method:'PUT',body:JSON.stringify(data)});
-  else await api('/locataires/',{method:'POST',body:JSON.stringify(data)});
-  closeModal('m-loca');loadLocas();
-}
+
 async function delLoca(){if(!confirm('Supprimer ?'))return;var id=document.getElementById('loca-id').value;await api('/locataires/'+id+'/',{method:'DELETE'});closeModal('m-loca');loadLocas();}
 
 // CONTRATS LOCATION
@@ -3446,24 +3271,7 @@ function loadImmeublesForFilter(propSelectId, immSelectId){
   }
 }
 
-// Handlers des filtres
-function onDashFilterChange(){
-  // Charge les immeubles du propriétaire sélectionné
-  loadImmeublesForFilter('dash-filter-prop','dash-filter-imm');
-  // Recharge le dashboard sans immeuble (juste le propriétaire)
-  var propId = document.getElementById('dash-filter-prop').value;
-  loadDashWithFilter(propId, '');
-}
 
-function onLoyersFilterChange(){
-  loadImmeublesForFilter('ly-filter-prop','ly-filter-imm');
-  var propId = document.getElementById('ly-filter-prop').value;
-  loadLoyersWithFilter(
-    document.getElementById('f-ly').value || 'tous',
-    propId,
-    ''
-  );
-}
 // Charge le dashboard filtré
 async function loadDashWithFilter(propId, immId){
   var url = '/dashboard/';

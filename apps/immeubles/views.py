@@ -1,57 +1,95 @@
+# apps/immeubles/views.py
 from rest_framework import generics, viewsets
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
+from django.http import JsonResponse
 
-
-
-from .models import Immeuble, PROVINCES_COMMUNES
+from .models import Immeuble
 from .serializers import ImmeubleSerializer
 from .permissions import IsAdminOrGestionnaire
-from .models import PROVINCES_COMMUNES_QUARTIERS
+
+from apps.immeubles.geo import PAYS, CONTINENTS
+from apps.locaux.models import Local
 
 
-@api_view(['GET'])
+# =====================================================================
+# API GÉO — Cascade Continent → Pays → Province → Commune → Quartier
+# =====================================================================
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def geo_continents(request):
+    """GET /api/immeubles/geo/continents/"""
+    return Response(list(CONTINENTS.keys()))
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def geo_pays(request):
+    """GET /api/immeubles/geo/pays/?continent=Afrique"""
+    continent = request.GET.get("continent")
+    if continent and continent in CONTINENTS:
+        return Response(list(CONTINENTS[continent].keys()))
+    return Response(list(PAYS.keys()))
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def geo_provinces(request):
-    """Retourne la liste des provinces"""
-    return Response(list(PROVINCES_COMMUNES_QUARTIERS.keys()))
+    """GET /api/immeubles/geo/provinces/  (Burundi par défaut)"""
+    pays = request.GET.get("pays", "Burundi")
+    if pays not in PAYS:
+        return Response([])
+    return Response(list(PAYS[pays].keys()))
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def geo_communes(request):
-    """Retourne les communes d'une province donnée"""
-    province = request.GET.get('province', '')
+    """GET /api/immeubles/geo/communes/?province=Bujumbura Mairie"""
+    pays = request.GET.get("pays", "Burundi")
+    province = request.GET.get("province")
     if not province:
         return Response([])
-    communes = list(PROVINCES_COMMUNES_QUARTIERS.get(province, {}).keys())
-    return Response(communes)
+    communes = PAYS.get(pays, {}).get(province, {})
+    return Response(list(communes.keys()))
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def geo_quartiers(request):
-    """Retourne les quartiers d'une commune donnée"""
-    province = request.GET.get('province', '')
-    commune = request.GET.get('commune', '')
-    if not province or not commune:
+    """GET /api/immeubles/geo/quartiers/?province=...&commune=..."""
+    pays = request.GET.get("pays", "Burundi")
+    province = request.GET.get("province")
+    commune = request.GET.get("commune")
+    if not (province and commune):
         return Response([])
-    quartiers = (
-        PROVINCES_COMMUNES_QUARTIERS
-        .get(province, {})
-        .get(commune, [])
-    )
+    quartiers = PAYS.get(pays, {}).get(province, {}).get(commune, [])
     return Response(quartiers)
 
-
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def geo_complet(request):
-    """Retourne la structure complète"""
-    return Response(PROVINCES_COMMUNES_QUARTIERS)
+    """GET /api/immeubles/geo/complet/ — renvoie tout le dict (à utiliser avec parcimonie)"""
+    return Response(PAYS)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def provinces_communes_view(request):
+    """Endpoint legacy — renvoie maintenant tout le dict PAYS."""
+    return Response(PAYS)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def geo_continents(request):
+    """GET /api/immeubles/geo/continents/"""
+    return Response(list(CONTINENTS.keys()))
+# =====================================================================
+# Vues DRF
+# =====================================================================
 
 class ImmeubleViewSet(viewsets.ModelViewSet):
     serializer_class = ImmeubleSerializer
@@ -67,6 +105,7 @@ class ImmeubleViewSet(viewsets.ModelViewSet):
             qs = qs.filter(locaux__proprietaire=user.proprietaire_profile).distinct()
 
         return qs
+
 
 class ImmeubleActeursView(APIView):
     permission_classes = [IsAuthenticated, IsAdminOrGestionnaire]
@@ -96,17 +135,19 @@ class ImmeubleActeursView(APIView):
                 'is_active': ua.is_active if ua else True,
                 'last_login': ua.last_login if ua else None,
                 'date_joined': ua.date_joined if ua else None,
-                'mot_de_passe_temp': p.mot_de_passe_temp,
+                'mot_de_passe_temp': getattr(p, 'mot_de_passe_temp', ''),
                 'local_reference': local_ref or '',
                 'immeuble_nom': immeuble.nom,
             })
 
         # ── LOCATAIRES ──
         from apps.locataires.models import Locataire
-        locataires = Locataire.objects.filter(contrats__local__in=locaux, contrats__statut='actif').distinct()
+        locataires = Locataire.objects.filter(
+            contrats__local__in=locaux, contrats__statut='actif'
+        ).distinct()
         for loc in locataires:
             ua = getattr(loc, 'user_account', None)
-            local_actuel = loc.local_actuel
+            local_actuel = getattr(loc, 'local_actuel', None)
             acteurs.append({
                 'id': ua.id if ua else None,
                 'nom_prenom': loc.nom_prenom,
@@ -117,12 +158,12 @@ class ImmeubleActeursView(APIView):
                 'is_active': ua.is_active if ua else True,
                 'last_login': ua.last_login if ua else None,
                 'date_joined': ua.date_joined if ua else None,
-                'mot_de_passe_temp': loc.mot_de_passe_temp,
+                'mot_de_passe_temp': getattr(loc, 'mot_de_passe_temp', ''),
                 'local_reference': local_actuel.reference if local_actuel else '',
                 'immeuble_nom': immeuble.nom,
             })
 
-        # ── GESTIONNAIRES & ADMINS (globaux à la plateforme) ──
+        # ── GESTIONNAIRES & ADMINS ──
         from apps.auth_app.models import User
         staff = User.objects.filter(role__in=['gestionnaire', 'admin'])
         for u in staff:
@@ -142,6 +183,8 @@ class ImmeubleActeursView(APIView):
             })
 
         return Response({'acteurs': acteurs})
+
+
 class ImmeubleListCreate(generics.ListCreateAPIView):
     serializer_class = ImmeubleSerializer
     permission_classes = [IsAuthenticated]
@@ -160,26 +203,22 @@ class ImmeubleDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ImmeubleSerializer
     permission_classes = [IsAuthenticated]
 
-# views.py
-from django.http import JsonResponse
-from .models import Immeuble
-from apps.locaux.models import Local
+
+# =====================================================================
+# Vue utilitaire
+# =====================================================================
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_immeubles_by_proprietaire(request):
     proprietaire_id = request.GET.get('proprietaire_id')
     if proprietaire_id:
-        # Relation indirecte : Immeuble → Local → Proprietaire
         immeuble_ids = Local.objects.filter(
             proprietaire_id=proprietaire_id
         ).values_list('immeuble_id', flat=True).distinct()
-        
         immeubles = Immeuble.objects.filter(id__in=immeuble_ids)
     else:
         immeubles = Immeuble.objects.all()
-    
+
     data = [{'id': i.id, 'nom': i.nom} for i in immeubles]
     return JsonResponse({'immeubles': data})
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def provinces_communes_view(request):
-    return Response(PROVINCES_COMMUNES)
