@@ -24,6 +24,6 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('register/', TemplateView.as_view(template_name='register.html'), name='register'),
-    path('index.html', TemplateView.as_view(template_name='index.html'), name='index'),
+    path('dashboard/', TemplateView.as_view(template_name='index.html'), name='dashboard'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
