@@ -592,82 +592,53 @@
       .cta-box { padding: 40px 22px; }
       .nav-act .btn { padding: 8px 14px; font-size: 12px; }
     }
-    /* ==========================================================================
-   RENDU UNIFORME SUR TOUS LES ÉCRANS
-   Force la même apparence sur mobile, tablette, desktop
-   ========================================================================== */
+    /* ============================================================
+   COMPLÉMENT RESPONSIVE — à coller à la fin du fichier existant
+   N'ajoute que des cas non couverts par les breakpoints actuels
+   (1080px / 680px). Aucune règle existante n'est modifiée.
+   ============================================================ */
 
-/* 1. Largeur minimale de référence (comme un desktop) */
-html, body {
-    min-width: 1280px;
-    overflow-x: auto;
+
+/* ===== PETITS TÉLÉPHONES (<400px) ===== */
+@media (max-width: 400px) {
+  .wrap { padding: 0 18px; }
+  .hero-main { padding: 0 18px; }
+  .nav-in { padding: 6px 6px 6px 14px; }
+  .lb { width: 30px; height: 30px; }
+  .lt b { font-size: 12.5px; }
+  .hero h1 { font-size: clamp(26px, 9vw, 34px); }
+  .hero p.lead { font-size: 13px; }
+  .hero-cta { gap: 10px; }
+  .trust .tt { font-size: 11px; }
+  .btn { padding: 11px 18px; font-size: 13px; }
+  .chip { padding: 7px 9px; }
+  .chip b { font-size: 11px; }
+  .chip span { font-size: 9px; }
+  .occbar { width: 76px; }
+  .fgrid, .stepwrap, .feat-side, .sp2, .wgrid { grid-template-columns: 1fr; }
+  .foot-in { grid-template-columns: 1fr; }
+  .split-l { padding: 28px 22px; }
 }
 
-body {
-    -webkit-text-size-adjust: 100%;
-    -moz-text-size-adjust: 100%;
-    text-size-adjust: 100%;
+/* ===== MODE PAYSAGE MOBILE (hauteur réduite) ===== */
+@media (max-height: 480px) and (orientation: landscape) {
+  .hero { height: auto; min-height: 100svh; max-height: none; padding-bottom: 24px; }
+  .hero-navspace { height: 64px; }
+  .hero-main { grid-template-columns: 1fr 1fr; }
+  .hero-copy { text-align: left; padding-bottom: 0; }
+  .hero-copy .eyebrow { margin: 0; }
+  .hero-cta, .hero-meta { justify-content: flex-start; }
+  .hero-stage { height: clamp(160px, 60vh, 320px); }
+  .ch1, .ch2, .ch3 { display: none; } /* évite le chevauchement des chips en paysage bas */
 }
 
-/* 2. Empêcher les media queries de casser la mise en page */
-/* On neutralise toutes les media queries mobiles existantes */
-@media screen and (max-width: 1280px) {
-    .nav-in,
-    .hero-main,
-    .hero-copy,
-    .hero-stage,
-    .hero-cta,
-    .hero-meta,
-    .nav-act,
-    .nlinks {
-        /* On garde le layout desktop partout */
-        display: revert !important;
-        flex-direction: revert !important;
-        grid-template-columns: revert !important;
-        width: revert !important;
-        max-width: revert !important;
-        padding: revert !important;
-        margin: revert !important;
-    }
+/* ===== TABLETTES INTERMÉDIAIRES (681px–900px), affinage ===== */
+@media (min-width: 681px) and (max-width: 900px) {
+  .fgrid { grid-template-columns: repeat(2, 1fr); }
+  .feat-side { grid-template-columns: repeat(2, 1fr); }
+  .stepwrap { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* 3. Éviter le débordement horizontal moche */
-.hero-bg,
-.hero,
-.nav {
-    overflow: hidden;
-}
+/* ===== SÉCURITÉ ANTI-DÉBORDEMENT GLOBALE ===== */
 
-/* 4. Images : garder leur taille relative au container desktop */
-.hero-stage img,
-.bld-photo {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
-/* 5. Forcer la police à ne pas être agrandie par iOS */
-.nav a, .nlinks a, .hero-copy h1, .lead, .eyebrow, .m, .tt {
-    -webkit-text-size-adjust: none;
-}
-
-/* 6. Scrollbar horizontale propre sur mobile */
-@media screen and (max-width: 1280px) {
-    html {
-        overflow-x: scroll;
-    }
-}
-
-/* Sur tous les écrans, on simule un desktop 1440px */
-body {
-    min-width: 1440px;
-}
-
-.nav-in,
-.hero-main,
-.hero-copy,
-.hero-stage {
-    max-width: 1440px;
-    margin-left: auto;
-    margin-right: auto;
-}
+.wrap, .hero-main { width: 100%; }
