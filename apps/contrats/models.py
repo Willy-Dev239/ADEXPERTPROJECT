@@ -91,19 +91,18 @@ class ContratSociete(models.Model):
     date_expiration = models.DateField(null=True, blank=True)
     statut = models.CharField(max_length=20, choices=STATUT, default='actif')
     
-    # ⚡ CHAMPS DU BIEN LOUÉ (MANQUANTS)
+    #  CHAMPS DU BIEN LOUÉ (MANQUANTS)
     type_bien = models.CharField(max_length=30, choices=TYPE_BIEN, blank=True)
     nombre_pieces = models.IntegerField(null=True, blank=True)
-    loyer_mensuel = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
-    
-    # ⚡ CONDITIONS FINANCIÈRES
+    redevance_mensuelle = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)   
+    # CONDITIONS FINANCIÈRES
     taux_commission = models.DecimalField(max_digits=5, decimal_places=2, default=9)
     periodicite_reversement = models.CharField(max_length=20, choices=PERIOD, default='mensuel')
     frais_entree = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     frais_mise_location = models.DecimalField(max_digits=5, decimal_places=2, default=50)
     frais_travaux_pct = models.DecimalField(max_digits=5, decimal_places=2, default=10)
     
-    # ⚡ SERVICES INCLUS
+    #  SERVICES INCLUS
     service_gestion_loyers = models.BooleanField(default=True)
     service_quittances = models.BooleanField(default=True)
     service_recherche_locataires = models.BooleanField(default=False)
