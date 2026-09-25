@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'apps.chat',
     'infinityhome',
     'apps.notifications',
-    'apps.core'
+    'apps.core',
+    'apps.annonces',
 ]
 
 MIDDLEWARE = [

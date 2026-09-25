@@ -39,6 +39,14 @@ if(!localStorage.getItem('authToken')){
     <a class="nav-item" href="#" data-nav="locataires"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/><path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.7"/></svg>Locataires</a>
     <a class="nav-item" href="#" data-nav="contrats-location"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="2.5" stroke="currentColor" stroke-width="1.7"/><path d="M9 8h6M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Contrats Location</a>
     <a class="nav-item" href="#" data-nav="contrats-societe"><svg viewBox="0 0 24 24" fill="none"><path d="M8 13l-3-3 3-3 3 3M16 11l3-3-3-3-3 3" stroke="currentColor" stroke-width="1.7"/></svg>Contrats Société</a>
+     <a class="nav-item" href="#" data-nav="annonces">
+  <svg viewBox="0 0 24 24" fill="none">
+    <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/>
+    <path d="M3 9h18M8 13h8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+  </svg>
+  Annonces Publiques
+  <span class="nav-badge" id="badge-annonces">0</span>
+</a>
     <a class="nav-item" href="#" data-nav="loyers"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.7"/><path d="M12 7.5v9M9.5 10a2.5 2.5 0 0 1 5 0c0 2.5-5 1.5-5 4a2.5 2.5 0 0 0 5 0" stroke="currentColor" stroke-width="1.5"/></svg>Loyers &amp; Paiements<span class="nav-badge" id="badge-loyers">0</span></a>
     <a class="nav-item" href="#" data-nav="bordereaux"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2.5" stroke="currentColor" stroke-width="1.7"/></svg>Bordereaux<span class="nav-badge" id="badge-bord">0</span></a>
     <a class="nav-item" href="#" data-nav="virements"><svg viewBox="0 0 24 24" fill="none"><path d="M3 9 12 4l9 5M5 9v9m4-9v9m6-9v9m4-9v9M3 20h18" stroke="currentColor" stroke-width="1.7"/></svg>Virements Propriétaires<span class="nav-badge" id="badge-vir">0</span></a>
@@ -273,6 +281,86 @@ if(!localStorage.getItem('authToken')){
       </section>
     </div>
   </main>
+<!-- ANNONCES PUBLIQUES -->
+<main class="main" data-panel="annonces" style="display:none">
+  <div class="masthead"><div class="mast-top">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/></svg>
+      <input placeholder="Rechercher une annonce…" oninput="filtAnnonces(this.value)">
+    </div>
+    <div class="mast-right">
+      <a class="btn-add" href="#" onclick="openModalAnnonce();return false;">
+        <span class="k"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6"/></svg></span>
+        Nouvelle annonce
+      </a>
+    </div>
+  </div><div class="rule"></div></div>
+
+  <div class="content">
+    <section class="hero" style="grid-template-columns:1fr"><div>
+      <h1>Annonces Publicitaires</h1>
+      <p>Biens actuellement visibles sur le site public. Elles disparaissent automatiquement dès qu'elles sont louées.</p>
+    </div></section>
+
+    <section class="stats4">
+      <div class="stat-card gold">
+        <div class="k">Publiées</div>
+        <div class="v num" id="an-pub">0</div>
+        <div class="s">visibles publiquement</div>
+      </div>
+      <div class="stat-card">
+        <div class="k">En attente</div>
+        <div class="v num" id="an-wait">0</div>
+        <div class="s">brouillons</div>
+      </div>
+      <div class="stat-card">
+        <div class="k">Louées / retirées</div>
+        <div class="v num" id="an-loue">0</div>
+        <div class="s">indisponibles</div>
+      </div>
+      <div class="stat-card">
+        <div class="k">Total</div>
+        <div class="v num" id="an-total">0</div>
+        <div class="s">annonces</div>
+      </div>
+    </section>
+
+    <section class="pane">
+      <div class="pane-h">
+        <div class="tt"><h3>Toutes les annonces</h3><div class="s" id="an-count">—</div></div>
+        <div class="sp"></div>
+        <div class="toolbar">
+          <select id="f-an" onchange="loadAnnonces()" style="padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);font-size:12.5px;font-family:inherit">
+            <option value="">Tous statuts</option>
+            <option value="publiee">Publiées</option>
+            <option value="brouillon">Brouillons</option>
+            <option value="louee">Louées</option>
+            <option value="retiree">Retirées</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Titre</th>
+              <th>Local</th>
+              <th class="r">Prix</th>
+              <th>Statut</th>
+              <th>Publiée le</th>
+              <th class="r">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tb-annonces">
+            <tr><td colspan="7" class="empty">Chargement…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
 
   <!-- LOYERS -->
   <main class="main" data-panel="loyers" style="display:none">
@@ -1033,6 +1121,184 @@ if(!localStorage.getItem('authToken')){
     <button class="btn btn-primary" onclick="validerVirement('valider')">Valider</button>
   </div>
 </div></div>
+<!-- ============================================================
+     MODAL : Nouvelle / Modifier Annonce
+     ============================================================ -->
+<div class="modal-overlay" id="m-annonce" role="dialog" aria-modal="true" aria-labelledby="mt-annonce">
+  <div class="modal modal-lg">
+
+    <!-- ===== HEADER ===== -->
+    <div class="modal-header">
+      <div class="mh-icon">
+        <svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/>
+        </svg>
+      </div>
+      <div>
+        <div class="modal-title" id="mt-annonce">Nouvelle annonce</div>
+        <div class="modal-subtitle">Visible sur la page d'accueil publique</div>
+      </div>
+      <button type="button" class="modal-close" onclick="closeModal('m-annonce')" aria-label="Fermer">×</button>
+    </div>
+
+    <!-- ===== BODY ===== -->
+    <div class="modal-body">
+
+      <!-- Zone d'alerte (erreurs serveur) -->
+      <div id="al-annonce" role="alert" aria-live="polite"></div>
+
+      <!-- ID caché (mode édition) -->
+      <input type="hidden" id="annonce-id" name="id">
+
+      <!-- === Local + Statut === -->
+      <div class="form-grid">
+        <div class="fg">
+          <label for="an-loc">Local <span class="req">*</span></label>
+          <select id="an-loc" name="local" required onchange="onAnnonceLocalChange()">
+            <option value="">— Sélectionner un local —</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label for="an-statut">Statut</label>
+          <select id="an-statut" name="statut">
+            <option value="brouillon">Brouillon (non visible)</option>
+            <option value="publiee">Publiée (visible)</option>
+            <option value="louee">Louée</option>
+            <option value="retiree">Retirée</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- === Titre === -->
+      <div class="fg">
+        <label for="an-titre">Titre <span class="req">*</span></label>
+        <input type="text" id="an-titre" name="titre" required
+               maxlength="200"
+               placeholder="Ex : Appartement 3 chambres — Rohero">
+      </div>
+
+      <!-- === Description === -->
+      <div class="fg">
+        <label for="an-desc">Description <span class="req">*</span></label>
+        <textarea id="an-desc" name="description" rows="4" required
+                  placeholder="Description détaillée du bien…"></textarea>
+      </div>
+
+      <!-- === Loyer + Caution === -->
+      <div class="form-grid">
+        <div class="fg">
+          <label for="an-prix">Prix mensuel (BIF) <span class="req">*</span></label>
+          <input type="number" id="an-prix" name="loyer" required
+                 min="0" step="1000" placeholder="300000">
+        </div>
+        <div class="fg">
+          <label for="an-caution">Caution (BIF)</label>
+          <input type="number" id="an-caution" name="caution"
+                 min="0" step="1000" placeholder="300000">
+        </div>
+      </div>
+
+      <!-- === Localisation + Contact === -->
+      <div class="form-grid">
+        <div class="fg">
+          <label for="an-loc-txt">Localisation</label>
+          <input type="text" id="an-loc-txt" name="localisation"
+                 placeholder="Rohero, Bujumbura">
+        </div>
+        <div class="fg">
+          <label for="an-contact">Contact <span class="req">*</span></label>
+          <input type="tel" id="an-contact" name="contact_telephone" required
+                 pattern="[0-9+\s]{8,20}"
+                 placeholder="+257 79 000 000">
+        </div>
+      </div>
+
+      <!-- === Chambres + Salles de bain === -->
+      <div class="form-grid">
+        <div class="fg">
+          <label for="an-chambres">Chambres</label>
+          <input type="number" id="an-chambres" name="chambres"
+                 min="0" step="1" placeholder="3">
+        </div>
+        <div class="fg">
+          <label for="an-sdb">Salles de bain</label>
+          <input type="number" id="an-sdb" name="salles_de_bain"
+                 min="0" step="1" placeholder="1">
+        </div>
+      </div>
+
+      <!-- === Superficie + Meublé === -->
+      <div class="form-grid">
+        <div class="fg">
+          <label for="an-surface">Superficie (m²)</label>
+          <input type="number" id="an-surface" name="superficie"
+                 min="0" step="1" placeholder="120">
+        </div>
+        <div class="fg">
+          <label for="an-meuble">Meublé</label>
+          <select id="an-meuble" name="meuble">
+            <option value="false">Non</option>
+            <option value="true">Oui</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- === Équipements === -->
+      <div class="fg">
+        <label for="an-equip">Équipements</label>
+        <input type="text" id="an-equip" name="equipements"
+               placeholder="Eau, électricité, parking…">
+      </div>
+
+      <!-- === Photos === -->
+      <div class="sep"></div>
+
+      <div class="form-section-title">Photos</div>
+
+      <div class="fg">
+        <label for="an-photos">Ajouter des photos</label>
+        <input type="file" id="an-photos" name="photos"
+               accept="image/png,image/jpeg,image/webp" multiple
+               onchange="previewAnnoncePhotos(event)">
+        <div class="hint">Sélectionnez plusieurs images (JPG, PNG — max 5 Mo chacune)</div>
+      </div>
+
+      <div id="an-photos-list" class="photos-grid"></div>
+
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger hidden" id="del-annonce" onclick="delAnnonce()">
+        <i class="fas fa-trash" aria-hidden="true"></i> Supprimer
+      </button>
+      <button type="button" class="btn" onclick="closeModal('m-annonce')">Annuler</button>
+      <button type="button" class="btn btn-primary" onclick="saveAnnonce()">
+        <i class="fas fa-save" aria-hidden="true"></i> Enregistrer
+      </button>
+    </div>
+
+  </div>
+</div>
+<!-- MODAL : Aperçu annonce -->
+<div class="modal-overlay" id="m-annonce-view">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div class="mh-icon">
+        <svg viewBox="0 0 24 24" fill="none" style="width:20px;height:20px">
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="1.7"/>
+          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/>
+        </svg>
+      </div>
+      <div><div class="modal-title">Aperçu de l'annonce</div></div>
+      <button class="modal-close" onclick="closeModal('m-annonce-view')">×</button>
+    </div>
+    <div class="modal-body"><div id="annonce-view-content"></div></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('m-annonce-view')">Fermer</button>
+    </div>
+  </div>
+</div>
 
 <script>
 var S={
@@ -1153,34 +1419,62 @@ async function updateQuartiers(provId, comId, quartId){
     console.error('Erreur chargement quartiers :', e);
     qEl.innerHTML = '<option value="">— Erreur —</option>';
   }
-}
-async function api(url,opts){
-  opts=opts||{};
-  var h=Object.assign({'Content-Type':'application/json'},S.token?{'Authorization':'Token '+S.token}:{},opts.headers||{});
-  try{
-    var r=await fetch(BASE+url,Object.assign({},opts,{headers:h}));
-    if(r.status===401){doLogout();return null;}
-    if(r.status===204)return null;
-    if(!r.ok){
-      if(r.status===404 && !opts.method) return {results:[]};
-      var eBody=await r.json().catch(()=>({}));
-      var msg='';
-      if(typeof eBody==='object'&&eBody!==null){
-        msg=Object.entries(eBody).map(([k,v])=>{
-          var vals=Array.isArray(v)?v.join(', '):String(v);
-          return k==='non_field_errors'||k==='detail'?vals:k+': '+vals;
-        }).join(' | ');
-      }
-      throw new Error(msg||('Erreur HTTP '+r.status));
-    }
-    return r.json();
-  }catch(e){
-    console.warn('API error:',url,e.message);
-    // Remonter l'erreur au lieu de retourner null silencieusement
-    throw e;
-  }
-}
+}async function api(url, opts) {
+    opts = opts || {};
 
+    // ✅ Détecter si le body est un FormData (upload de fichiers)
+    var isFormData = (typeof FormData !== 'undefined') && (opts.body instanceof FormData);
+
+    // En-têtes par défaut
+    var defaultHeaders = isFormData
+        ? {}                                       // multipart : laisser le navigateur gérer
+        : { 'Content-Type': 'application/json' };  // JSON : on force
+
+    var h = Object.assign(
+        defaultHeaders,
+        S.token ? { 'Authorization': 'Token ' + S.token } : {},
+        opts.headers || {}
+    );
+
+    // ✅ Sérialiser automatiquement le body si ce n'est pas déjà une string / FormData
+    var body = opts.body;
+    if (!isFormData && body !== undefined && typeof body !== 'string') {
+        body = JSON.stringify(body);
+    }
+
+    var method = (opts.method || 'GET').toUpperCase();
+
+    try {
+        var r = await fetch(BASE + url, Object.assign({}, opts, { method: method, body: body, headers: h }));
+
+        if (r.status === 401) { doLogout(); return null; }
+        if (r.status === 204) return null;
+
+        if (!r.ok) {
+            if (r.status === 404 && method === 'GET') return { results: [] };
+
+            var eBody = await r.json().catch(() => ({}));
+
+            var msg = '';
+            if (typeof eBody === 'object' && eBody !== null) {
+                msg = Object.entries(eBody).map(([k, v]) => {
+                    var vals = Array.isArray(v) ? v.join(', ') : String(v);
+                    return (k === 'non_field_errors' || k === 'detail')
+                        ? vals
+                        : k + ': ' + vals;
+                }).join(' | ');
+            }
+
+            throw new Error(msg || ('Erreur HTTP ' + r.status));
+        }
+
+        return r.json();
+
+    } catch (e) {
+        console.warn('API error:', url, e.message);
+        throw e;
+    }
+}
 var f=n=>n==null?'—':Math.round(n).toLocaleString('fr-FR');
 var fd=d=>d?new Date(d+'T00:00:00').toLocaleDateString('fr-FR'):'—';
 var fdt=d=>d?new Date(d).toLocaleDateString('fr-FR'):'—';
@@ -3334,7 +3628,405 @@ async function loadDashWithFilter(propId, immId){
     document.getElementById('badge-loyers').textContent = d.loyers_mois.retard;
   }catch(e){ console.warn('Load dash filtered:', e); }
 }
+// ═══════════════════════════════════════════
+//  ANNONCES PUBLIQUES - Gestion Admin
+// ═══════════════════════════════════════════
+var _annonces = [];
+var _annoncePhotos = []; // fichiers à uploader
 
+// --- Loader principal
+async function loadAnnonces(){
+  var tb = document.getElementById('tb-annonces');
+  if(!tb) return;
+  tb.innerHTML = '<tr><td colspan="7" class="empty">Chargement…</td></tr>';
+
+  var st = document.getElementById('f-an') ? document.getElementById('f-an').value : '';
+  var url = '/annonces/?page_size=300' + (st ? '&statut=' + st : '');
+
+  try{
+    var d = await api(url);
+    _annonces = Array.isArray(d) ? d : ((d && d.results) || []);
+
+    // Stats (basées sur la liste complète si pas de filtre)
+    if(!st){
+      document.getElementById('an-total').textContent = _annonces.length;
+      document.getElementById('an-pub').textContent   = _annonces.filter(a => a.statut === 'publiee').length;
+      document.getElementById('an-wait').textContent  = _annonces.filter(a => a.statut === 'brouillon').length;
+      document.getElementById('an-loue').textContent  = _annonces.filter(a => a.statut === 'louee' || a.statut === 'retiree').length;
+      document.getElementById('badge-annonces').textContent = _annonces.filter(a => a.statut === 'publiee').length;
+    }
+
+    document.getElementById('an-count').textContent = _annonces.length + ' annonce(s)';
+    renderAnnonces(_annonces);
+
+  }catch(e){
+    console.error('Erreur annonces:', e);
+    tb.innerHTML = '<tr><td colspan="7" class="empty">Erreur: ' + e.message + '</td></tr>';
+  }
+}
+
+// --- Rendu du tableau
+function renderAnnonces(list){
+  var tb = document.getElementById('tb-annonces');
+  if(!list.length){
+    tb.innerHTML = '<tr><td colspan="7" class="empty">Aucune annonce. Cliquez sur "Nouvelle annonce" pour commencer.</td></tr>';
+    return;
+  }
+
+  var stMap = {
+    publiee:   {cls:'ok',    label:'Publiée'},
+    brouillon: {cls:'wait',  label:'Brouillon'},
+    louee:     {cls:'info',  label:'Louée'},
+    retiree:   {cls:'neutral', label:'Retirée'}
+  };
+
+  tb.innerHTML = list.map(function(a){
+    var s = stMap[a.statut] || {cls:'neutral', label:a.statut};
+    var photo = (a.photos && a.photos.length) ? a.photos[0].url : '/static/images/placeholder-house.jpg';
+    var datePub = a.date_publication ? fdt(a.date_publication) : '—';
+
+    // Actions contextuelles selon statut
+    var actions = '';
+
+    // Voir (aperçu)
+    actions += '<span class="ra" onclick="viewAnnonce(' + a.id + ')" title="Aperçu">' +
+      '<svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/></svg></span>';
+
+    // Modifier
+    actions += '<span class="ra" onclick="openModalAnnonce(' + a.id + ')" title="Modifier">' +
+      '<svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4L18.5 9.5a2 2 0 0 0-3-3L5 17v3z" stroke="currentColor" stroke-width="1.7"/></svg></span>';
+
+    // Publier (si brouillon)
+    if(a.statut === 'brouillon'){
+      actions += '<span class="ra" onclick="publierAnnonce(' + a.id + ')" title="Publier" style="color:var(--green);border-color:var(--green-wash)">' +
+        '<svg viewBox="0 0 24 24" fill="none"><path d="m5 13 4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+    }
+
+    // Retirer (si publiée)
+    if(a.statut === 'publiee'){
+      actions += '<span class="ra" onclick="retirerAnnonce(' + a.id + ')" title="Retirer de la vue publique">' +
+        '<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>';
+
+      actions += '<span class="ra" onclick="marquerLoueeAnnonce(' + a.id + ')" title="Marquer comme louée" style="color:var(--gold-deep)">' +
+        '<svg viewBox="0 0 24 24" fill="none"><path d="M3 10.5 12 4l9 6.5V20H4z" stroke="currentColor" stroke-width="1.7"/></svg></span>';
+    }
+
+    // Republier (si retirée/louée)
+    if(a.statut === 'retiree' || a.statut === 'louee'){
+      actions += '<span class="ra" onclick="republierAnnonce(' + a.id + ')" title="Republier">' +
+        '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3" stroke="currentColor" stroke-width="1.7"/><path d="M18 3v4h-4M6 21v-4h4" stroke="currentColor" stroke-width="1.7"/></svg></span>';
+    }
+
+    // Supprimer
+    actions += '<span class="ra" onclick="delAnnonce(' + a.id + ')" title="Supprimer" style="color:var(--red);border-color:var(--red-wash)">' +
+      '<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>';
+
+    return '<tr>' +
+      '<td><img src="' + photo + '" style="width:50px;height:50px;object-fit:cover;border-radius:8px" onerror="this.src=\'/static/images/placeholder-house.jpg\'"></td>' +
+      '<td><b>' + (a.titre || '—') + '</b></td>' +
+      '<td>' + (a.local_reference ? '<span class="ref">' + a.local_reference + '</span>' : (a.localisation || '—')) + '</td>' +
+      '<td class="r mono num">' + f(a.loyer) + ' <small>BIF</small></td>' +
+      '<td><span class="pill ' + s.cls + '"><span class="i"></span>' + s.label + '</span></td>' +
+      '<td>' + datePub + '</td>' +
+      '<td><div class="rowact">' + actions + '</div></td>' +
+    '</tr>';
+  }).join('');
+}
+
+// --- Recherche
+function filtAnnonces(q){
+  q = (q || '').toLowerCase();
+  renderAnnonces(_annonces.filter(a =>
+    ((a.titre||'') + (a.localisation||'') + (a.local_reference||'')).toLowerCase().includes(q)
+  ));
+}
+
+// --- Ouverture modal création / édition
+async function openModalAnnonce(id){
+  document.getElementById('mt-annonce').textContent = id ? 'Modifier l\'annonce' : 'Nouvelle annonce';
+  document.getElementById('annonce-id').value = id || '';
+  document.getElementById('al-annonce').innerHTML = '';
+  document.getElementById('del-annonce').classList.toggle('hidden', !id);
+  document.getElementById('an-photos-list').innerHTML = '';
+  _annoncePhotos = [];
+
+  // Reset fields
+  ['an-titre','an-desc','an-prix','an-caution','an-loc-txt','an-contact',
+   'an-chambres','an-sdb','an-surface','an-equip'].forEach(x => document.getElementById(x).value = '');
+  document.getElementById('an-statut').value = 'brouillon';
+  document.getElementById('an-meuble').value = 'false';
+
+  // Charge la liste des locaux dans le select
+  try{
+    var d = await api('/locaux/?page_size=300');
+    var locaux = (d && (d.results || d)) || [];
+    var sel = document.getElementById('an-loc');
+    sel.innerHTML = '<option value="">— Sélectionner un local —</option>' +
+      locaux.map(l => '<option value="' + l.id + '">' + l.reference + ' — ' + (l.proprietaire_nom || '') + '</option>').join('');
+  }catch(e){ console.warn('Locaux:', e); }
+
+  // Édition : charge les données
+  if(id){
+    try{
+      var a = await api('/annonces/' + id + '/');
+      if(a){
+        document.getElementById('an-loc').value = a.local || '';
+        document.getElementById('an-statut').value = a.statut || 'brouillon';
+        document.getElementById('an-titre').value = a.titre || '';
+        document.getElementById('an-desc').value = a.description || '';
+        document.getElementById('an-prix').value = a.loyer || '';
+        document.getElementById('an-caution').value = a.caution || '';
+        document.getElementById('an-loc-txt').value = a.localisation || '';
+        document.getElementById('an-contact').value = a.contact_telephone || '';
+        document.getElementById('an-chambres').value = a.nombre_chambres || '';
+        document.getElementById('an-sdb').value = a.nombre_salles_bain || '';
+        document.getElementById('an-surface').value = a.superficie || '';
+        document.getElementById('an-meuble').value = a.meuble ? 'true' : 'false';
+        document.getElementById('an-equip').value = a.equipements || '';
+
+        // Affiche les photos existantes
+        var list = document.getElementById('an-photos-list');
+        (a.photos || []).forEach(function(p){
+          var div = document.createElement('div');
+          div.style.cssText = 'position:relative;width:110px;height:110px;border-radius:10px;overflow:hidden;border:1px solid var(--line)';
+          div.innerHTML =
+            '<img src="' + p.url + '" style="width:100%;height:100%;object-fit:cover">' +
+            '<button onclick="supprPhotoAnnonce(' + a.id + ',' + p.id + ')" style="position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:var(--red);color:#fff;border:none;cursor:pointer;font-size:12px">×</button>';
+          list.appendChild(div);
+        });
+      }
+    }catch(e){ console.warn('Annonce:', e); }
+  }
+  openModal('m-annonce');
+}
+
+// --- Auto-remplissage quand on choisit un local
+function onAnnonceLocalChange(){
+  var locId = document.getElementById('an-loc').value;
+  if(!locId) return;
+  var loc = _allLocaux.find(l => String(l.id) === String(locId));
+  if(!loc) return;
+
+  // Auto-remplit si champs vides
+  if(!document.getElementById('an-titre').value){
+    var type = loc.type_local_display || loc.type_local || 'Bien';
+    var ref  = loc.reference || '';
+    document.getElementById('an-titre').value = type.charAt(0).toUpperCase() + type.slice(1) + ' ' + ref;
+  }
+  if(!document.getElementById('an-loc-txt').value){
+    var parts = [loc.adresse_quartier, loc.adresse_commune, loc.adresse_province].filter(Boolean);
+    document.getElementById('an-loc-txt').value = parts.join(', ');
+  }
+  if(!document.getElementById('an-surface').value && loc.superficie){
+    document.getElementById('an-surface').value = loc.superficie;
+  }
+  if(loc.meuble !== undefined){
+    document.getElementById('an-meuble').value = loc.meuble ? 'true' : 'false';
+  }
+}
+/* ============================================================
+   SAUVEGARDE ANNONCE
+   ============================================================ */
+function getCookie(name) {
+    const v = `; ${document.cookie}`;
+    const parts = v.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+function showAlert(containerId, message, type = 'error') {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    el.innerHTML = message;
+    el.classList.toggle('alert-success', type === 'success');
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function formatApiErrors(data) {
+    if (typeof data === 'string') return data;
+    if (data.detail) return data.detail;
+    return Object.entries(data)
+        .map(([field, msgs]) => {
+            const txt = Array.isArray(msgs) ? msgs.join(' ') : msgs;
+            const label = field.replace(/_/g, ' ');
+            return `<b>${label}</b> : ${txt}`;
+        })
+        .join('<br>');
+}
+
+// --- Aperçu des photos sélectionnées
+function previewAnnoncePhotos(event){
+  var files = Array.from(event.target.files || []);
+  _annoncePhotos = files;
+
+  var list = document.getElementById('an-photos-list');
+  files.forEach(function(f){
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var div = document.createElement('div');
+      div.style.cssText = 'width:110px;height:110px;border-radius:10px;overflow:hidden;border:1px solid var(--line);position:relative';
+      div.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover">' +
+                      '<span style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:2px 6px;border-radius:6px">nouveau</span>';
+      list.appendChild(div);
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+// --- Enregistrement
+async function saveAnnonce(){
+  var id = document.getElementById('annonce-id').value;
+  var al = document.getElementById('al-annonce');
+
+  var data = {
+    local: document.getElementById('an-loc').value,
+    statut: document.getElementById('an-statut').value,
+    titre: document.getElementById('an-titre').value.trim(),
+    description: document.getElementById('an-desc').value.trim(),
+    loyer: document.getElementById('an-prix').value,
+    caution: document.getElementById('an-caution').value || null,
+    localisation: document.getElementById('an-loc-txt').value.trim(),
+    contact_telephone: document.getElementById('an-contact').value.trim(),
+    nombre_chambres: document.getElementById('an-chambres').value || null,
+    nombre_salles_bain: document.getElementById('an-sdb').value || null,
+    superficie: document.getElementById('an-surface').value || null,
+    meuble: document.getElementById('an-meuble').value === 'true',
+    equipements: document.getElementById('an-equip').value.trim()
+  };
+
+  // Validation
+  if(!data.titre){ al.innerHTML = err('Le titre est requis.'); return; }
+  if(!data.description){ al.innerHTML = err('La description est requise.'); return; }
+  if(!data.loyer){ al.innerHTML = err('Le prix est requis.'); return; }
+  if(!data.contact_telephone){ al.innerHTML = err('Le contact est requis.'); return; }
+
+  try{
+    var saved;
+    if(id){
+      saved = await api('/annonces/' + id + '/', {method:'PUT', body:JSON.stringify(data)});
+    } else {
+      saved = await api('/annonces/', {method:'POST', body:JSON.stringify(data)});
+    }
+
+    var savedId = id || (saved && saved.id);
+
+    // Upload des photos si présentes
+    if(_annoncePhotos.length && savedId){
+      var formData = new FormData();
+      _annoncePhotos.forEach(function(f){
+        formData.append('photos', f);
+      });
+      await fetch(BASE + '/annonces/' + savedId + '/photos/', {
+        method: 'POST',
+        headers: { 'Authorization': 'Token ' + S.token },
+        body: formData
+      }).then(function(r){
+        if(!r.ok) throw new Error('Erreur upload photos');
+      });
+    }
+
+    closeModal('m-annonce');
+    loadAnnonces();
+    alert('✅ Annonce enregistrée');
+  }catch(e){
+    al.innerHTML = err(e.message);
+  }
+}
+
+// --- Supprimer une annonce
+async function delAnnonce(id){
+  if(!id){ id = document.getElementById('annonce-id').value; }
+  if(!id) return;
+  if(!confirm('Supprimer définitivement cette annonce ?')) return;
+  try{
+    await api('/annonces/' + id + '/', {method:'DELETE'});
+    closeModal('m-annonce');
+    loadAnnonces();
+  }catch(e){ alert('Erreur: ' + e.message); }
+}
+
+// --- Supprimer une photo individuelle
+async function supprPhotoAnnonce(annonceId, photoId){
+  if(!confirm('Supprimer cette photo ?')) return;
+  try{
+    await api('/annonces/photos/' + photoId + '/supprimer/', {method:'DELETE'});
+    openModalAnnonce(annonceId); // recharge
+  }catch(e){ alert('Erreur: ' + e.message); }
+}
+
+// --- Actions rapides
+async function publierAnnonce(id){
+  try{
+    await api('/annonces/' + id + '/republier/', {method:'POST', body:'{}'});
+    loadAnnonces();
+  }catch(e){ alert('Erreur publication: ' + e.message); }
+}
+
+async function retirerAnnonce(id){
+  if(!confirm('Retirer cette annonce du site public ?')) return;
+  try{
+    await api('/annonces/' + id + '/retirer/', {method:'POST', body:'{}'});
+    loadAnnonces();
+  }catch(e){ alert('Erreur retrait: ' + e.message); }
+}
+
+async function marquerLoueeAnnonce(id){
+  if(!confirm('Marquer cette annonce comme LOUÉE ?\n\nElle disparaîtra immédiatement du site public.')) return;
+  try{
+    await api('/annonces/' + id + '/marquer-louee/', {method:'POST', body:'{}'});
+    loadAnnonces();
+    alert('✅ Annonce marquée comme louée — retirée du site public');
+  }catch(e){ alert('Erreur: ' + e.message); }
+}
+
+async function republierAnnonce(id){
+  try{
+    await api('/annonces/' + id + '/republier/', {method:'POST', body:'{}'});
+    loadAnnonces();
+  }catch(e){ alert('Erreur: ' + e.message); }
+}
+
+// --- Aperçu
+async function viewAnnonce(id){
+  var div = document.getElementById('annonce-view-content');
+  div.innerHTML = '<div class="empty">Chargement…</div>';
+  openModal('m-annonce-view');
+
+  try{
+    var a = await api('/annonces/' + id + '/');
+    if(!a){ div.innerHTML = '<div class="empty">Introuvable</div>'; return; }
+
+    var photos = a.photos || [];
+    var imgMain = a.photo_principale || (photos[0] && photos[0].url) || '/static/images/placeholder-house.jpg';
+
+    div.innerHTML =
+      '<img src="' + imgMain + '" style="width:100%;max-height:320px;object-fit:cover;border-radius:14px;margin-bottom:16px">' +
+      '<h2 style="font-family:Fraunces,serif;font-size:24px;margin-bottom:8px">' + a.titre + '</h2>' +
+      '<p style="color:var(--ink-2);margin-bottom:16px">' + (a.localisation || '') + '</p>' +
+      '<div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:16px">' +
+        '<div><span style="font-size:11px;color:var(--ink-3);text-transform:uppercase">Prix</span><br><b style="font-size:18px">' + f(a.loyer) + ' BIF</b></div>' +
+        (a.caution ? '<div><span style="font-size:11px;color:var(--ink-3);text-transform:uppercase">Caution</span><br><b>' + f(a.caution) + ' BIF</b></div>' : '') +
+        (a.nombre_chambres ? '<div><span style="font-size:11px;color:var(--ink-3);text-transform:uppercase">Chambres</span><br><b>' + a.nombre_chambres + '</b></div>' : '') +
+        (a.nombre_salles_bain ? '<div><span style="font-size:11px;color:var(--ink-3);text-transform:uppercase">Salles de bain</span><br><b>' + a.nombre_salles_bain + '</b></div>' : '') +
+        (a.superficie ? '<div><span style="font-size:11px;color:var(--ink-3);text-transform:uppercase">Surface</span><br><b>' + a.superficie + ' m²</b></div>' : '') +
+        '<div><span style="font-size:11px;color:var(--ink-3);text-transform:uppercase">Statut</span><br><b>' + (a.statut_display || a.statut) + '</b></div>' +
+      '</div>' +
+      '<p style="line-height:1.7;color:var(--ink-2);margin-bottom:16px">' + (a.description || '') + '</p>' +
+      (a.equipements ? '<p><b>Équipements :</b> ' + a.equipements + '</p>' : '') +
+      (photos.length > 1
+        ? '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:16px">' +
+          photos.map(function(p){
+            return '<img src="' + p.url + '" style="width:100%;height:100px;object-fit:cover;border-radius:10px">';
+          }).join('') +
+          '</div>'
+        : '');
+  }catch(e){
+    div.innerHTML = '<div class="empty">Erreur: ' + e.message + '</div>';
+  }
+}
+
+// Enregistre le loader dans LOADERS
+LOADERS.annonces = loadAnnonces;
 initUI();
 initFilters();
 </script>

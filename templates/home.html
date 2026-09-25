@@ -30,6 +30,7 @@
         <a href="#locataires">Locataires</a>
         <a href="#methode">Guide</a>
         <a href="#faq">FAQ</a>
+        <a href="#annonces">Annonces</a>
       </nav>
       <div class="nav-act">
         <a class="btn b-line" href="login/">Se connecter</a>
@@ -252,7 +253,19 @@
       </div>
     </div>
   </section>
-
+    <!-- ===== SECTION ANNONCES PUBLIQUES ===== -->
+  <section class="annonces-section" id="annonces">
+    <div class="container">
+      <h2 class="section-title">Nos biens disponibles à la location</h2>
+      <p class="section-subtitle">Découvrez les maisons actuellement en attente de locataires.</p>
+      
+      <!-- Ce conteneur sera rempli dynamiquement par JavaScript -->
+      <div id="annonces-list" class="annonces-grid">
+        <!-- Un message de chargement initial -->
+        <p class="loading-text">Chargement des annonces en cours...</p>
+      </div>
+    </div>
+  </section>
   <!-- ===== CTA ===== -->
   <section class="cta">
     <div class="wrap">
@@ -319,6 +332,335 @@
       document.querySelectorAll('.fq').forEach(function(f) { f.classList.remove('open'); });
       if (!isOpen) item.classList.add('open');
     });
+
+    /* ============================================
+   ANNONCES PUBLIQUES - ADEXPER
+   ============================================ */
+(function () {
+    'use strict';
+
+    const API_URL = '/api/annonces/public/';
+    const PLACEHOLDER = '/static/images/placeholder-house.jpg';
+    const FETCH_TIMEOUT = 10000; // 10 secondes
+
+    const container = document.getElementById('annonces-list');
+    if (!container) return; // Sécurité si la section n'existe pas
+
+    // ===== FORMAT PRIX =====
+    function formatPrix(prix) {
+        if (prix === null || prix === undefined || prix === '') {
+            return 'Prix non spécifié';
+        }
+        const valeur = Number(prix);
+        if (Number.isNaN(valeur)) return 'Prix non spécifié';
+
+        // Tentative avec la locale burundaise, puis française, puis fallback manuel
+        try {
+            return new Intl.NumberFormat('fr-BI', {
+                style: 'currency',
+                currency: 'BIF',
+                maximumFractionDigits: 0
+            }).format(valeur);
+        } catch (e) {
+            try {
+                return new Intl.NumberFormat('fr-FR', {
+                    style: 'currency',
+                    currency: 'BIF',
+                    maximumFractionDigits: 0
+                }).format(valeur);
+            } catch (e2) {
+                // Fallback manuel : séparateur de milliers avec espace
+                const formatted = valeur.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+                return formatted + ' BIF';
+            }
+        }
+    }
+
+    // ===== ÉCHAPPEMENT TEXTE (pour textContent) =====
+    // Plus besoin de escapeHtml si on utilise textContent, mais on garde
+    // une fonction utilitaire pour les cas où innerHTML est nécessaire.
+    function escapeHtml(text) {
+        if (text === null || text === undefined) return '';
+        const div = document.createElement('div');
+        div.textContent = String(text);
+        return div.innerHTML;
+    }
+
+    // ===== ÉCHAPPEMENT ATTRIBUT (pour les URLs) =====
+    function escapeAttr(text) {
+        if (text === null || text === undefined) return '';
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    }
+
+    // ===== VALIDATION URL IMAGE =====
+    function getImageUrl(annonce) {
+        const photos = annonce.photos;
+        const url = (Array.isArray(photos) && photos.length > 0) ? photos[0].url : '';
+        if (!url || typeof url !== 'string') return PLACEHOLDER;
+        // Autorise uniquement http, https, data:image et chemins relatifs
+        if (/^(https?:|data:image\/|\/)/i.test(url)) {
+            return url;
+        }
+        return PLACEHOLDER;
+    }
+
+    // ===== FETCH AVEC TIMEOUT =====
+    async function fetchWithTimeout(url, options, timeout) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeout);
+        try {
+            const response = await fetch(url, Object.assign({}, options, {
+                signal: controller.signal
+            }));
+            return response;
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+
+    // ===== CHARGEMENT DES ANNONCES =====
+    async function chargerAnnonces() {
+        try {
+            container.innerHTML = `
+                <div class="annonce-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Chargement des annonces en cours...</p>
+                </div>`;
+
+            const response = await fetchWithTimeout(API_URL, {
+                method: 'GET',
+                headers: { 'Accept': 'application/json' }
+            }, FETCH_TIMEOUT);
+
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+
+            const annonces = await response.json();
+
+            // Cas vide
+            if (!Array.isArray(annonces) || annonces.length === 0) {
+                container.innerHTML = `
+                    <div class="annonce-empty">
+                        <i class="fas fa-home"></i>
+                        <h3>Aucune annonce disponible</h3>
+                        <p>Toutes nos maisons sont actuellement occupées. Revenez bientôt !</p>
+                    </div>`;
+                return;
+            }
+
+            // Affichage
+            afficherAnnonces(annonces);
+
+        } catch (error) {
+            console.error('Erreur annonces:', error);
+
+            const message = (error.name === 'AbortError')
+                ? 'Le serveur met trop de temps à répondre.'
+                : 'Impossible de récupérer les annonces pour le moment.';
+
+            container.innerHTML = `
+                <div class="annonce-error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Erreur de chargement</h3>
+                    <p>${escapeHtml(message)}</p>
+                    <button type="button" class="btn b-ink" id="annonces-retry">
+                        <i class="fas fa-redo"></i> Réessayer
+                    </button>
+                </div>`;
+
+            // Attache l'événement proprement (pas de onclick inline)
+            const retryBtn = document.getElementById('annonces-retry');
+            if (retryBtn) {
+                retryBtn.addEventListener('click', chargerAnnonces);
+            }
+        }
+    }
+
+    // ===== MODALES (détail / contact) — auto-suffisantes, sans dépendance CSS externe =====
+    let modalOverlay = null;
+    function ensureModal() {
+        if (modalOverlay) return modalOverlay;
+        modalOverlay = document.createElement('div');
+        modalOverlay.id = 'annonce-modal-overlay';
+        modalOverlay.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(20,15,5,.55);' +
+            'z-index:9999;align-items:center;justify-content:center;padding:20px;';
+        modalOverlay.innerHTML = '<div id="annonce-modal-box" style="background:#fff;border-radius:14px;' +
+            'max-width:520px;width:100%;max-height:85vh;overflow:auto;padding:26px;position:relative;' +
+            'font-family:inherit;box-shadow:0 20px 60px rgba(0,0,0,.3)"></div>';
+        modalOverlay.addEventListener('click', function (e) {
+            if (e.target === modalOverlay) closeAnnonceModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeAnnonceModal();
+        });
+        document.body.appendChild(modalOverlay);
+        return modalOverlay;
+    }
+
+    function closeAnnonceModal() {
+        if (modalOverlay) modalOverlay.style.display = 'none';
+    }
+
+    function openAnnonceModal(innerHtml) {
+        const overlay = ensureModal();
+        overlay.querySelector('#annonce-modal-box').innerHTML =
+            '<button type="button" aria-label="Fermer" style="position:absolute;top:14px;right:14px;' +
+            'border:none;background:none;font-size:22px;line-height:1;cursor:pointer;color:#555" ' +
+            'onclick="document.getElementById(\'annonce-modal-overlay\').style.display=\'none\'">×</button>' +
+            innerHtml;
+        overlay.style.display = 'flex';
+    }
+
+    function showDetailModal(annonce) {
+        const titre = escapeHtml(annonce.titre || annonce.title || 'Maison sans titre');
+        const localisation = escapeHtml(
+            annonce.localisation || annonce.adresse || annonce.ville || 'Localisation non spécifiée'
+        );
+        const prixRaw = (annonce.prix !== undefined && annonce.prix !== null) ? annonce.prix : annonce.loyer;
+        const prix = escapeHtml(formatPrix(prixRaw));
+        const description = escapeHtml(annonce.description || 'Aucune description fournie.');
+        const imageUrl = escapeAttr(getImageUrl(annonce));
+
+        openAnnonceModal(`
+            <img src="${imageUrl}" alt="${escapeAttr(titre)}"
+                 style="width:100%;height:220px;object-fit:cover;border-radius:10px;margin-bottom:16px"
+                 onerror="this.src='${escapeAttr(PLACEHOLDER)}'">
+            <h3 style="margin:0 0 6px">${titre}</h3>
+            <p style="color:#8a6f3a;margin:0 0 10px"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> ${localisation}</p>
+            <p style="font-weight:800;font-size:18px;margin:0 0 14px">${prix}</p>
+            <p style="white-space:pre-line;color:#444;margin:0 0 18px">${description}</p>
+            <button type="button" class="btn b-ink" style="width:100%"
+                onclick='window.__annonceContact(${JSON.stringify(annonce.id)})'>
+                <i class="fas fa-phone" aria-hidden="true"></i> Contacter
+            </button>
+        `);
+    }
+
+    function showContactModal(annonce) {
+        const tel = annonce.contact_telephone || '';
+        const whatsapp = annonce.contact_whatsapp || '';
+
+        let rows = '';
+        if (tel) {
+            rows += `<a href="tel:${escapeAttr(tel)}" class="btn b-ink" style="width:100%;margin-bottom:10px;display:block;text-align:center">
+                <i class="fas fa-phone" aria-hidden="true"></i> Appeler ${escapeHtml(tel)}
+            </a>`;
+        }
+        if (whatsapp) {
+            const digits = String(whatsapp).replace(/[^0-9]/g, '');
+            rows += `<a href="https://wa.me/${escapeAttr(digits)}" target="_blank" rel="noopener" class="btn b-line" style="width:100%;display:block;text-align:center">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp ${escapeHtml(whatsapp)}
+            </a>`;
+        }
+        if (!rows) {
+            rows = '<p>Aucun contact disponible pour cette annonce.</p>';
+        }
+
+        openAnnonceModal(`
+            <h3 style="margin:0 0 16px">Nous Contacter</h3>
+            ${rows}
+        `);
+    }
+
+    // Pont pour le bouton "Contacter" appelé depuis la modale de détail
+    window.__annonceContact = function (id) {
+        const annonce = window.__annoncesCache.find(function (a) { return String(a.id) === String(id); });
+        if (annonce) showContactModal(annonce);
+    };
+
+    // ===== CRÉATION D'UNE CARTE =====
+    function creerCarte(annonce) {
+        const card = document.createElement('div');
+        card.className = 'annonce-card';
+
+        // Récupération et validation des champs
+        const imageUrl     = getImageUrl(annonce);
+        const titre        = String(annonce.titre || annonce.title || 'Maison sans titre');
+        const localisation = String(
+            annonce.localisation || annonce.adresse || annonce.ville || 'Localisation non spécifiée'
+        );
+        const prixRaw      = (annonce.prix !== undefined && annonce.prix !== null)
+                            ? annonce.prix
+                            : annonce.loyer;
+        const prix         = formatPrix(prixRaw);
+        const description  = String(annonce.description || '');
+        const descCourte   = description.length > 100
+                            ? description.substring(0, 100) + '…'
+                            : description;
+
+        // ---- Construction du HTML (structure statique uniquement) ----
+        card.innerHTML = `
+            <div class="annonce-image">
+                <img alt="" loading="lazy" decoding="async">
+                <span class="annonce-badge">Disponible</span>
+            </div>
+            <div class="annonce-content">
+                <h3></h3>
+                <p class="annonce-location">
+                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                    <span class="annonce-location-text"></span>
+                </p>
+                <p class="annonce-price"></p>
+                <p class="annonce-desc"></p>
+                <div class="annonce-actions">
+                    <button type="button" class="btn b-ink annonce-btn-detail">
+                        <i class="fas fa-eye" aria-hidden="true"></i> Voir détails
+                    </button>
+                    <button type="button" class="btn b-line annonce-btn-contact">
+                        <i class="fas fa-phone" aria-hidden="true"></i> Contacter
+                    </button>
+                </div>
+            </div>`;
+
+        // ---- Remplissage sécurisé via textContent / attributs ----
+        const img = card.querySelector('.annonce-image img');
+        img.src = imageUrl;
+        img.alt = titre; // l'attribute alt est sûr avec textContent
+        img.addEventListener('error', function handleError() {
+            img.removeEventListener('error', handleError);
+            img.src = PLACEHOLDER;
+        }, { once: true });
+
+        card.querySelector('.annonce-content h3').textContent = titre;
+        card.querySelector('.annonce-location-text').textContent = localisation;
+        card.querySelector('.annonce-price').textContent = prix;
+        card.querySelector('.annonce-desc').textContent = descCourte;
+
+        card.querySelector('.annonce-btn-detail').addEventListener('click', function () {
+            showDetailModal(annonce);
+        });
+        card.querySelector('.annonce-btn-contact').addEventListener('click', function () {
+            showContactModal(annonce);
+        });
+
+        return card;
+    }
+
+    // ===== AFFICHAGE =====
+    function afficherAnnonces(annonces) {
+        window.__annoncesCache = annonces;
+        // Utilise un DocumentFragment pour limiter les reflows
+        const fragment = document.createDocumentFragment();
+        annonces.forEach(function (annonce) {
+            fragment.appendChild(creerCarte(annonce));
+        });
+
+        container.innerHTML = '';
+        container.appendChild(fragment);
+    }
+
+    // ===== LANCEMENT =====
+    chargerAnnonces();
+
+    // (Optionnel) Rafraîchir toutes les 60 secondes
+    // setInterval(chargerAnnonces, 60000);
+})();
   </script>
 </body>
 </html>

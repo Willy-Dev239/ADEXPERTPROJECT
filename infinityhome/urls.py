@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/dashboard/', include('apps.dashboard.urls')),
     path('api/chat/', include('apps.chat.urls')),
     path('api/notifications/', include('apps.notifications.urls')),
+    path("api/annonces/", include("apps.annonces.urls")),
     path('login/', TemplateView.as_view(template_name='login.html'), name='login'),
     path('locataire/', TemplateView.as_view(template_name='locataire_dashboard.html')),
     path('proprietaire/', TemplateView.as_view(template_name='proprietaire_dashboard.html')),
