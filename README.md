@@ -1,29 +1,8 @@
 # A — Gestion Locative
 
-Système complet de gestion locative basé sur Django REST Framework
-1. Créer la base de données MySQL
+## Installation
 
-CREATE DATABASE adexpert_recouvrement_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER 'adexpert'@'localhost' IDENTIFIED BY 'adexpert2121';
-GRANT ALL PRIVILEGES ON adexpert_recouvrement_db.* TO 'adexpert'@'localhost';
-FLUSH PRIVILEGES;
-
-2. Configurer infinityhome/settings.py
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'adexpert_recouvrement_db',
-        'USER': 'adexpert',
-        'PASSWORD': 'adexpert2121',
-        'HOST': 'localhost',
-        'PORT': '3306',
-    }
-}
-
-
-
-## Installation rapide
+### Lancer le projet
 
 ```bash
 pip install -r requirements.txt
@@ -32,44 +11,35 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-## Accès
+## Contribuer au projet
 
-- **Admin/Gestionnaire** → http://localhost:8000/
-- **Propriétaire** → http://localhost:8000/proprietaire/
-- **Locataire** → http://localhost:8000/locataire/
-- **Connexion** → http://localhost:8000/login/
-- **API** → http://localhost:8000/api/
+Le dépôt est privé : l'accès doit être accordé par l'administrateur.
 
+1. **Créer un compte GitHub** sur https://github.com/signup (si vous n'en avez pas déjà un).
+2. **Envoyer votre nom d'utilisateur GitHub** à l'administrateur du projet et lui **demander l'accès** au dépôt.
+3. **Accepter l'invitation** reçue par e-mail ou dans vos notifications GitHub.
+4. **Cloner le dépôt** :
 
+   ```bash
+   git clone <URL_DU_DEPOT>
+   cd <NOM_DU_DEPOT>
+   ```
 
-## 9 Fonctionnalités implémentées
+5. **Créer une branche** pour votre travail (ne jamais travailler directement sur `main`) :
 
-1. **Dashboard Locataire** — connexion + upload bordereau de paiement (photo)
-2. **Quittance compacte A5** — signature unique admin/gestionnaire, impression optimisée
-3. **Historique locataire** — tous les loyers payés/restants avec détail des paiements
-4. **Dashboard Propriétaire** — vue isolée : ses locaux, locataires, loyers, charges uniquement
-5. **Group Chat par immeuble** — sélection propriétaire → immeuble → groupe, polling temps réel
-6. **Provinces du Burundi** — Bujumbura, Gitega, Burunga, Butanyerera, Buhumuza + communes cascadées
-7. **Contrats Société étendus** — services loyers impayés, assurances, judiciaire, impôts, clients, touristique
-8. **Notifications de paiement** — alertes automatiques aux locataires après paiement/bordereau
-9. **CSRF Token** — endpoint /api/auth/csrf/ + intégration login sécurisé
+   ```bash
+   git checkout -b feature/nom-de-la-fonctionnalite
+   ```
 
-## Structure des apps
+6. **Committer et pousser** vos modifications :
 
-```
-apps/
-├── auth_app/          — Utilisateurs (5 rôles)
-├── proprietaires/     — Propriétaires
-├── immeubles/         — Immeubles + provinces Burundi
-├── locaux/            — Locaux (appartements, bureaux, etc.)
-├── locataires/        — Locataires + upload bordereaux
-├── contrats/          — Contrats location + contrats société
-├── loyers/            — Loyers, paiements, quittances
-├── charges/           — Charges et frais
-├── dashboard/         — Dashboard + portefeuille
-├── chat/              — Group chat par immeuble
-└── notifications/     — Notifications locataires
-```
+   ```bash
+   git add .
+   git commit -m "Description claire de la modification"
+   git push origin feature/nom-de-la-fonctionnalite
+   ```
+
+7. **Ouvrir une Pull Request** vers `main` et attendre la validation de l'administrateur avant la fusion.
 
 ## Variables d'environnement (production)
 
@@ -77,6 +47,10 @@ apps/
 SECRET_KEY=votre-cle-secrete
 DEBUG=False
 ALLOWED_HOSTS=votre-domaine.com
-DATABASE_URL=postgresql://...
+DB_NAME=...
+DB_USER=...
+DB_PASSWORD=...
+DB_HOST=...
+DB_PORT=3306
 REDIS_URL=redis://localhost:6379/0
 ```
