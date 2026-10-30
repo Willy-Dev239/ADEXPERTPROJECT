@@ -51,7 +51,20 @@
         Les comptes créés via ce formulaire ont un accès <b>Lecteur</b> : consultation limitée, sans accès aux données de gestion sensibles (contrats, finances, coordonnées des propriétaires/locataires).
       </div>
     </form>
-
+    <form id="verifyForm" style="display:none">
+      <p class="subtitle" id="verifyInfo"></p>
+      <div class="form-grid">
+        <div class="field full">
+          <label for="code">Code à 6 chiffres</label>
+          <input type="text" id="code" inputmode="numeric" maxlength="6"
+                 autocomplete="one-time-code" pattern="[0-9]{6}" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Vérifier</button>
+      <div class="error" id="verifyError"></div>
+      <button type="button" id="resendBtn" class="link-back"
+              style="background:none;border:0;cursor:pointer;margin-top:12px">Renvoyer le code</button>
+    </form>
     <a href="/login/" class="link-back">← Retour à la connexion</a>
   </div>
 
@@ -60,6 +73,9 @@
     Gestion Locative · Bujumbura, Burundi · Support
   </footer>
 <script>
+  let pendingUsername = "";
+  let resendTimer = null;
+
   document.getElementById("registerForm").addEventListener("submit", async function(e){
     e.preventDefault();
     const errorEl = document.getElementById("registerError");
@@ -97,23 +113,76 @@
         return;
       }
 
-      localStorage.setItem('authToken', data.token);
-      localStorage.setItem('username', data.username);
-      localStorage.setItem('fullname', data.fullname);
-      localStorage.setItem('role', data.role);
-      localStorage.setItem('peutEcrire', data.peutEcrire);
-      localStorage.setItem('estAdmin', data.estAdmin);
+      pendingUsername = data.username;
+      document.getElementById("registerForm").style.display = "none";
+      document.getElementById("verifyForm").style.display = "block";
+      document.getElementById("verifyInfo").textContent =
+        "Un code a été envoyé à " + data.email + ". Il expire dans 10 minutes.";
+      startResendTimer();
+    } catch(err){
+      errorEl.textContent = "Impossible de contacter le serveur.";
+    }
+  });
 
-      const role = (data.role || "").toLowerCase();
-      let target = "/";
-
-      if(role === "locataire"){
-        target = "/locataire/";
-      } else if(role === "proprietaire"){
-        target = "/proprietaire/";
+    document.getElementById("verifyForm").addEventListener("submit", async function(e){
+    e.preventDefault();
+    const errorEl = document.getElementById("verifyError");
+    errorEl.textContent = "";
+    const payload = {
+      username: pendingUsername,
+      code: document.getElementById("code").value.trim()
+    };
+    console.log("verify payload:", payload);
+    try{
+      const res = await fetch("/api/auth/verify-email/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      console.log("verify réponse:", res.status, data);
+      if(!res.ok){
+        errorEl.textContent = data.detail || "Code invalide ou expiré.";
+        return;
       }
+      document.getElementById("verifyForm").innerHTML =
+        '<p class="subtitle">✔ Compte vérifié. Redirection vers la connexion…</p>';
+      setTimeout(() => { window.location.href = "/login/"; }, 1500);
+    } catch(err){
+      errorEl.textContent = "Impossible de contacter le serveur.";
+    }
+  });
 
-      window.location.href = target;
+  function startResendTimer(){
+    const btn = document.getElementById("resendBtn");
+    let left = 60;
+    btn.disabled = true;
+    btn.textContent = "Renvoyer le code (60 s)";
+    clearInterval(resendTimer);
+    resendTimer = setInterval(() => {
+      left--;
+      if(left <= 0){
+        clearInterval(resendTimer);
+        btn.disabled = false;
+        btn.textContent = "Renvoyer le code";
+      } else {
+        btn.textContent = "Renvoyer le code (" + left + " s)";
+      }
+    }, 1000);
+  }
+
+  document.getElementById("resendBtn").addEventListener("click", async function(){
+    const errorEl = document.getElementById("verifyError");
+    errorEl.textContent = "";
+    try{
+      const res = await fetch("/api/auth/resend-code/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: pendingUsername })
+      });
+      const data = await res.json();
+      if(res.ok) startResendTimer();
+      else errorEl.textContent = data.detail || "Erreur d'envoi.";
     } catch(err){
       errorEl.textContent = "Impossible de contacter le serveur.";
     }

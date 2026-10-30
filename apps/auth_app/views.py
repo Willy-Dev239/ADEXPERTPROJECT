@@ -163,6 +163,21 @@ def lier_locataire(request, user_id):
  
  
 from .serializers import RegisterSerializer  
+from django.conf import settings
+from django.core.mail import send_mail
+from django.db.models import Q
+from django.utils import timezone
+from .models import EmailVerification
+
+from .emails import envoyer_code_verification
+
+
+def _send_code(user):
+    code = EmailVerification.issue(user)          # unique source du code (hashé en base)
+    envoyer_code_verification(
+        user.email, code, user.first_name or user.username
+    )
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -171,16 +186,70 @@ def register_view(request):
     if not s.is_valid():
         return Response(s.errors, status=400)
     user = s.save()
+    try:
+        _send_code(user)
+    except Exception:
+        user.delete()
+        return Response({'detail': "Impossible d'envoyer l'e-mail de vérification."}, status=500)
+    return Response({'username': user.username, 'detail': 'Code envoyé.'}, status=201)
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def verify_email_view(request):
+    username = request.data.get('username')
+    code = str(request.data.get('code', '')).strip()
+    err = Response({'detail': 'Code invalide ou expiré.'}, status=400)
+    try:
+        user = User.objects.get(username=username, is_active=False)
+        ev = user.email_verification
+    except (User.DoesNotExist, EmailVerification.DoesNotExist):
+        return err
+    if not ev.verify_code(code):
+        return err
+    user.is_active = True
+    user.save(update_fields=['is_active'])
+    ev.delete()
     token, _ = Token.objects.get_or_create(user=user)
     return Response({
-        'token':      token.key,
-        'user_id':    user.pk,
-        'username':   user.username,
-        'fullname':   user.full_name,
-        'role':       user.role,
-        'peutEcrire': user.peut_ecrire,
-        'estAdmin':   user.est_admin,
-    }, status=201)
+        'token': token.key, 'user_id': user.pk, 'username': user.username,
+        'fullname': user.full_name, 'role': user.role,
+        'peutEcrire': user.peut_ecrire, 'estAdmin': user.est_admin,
+    })
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def resend_code_view(request):
+    try:
+        user = User.objects.get(username=request.data.get('username'), is_active=False)
+        ev = user.email_verification
+    except (User.DoesNotExist, EmailVerification.DoesNotExist):
+        return Response({'detail': 'Si le compte existe, un code a été envoyé.'})
+    if (timezone.now() - ev.created_at).total_seconds() < 60:
+        return Response({'detail': 'Patientez 60 secondes avant un nouvel envoi.'}, status=429)
+    _send_code(user)
+    return Response({'detail': 'Si le compte existe, un code a été envoyé.'})
+
+
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# def register_view(request):
+#     s = RegisterSerializer(data=request.data)
+#     if not s.is_valid():
+#         return Response(s.errors, status=400)
+#     user = s.save()
+#     token, _ = Token.objects.get_or_create(user=user)
+#     return Response({
+#         'token':      token.key,
+#         'user_id':    user.pk,
+#         'username':   user.username,
+#         'fullname':   user.full_name,
+#         'role':       user.role,
+#         'peutEcrire': user.peut_ecrire,
+#         'estAdmin':   user.est_admin,
+#     }, status=201)
  
  
     

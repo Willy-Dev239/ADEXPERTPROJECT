@@ -181,3 +181,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSP_CONNECT_SRC = ("'self'", "https://upload.uploadcare.com", "https://ucarecdn.com", "https://*.ucarecdn.com")
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+
+
+
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'contact.adexper@gmail.com'
+DEFAULT_FROM_EMAIL = 'ADEXPERT <contact.adexper@gmail.com>'
+EMAIL_HOST_PASSWORD = 'kcfg itgj bzdf hxxx'

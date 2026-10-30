@@ -94,8 +94,7 @@ class LoginSerializer(serializers.Serializer):
         return data
 
 
-
-class RegisterSerializer(serializers.ModelSerializer):   # ← à ajouter, tout en bas
+class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=6)
 
     class Meta:
@@ -108,14 +107,16 @@ class RegisterSerializer(serializers.ModelSerializer):   # ← à ajouter, tout 
         return value
 
     def validate_email(self, value):
-        if value and User.objects.filter(email=value).exists():
+        if not value:
+            raise serializers.ValidationError("L'adresse e-mail est obligatoire.")
+        if User.objects.filter(email__iexact=value).exists():
             raise serializers.ValidationError("Cette adresse e-mail est déjà associée à un compte.")
         return value
-
     def create(self, validated_data):
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.role = 'lecteur'
+        user.is_active = False      # inactif jusqu'à la vérification du code
         user.set_password(password)
         user.save()
         return user
