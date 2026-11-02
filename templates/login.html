@@ -6,59 +6,173 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Connexion | ADEXPER</title>
 <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#f5c518; --gold-deep:#d9a908; --gold-hi:#ffd94a; --gold-wash:#fdf6df; --gold-line:#efd98a;
+  --ink:#1c1810; --ink-2:#5c5545; --ink-3:#938a76;
+  --paper:#fbf7ee; --paper-2:#f4eedd; --card:#ffffff; --line:#e9e0cd;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px;position:relative;overflow-x:hidden;overflow-y:auto;
+  background:radial-gradient(130% 120% at 50% 18%,#3a2e14 0%,#241c0e 45%,#171109 100%)}
+.bg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg .wash{position:absolute;inset:0;
+  background:
+    radial-gradient(45% 40% at 85% 12%,rgba(245,197,24,.3),transparent 60%),
+    radial-gradient(45% 45% at 12% 88%,rgba(217,169,8,.26),transparent 60%);
+  filter:blur(30px)}
+.bg .pulse{position:absolute;top:42%;left:50%;width:760px;height:760px;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle,rgba(245,197,24,.42),transparent 62%);filter:blur(44px);
+  animation:pulse 9s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.95)}50%{opacity:.85;transform:translate(-50%,-50%) scale(1.07)}}
+.bg .pt{position:absolute;border-radius:50%;background:#ffe88c;
+  box-shadow:0 0 9px 2px rgba(255,217,74,.7);animation:rise linear infinite;opacity:0}
+@keyframes rise{0%{transform:translateY(40px);opacity:0}15%{opacity:.8}85%{opacity:.8}100%{transform:translateY(-80vh);opacity:0}}
+.bg .grid{position:absolute;inset:0;opacity:.09;
+  background-image:linear-gradient(rgba(245,197,24,.8) 1px,transparent 1px),linear-gradient(90deg,rgba(245,197,24,.8) 1px,transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(85% 75% at 50% 44%,#000 10%,transparent 80%);
+          mask-image:radial-gradient(85% 75% at 50% 44%,#000 10%,transparent 80%)}
+.bg .vig{position:absolute;inset:0;background:radial-gradient(80% 75% at 50% 44%,transparent 46%,rgba(14,9,3,.6) 100%)}
+@media (prefers-reduced-motion:reduce){.bg *{animation:none!important}}
 
-   <link rel="stylesheet" href="{% static 'css/stylelogin.css' %}" />
+.card{position:relative;z-index:1;background:var(--card);width:100%;max-width:420px;border-radius:22px;
+  padding:30px 34px 30px;box-shadow:0 40px 90px -40px rgba(0,0,0,.6),0 2px 8px rgba(0,0,0,.2);
+  border:1px solid rgba(255,255,255,.6)}
+.logo{
+  width:84px;
+  height:84px;
+  margin:0 auto 14px;
+  border-radius:25px; /* <-- L'arrondi des angles */
+  display:grid;
+  place-items:center;
+  background:radial-gradient(130% 130% at 30% 20%,var(--gold-hi),var(--gold) 55%,var(--gold-deep));
+  box-shadow:inset 0 0 0 5px rgba(255,255,255,.85),0 14px 30px -14px rgba(217,169,8,.7);
+  overflow:hidden; /* <-- TRÈS IMPORTANT : force l'image à respecter l'arrondi */
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* <-- Remplit tout l'espace sans déformer */
+  display: block;
+}
+.title{text-align:center;font-family:"Fraunces",Georgia,serif;font-size:30px;font-weight:600;letter-spacing:-.02em}
+.sub{text-align:center;font-size:14px;color:var(--ink-3);margin-top:5px;font-weight:500}
+
+.form{margin-top:26px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-bottom:7px}
+.field input{width:100%;border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:12px 15px;
+  font-family:inherit;font-size:15px;color:var(--ink);outline:none;transition:.15s}
+.field input::placeholder{color:var(--ink-3)}
+.field input:focus{border-color:var(--gold);background:#fff;box-shadow:0 0 0 4px var(--gold-wash)}
+
+.btn{width:100%;border:none;border-radius:12px;padding:13px;font-family:inherit;font-weight:700;font-size:15px;
+  cursor:pointer;transition:.18s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn:disabled{opacity:.7;cursor:wait}
+.btn-primary{background:var(--gold);color:var(--ink);margin-top:6px;box-shadow:0 14px 30px -14px rgba(217,169,8,.7)}
+.btn-primary:hover:not(:disabled){background:var(--gold-deep);transform:translateY(-1px)}
+.btn-ghost{background:#fff;color:var(--ink);border:1.5px solid var(--gold-line);margin-top:4px}
+.btn-ghost:hover{background:var(--gold-wash);border-color:var(--gold-deep)}
+
+.divider{display:flex;align-items:center;gap:14px;margin:16px 0 14px;color:var(--ink-3);font-size:13px;font-weight:600}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.alert{display:none;margin-top:16px;padding:11px 14px;border-radius:11px;font-size:13.5px;font-weight:600;line-height:1.45}
+.alert-err{background:#fdecec;color:#b3261e;border:1px solid #f6c9c5}
+.alert-ok{background:#eaf7ec;color:#1e7a34;border:1px solid #c4e8cc}
+.alert-warn{background:#fff6e0;color:#8a6200;border:1px solid #f2dda0}
+
+.foot{text-align:center;margin-top:16px;font-size:12.5px;color:var(--ink-3)}
+.foot a{color:var(--gold-deep);font-weight:600;text-decoration:none}
+.foot a:hover{text-decoration:underline}
+
+.page-foot{position:relative;z-index:1;margin-top:22px;text-align:center;color:rgba(255,255,255,.55);font-size:12.5px;line-height:1.8}
+.page-foot .l1 b{color:#fff;font-weight:700}
+.page-foot .l1 .home{color:var(--gold)}
+.page-foot .dots{color:var(--gold);letter-spacing:4px;font-size:10px}
+.page-foot a{color:rgba(255,255,255,.7);text-decoration:none}
+.page-foot a:hover{color:var(--gold)}
+
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:48px}
+.pw-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:none;
+  background:none;cursor:pointer;display:grid;place-items:center;color:var(--ink-3);border-radius:9px;transition:.15s}
+.pw-toggle:hover{color:var(--ink);background:var(--gold-wash)}
+.pw-toggle svg{width:20px;height:20px}
+.pw-toggle .off{display:none}
+.pw-wrap.show .pw-toggle .on{display:none}
+.pw-wrap.show .pw-toggle .off{display:block}
+
+.spinner{width:16px;height:16px;border:2px solid rgba(28,24,16,.3);border-top-color:var(--ink);border-radius:50%;
+  display:inline-block;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:480px){.card{padding:30px 24px 28px}.logo{width:76px;height:76px}}
+</style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">
-  <div class="logo-icon">
-  <img src="{% static 'images/logo_adexpert.png' %}" alt="ADEXPER">
-</div>
-    <h1>ADEXPER</h1>
-    <p>Gestion Locative - Bujumbura</p>
+  <div class="bg">
+    <div class="wash"></div><div class="pulse"></div><div class="grid"></div>
+    <div class="particles" id="pt"></div><div class="vig"></div>
   </div>
 
-  <!-- Message expiration session -->
-  <div id="alert-timeout" class="alert alert-warn" style="display:none;">
-    &#9201; Votre session a expiré après 5 minutes d'inactivité. Veuillez vous reconnecter.
+  <div class="card">
+    <div class="logo">
+     <img src="{% static 'images/logo_adexpert.png' %}" alt="ADEXPER" style="width:180%;height:180%;object-fit:contain;">
+    </div>
+    <div class="title">ADEXPER</div>
+    <div class="sub">Gestion Locative · Bujumbura</div>
+
+    <!-- Message expiration session -->
+    <div id="alert-timeout" class="alert alert-warn" style="margin-top:18px;">
+      &#9201; Votre session a expiré après 5 minutes d'inactivité. Veuillez vous reconnecter.
+    </div>
+
+    <div id="alert" class="alert"></div>
+
+    <form class="form" onsubmit="return false">
+      <div class="field">
+        <label for="username">Nom d'utilisateur</label>
+        <input id="username" type="text" placeholder="Votre identifiant" autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <div class="pw-wrap" id="pwWrap">
+          <input id="password" type="password" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" class="pw-toggle" id="pwToggle" aria-label="Afficher le mot de passe">
+            <svg class="on" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
+            <svg class="off" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.5-7 10-7c2 0 3.8.6 5.3 1.4M22 12s-3.5 7-10 7c-2 0-3.8-.6-5.3-1.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9.5 9.5a3 3 0 0 0 4.2 4.2M4 4l16 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" id="btn-login" onclick="doLogin()">Se connecter</button>
+      <div class="divider">ou</div>
+      <button type="button" class="btn btn-ghost" onclick="window.location.href='/register/'">Créer un compte</button>
+    </form>
+
+    {% comment %} <div class="foot">Mot de passe oublié ? <a href="">Réinitialiser</a></div> {% endcomment %}
   </div>
 
-  <div id="alert" class="alert"></div>
-
-  <div class="fg">
-    <label>Nom d'utilisateur</label>
-    <input type="text" id="username" placeholder="Votre identifiant" autocomplete="username">
+  <div class="page-foot">
+    <div class="l1">© 2026 <b>ADEXPER</b> — <span class="home">InfinityHome</span></div>
+    <div class="dots">• • •</div>
+    <div class="l2">Gestion Locative · Bujumbura, Burundi · <a href="#">Support</a></div>
   </div>
-  <div class="fg">
-    <label>Mot de passe</label>
-    <input type="password" id="password" placeholder="..." autocomplete="current-password">
-  </div>
-  
-  <button class="btn" id="btn-login" onclick="doLogin()">Se connecter</button>
-  
-  <!-- Séparateur -->
-  <div class="divider">ou</div>
-  
-  <!-- Bouton d'inscription -->
-  <button class="btn-register" onclick="window.location.href='/register/'">
-    Créer un compte
-  </button>
-</div>
-
-<!-- Footer -->
-<footer class="footer">
-  <div>&copy; 2026 <strong>ADEXPER</strong> &mdash; InfinityHome</div>
-  <div class="footer-dots">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-  <div>Gestion Locative &middot; Bujumbura, Burundi &middot; <a href="#">Support</a></div>
-</footer>
 
 <script>
-// Afficher le message si session expirée
+/* ---------- Fond : particules ---------- */
+(function(){var p=document.getElementById('pt');if(!p)return;for(var i=0;i<10;i++){var s=document.createElement('span');s.className='pt';s.style.left=(Math.random()*100)+'%';var z=(2.5+Math.random()*2.5).toFixed(1);s.style.width=z+'px';s.style.height=z+'px';s.style.bottom=(-5-Math.random()*15)+'%';s.style.animationDuration=(11+Math.random()*8).toFixed(1)+'s';s.style.animationDelay=(Math.random()*12).toFixed(1)+'s';p.appendChild(s);}})();
+
+/* ---------- Toggle mot de passe ---------- */
+(function(){var t=document.getElementById('pwToggle'),w=document.getElementById('pwWrap'),f=document.getElementById('password');if(t){t.addEventListener('click',function(){var show=f.type==='password';f.type=show?'text':'password';w.classList.toggle('show',show);t.setAttribute('aria-label',show?'Masquer le mot de passe':'Afficher le mot de passe');});}})();
+
+/* ---------- Message session expirée ---------- */
 (function(){
   var params = new URLSearchParams(window.location.search);
   if(params.get('timeout') === '1'){
@@ -66,30 +180,39 @@
   }
 })();
 
+/* ---------- CSRF ---------- */
 var csrfToken='';
 async function fetchCsrf(){
   try{var r=await fetch('/api/auth/csrf/');var d=await r.json();csrfToken=d.csrfToken||'';}
   catch(e){console.warn('CSRF fetch failed',e);}
 }
 fetchCsrf();
+
+/* ---------- Entrée clavier ---------- */
 document.getElementById('password').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
-function showAlert(msg,isErr){var el=document.getElementById('alert');el.textContent=msg;el.className='alert '+(isErr?'alert-err':'alert-ok');el.style.display='block';}
-function fillDemo(u,p){document.getElementById('username').value=u;document.getElementById('password').value=p;}
+
+/* ---------- Alertes ---------- */
+function showAlert(msg,isErr){
+  var el=document.getElementById('alert');
+  el.textContent=msg;
+  el.className='alert '+(isErr?'alert-err':'alert-ok');
+  el.style.display='block';
+}
+
+/* ---------- Connexion ---------- */
 async function doLogin() {
   var btn = document.getElementById('btn-login');
   var username = document.getElementById('username').value.trim();
   var password = document.getElementById('password').value;
-  
-  // Validation des champs
+
   if (!username || !password) {
     showAlert('Veuillez remplir tous les champs.', true);
     return;
   }
-  
-  // Désactivation du bouton
+
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Connexion...';
-  
+
   try {
     var response = await fetch('/api/auth/login/', {
       method: 'POST',
@@ -98,34 +221,28 @@ async function doLogin() {
         'X-CSRFToken': csrfToken
       },
       credentials: 'include',
-      body: JSON.stringify({
-        username: username,
-        password: password
-      }),
+      body: JSON.stringify({ username: username, password: password }),
     });
-    
+
     var data = await response.json();
-    
-    // Gestion des erreurs de réponse
+
     if (!response.ok) {
-      var errorMsg = data.non_field_errors 
-        ? data.non_field_errors[0] 
+      var errorMsg = data.non_field_errors
+        ? data.non_field_errors[0]
         : data.detail || data.message || 'Identifiants incorrects.';
       showAlert(errorMsg, true);
       btn.disabled = false;
       btn.innerHTML = 'Se connecter';
       return;
     }
-    
-    // Validation des données reçues
+
     if (!data.token || !data.username) {
       showAlert('Erreur de réponse du serveur. Veuillez réessayer.', true);
       btn.disabled = false;
       btn.innerHTML = 'Se connecter';
       return;
     }
-    
-    // Stockage des données dans localStorage
+
     localStorage.setItem('authToken', data.token);
     localStorage.setItem('username', data.username);
     localStorage.setItem('fullname', data.fullname || data.username);
@@ -134,43 +251,25 @@ async function doLogin() {
     localStorage.setItem('estAdmin', String(data.estAdmin || false));
     localStorage.setItem('locataire_id', data.locataire_id || '');
     localStorage.setItem('proprietaire_id', data.proprietaire_id || '');
-    
-    // Message de confirmation
+
     showAlert('Connexion réussie ! Redirection en cours...', false);
-    
-    // Redirection après un court délai
+
     setTimeout(function() {
       var role = data.role || 'lecteur';
-      
-      // Redirection selon le rôle
       switch(role) {
-        case 'locataire':
-          window.location.href = '/locataire/';
-          break;
-        case 'proprietaire':
-          window.location.href = '/proprietaire/';
-          break;
+        case 'locataire':    window.location.href = '/locataire/';   break;
+        case 'proprietaire': window.location.href = '/proprietaire/'; break;
         case 'admin':
-        case 'gestionnaire':
-          window.location.href = '/dashboard/';
-          break;
-        default:
-          // Lecteur ou rôle non reconnu → dashboard
-          window.location.href = '/';
-          break;
+        case 'gestionnaire': window.location.href = '/dashboard/';   break;
+        default:             window.location.href = '/';             break;
       }
     }, 600);
-    
+
   } catch(error) {
     console.error('Erreur de connexion:', error);
     showAlert('Erreur réseau. Vérifiez votre connexion internet.', true);
-  } finally {
-    // Réactivation du bouton (sauf si redirection en cours)
-    // On ne réactive pas si la redirection a déjà été déclenchée
-    if (!btn.disabled) {
-      btn.disabled = false;
-      btn.innerHTML = 'Se connecter';
-    }
+    btn.disabled = false;
+    btn.innerHTML = 'Se connecter';
   }
 }
 </script>

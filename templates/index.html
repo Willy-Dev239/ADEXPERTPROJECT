@@ -56,7 +56,7 @@ if(!localStorage.getItem('authToken')){
     <a class="nav-item" href="#" data-nav="notifications"><svg viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="currentColor" stroke-width="1.7"/></svg>Notifications</a>
     <div class="nav-label">Administration</div>
     <a class="nav-item" href="#" data-nav="utilisateurs"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.7"/></svg>Gestion des Utilisateurs</a>
-    <a class="nav-item" href="../index.html" style="margin-top:8px"><svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 18l-6-6 6-6" stroke="currentColor" stroke-width="1.7"/></svg>Retour au site</a>
+    <a class="nav-item" href="/" style="margin-top:8px"><svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M11 18l-6-6 6-6" stroke="currentColor" stroke-width="1.7"/></svg>Retour au site</a>
     <div class="side-foot">
       <div class="user"><div class="avatar" id="sb-avatar">A</div><div><div class="user-name" id="sb-name">…</div><div class="user-role" id="sb-role">…</div></div><a href="#" onclick="confirmLogout();return false;"><svg viewBox="0 0 24 24" fill="none" class="power"><path d="M12 4v8M7 7a7 7 0 1 0 10 0" stroke="currentColor" stroke-width="1.7"/></svg></a></div>
     </div>
@@ -67,7 +67,7 @@ if(!localStorage.getItem('authToken')){
     <div class="masthead"><div class="mast-top">
       <div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/></svg><input placeholder="Rechercher…"></div>
 
-      <!-- ⬇️⬇️ FILTRE PROPRIÉTAIRE / IMMEUBLE ⬇️⬇️ -->
+      <!--  FILTRE PROPRIÉTAIRE / IMMEUBLE -->
       <div class="filter-group">
         <div class="filter-item">
           <label for="dash-filter-prop">
@@ -88,7 +88,7 @@ if(!localStorage.getItem('authToken')){
           </select>
         </div>
       </div>
-      <!-- ⬆️⬆️ FIN FILTRE ⬆️⬆️ -->
+      <!--  FIN FILTRE  -->
 
       <div class="mast-right"><div class="lang"><span class="on">FR</span><span>EN</span></div>
         <a class="btn-add" href="#" onclick="openModalLoyer();return false;"><span class="k"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6"/></svg></span>Encaisser un loyer</a>
@@ -367,7 +367,7 @@ if(!localStorage.getItem('authToken')){
     <div class="masthead"><div class="mast-top">
       <div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/></svg><input placeholder="Rechercher…"></div>
 
-      <!-- ⬇️⬇️ FILTRE PROPRIÉTAIRE / IMMEUBLE ⬇️⬇️ -->
+      <!--  FILTRE PROPRIÉTAIRE / IMMEUBLE  -->
       <div class="filter-group">
         <div class="filter-item">
           <label for="ly-filter-prop">
@@ -388,7 +388,7 @@ if(!localStorage.getItem('authToken')){
           </select>
         </div>
       </div>
-      <!-- ⬆️⬆️ FIN FILTRE ⬆️⬆️ -->
+      <!--  FIN FILTRE  -->
 
       <div class="mast-right"><a class="btn-add" href="#" onclick="openModalLoyer();return false;"><span class="k"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6"/></svg></span>Nouveau loyer</a></div>
     </div><div class="rule"></div></div>
@@ -1422,7 +1422,7 @@ async function updateQuartiers(provId, comId, quartId){
 }async function api(url, opts) {
     opts = opts || {};
 
-    // ✅ Détecter si le body est un FormData (upload de fichiers)
+    //  Détecter si le body est un FormData (upload de fichiers)
     var isFormData = (typeof FormData !== 'undefined') && (opts.body instanceof FormData);
 
     // En-têtes par défaut
@@ -1436,7 +1436,7 @@ async function updateQuartiers(provId, comId, quartId){
         opts.headers || {}
     );
 
-    // ✅ Sérialiser automatiquement le body si ce n'est pas déjà une string / FormData
+    //  Sérialiser automatiquement le body si ce n'est pas déjà une string / FormData
     var body = opts.body;
     if (!isFormData && body !== undefined && typeof body !== 'string') {
         body = JSON.stringify(body);
@@ -1485,6 +1485,10 @@ function closeModal(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
 
 function confirmLogout(){if(confirm('Se déconnecter ?')){localStorage.clear();window.location.href='/';}}
+function doLogout() {
+  localStorage.clear();
+  window.location.href = '/';
+}
 function err(m){return '<div class="info-box err">'+m+'</div>';}
 // ═══════════════════════════════════════════
 //  FILTRE PROPRIÉTAIRE / IMMEUBLE
@@ -1699,7 +1703,7 @@ async function openModalProp(id){
   document.getElementById('del-prop').classList.toggle('hidden', !id);
   ['prop-nom','prop-tel','prop-email','prop-nif','prop-cni','prop-info'].forEach(x => document.getElementById(x).value = '');
 
-  // ⚡ Charge les provinces depuis le backend
+  // Charge les provinces depuis le backend
   await loadProvincesInto(['prop-prov']);
 
   // Réinitialise Commune et Quartier
@@ -1716,7 +1720,7 @@ async function openModalProp(id){
       document.getElementById('prop-cni').value = p.cni || '';
       document.getElementById('prop-info').value = p.informations_complementaires || '';
 
-      // ⚡ Province → Commune → Quartier en cascade
+      //  Province → Commune → Quartier en cascade
       document.getElementById('prop-prov').value = p.adresse_province || '';
       if(p.adresse_province){
         await updateCommunes('prop-prov','prop-com','prop-quart');
@@ -1771,7 +1775,7 @@ async function openModalImm(id){
   document.getElementById('del-imm').classList.toggle('hidden', !id);
   ['imm-nom','imm-annee','imm-info'].forEach(x => document.getElementById(x).value = '');
 
-  // ⚡ CETTE LIGNE EST OBLIGATOIRE
+  //  CETTE LIGNE EST OBLIGATOIRE
   await loadProvincesInto(['imm-prov']);
 
   document.getElementById('imm-com').innerHTML = '<option value="">— Commune —</option>';
@@ -1811,7 +1815,7 @@ async function openModalLoc(id){
   await selProp('loc-prop');
   await selImm('loc-imm');
 
-  // ⚡ Charge les provinces depuis le backend Django
+  //  Charge les provinces depuis le backend Django
   await loadProvincesInto(['loc-prov']);
 
   // Réinitialise Commune et Quartier
@@ -1829,7 +1833,7 @@ async function openModalLoc(id){
       document.getElementById('loc-prop').value = l.proprietaire || '';
       document.getElementById('loc-imm').value = l.immeuble || '';
 
-      // ⚡ Province → Commune → Quartier en cascade (appels API backend)
+      //  Province → Commune → Quartier en cascade (appels API backend)
       document.getElementById('loc-prov').value = l.adresse_province || '';
       if(l.adresse_province){
         await updateCommunes('loc-prov','loc-com','loc-quart');
@@ -1871,6 +1875,76 @@ async function saveLoc(){
     closeModal('m-loc');loadLocaux();
   }catch(e){document.getElementById('al-loc').innerHTML=err(e.message);}
 }
+function getCookie(name){
+  var v = document.cookie.split('; ').find(function(r){ return r.startsWith(name + '='); });
+  return v ? decodeURIComponent(v.split('=')[1]) : null;
+}
+
+function authHeaders(){
+  var headers = { 'Content-Type': 'application/json' };
+
+  // JWT / Token : adapte la clé si ton login stocke le token sous un autre nom
+  var token = localStorage.getItem('access_token')
+           || localStorage.getItem('access')
+           || localStorage.getItem('token');
+  if(token){
+    headers['Authorization'] = 'Bearer ' + token; // mets 'Token ' si tu utilises DRF TokenAuthentication
+  }
+
+  // Session Django : CSRF requis pour POST/PUT
+  var LOGIN_URL = '/login/';
+  var csrf = getCookie('csrftoken');
+  if(csrf){
+    headers['X-CSRFToken'] = csrf;
+  }
+  return headers;
+}
+
+async function saveLoca() {
+  var id = document.getElementById('loca-id').value;
+  
+  // 1. Préparation des données avec les noms de champs exacts de ton API
+  var data = {
+    nom_prenom:   document.getElementById('loca-nom').value.trim(),
+    telephone:    document.getElementById('loca-tel').value.trim() || '',
+    email:        document.getElementById('loca-email').value.trim() || '',
+    adresse_postale: document.getElementById('loca-adr').value.trim() || '',
+    informations_complementaires: document.getElementById('loca-info').value.trim() || ''
+  };
+
+  var alertBox = document.getElementById('al-loca');
+  alertBox.innerHTML = ''; // Réinitialise les erreurs
+
+  // 2. Validations
+  if (!data.nom_prenom) {
+    alertBox.innerHTML = err('Le nom et prénom sont requis.');
+    return;
+  }
+  if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    alertBox.innerHTML = err('Adresse email invalide.');
+    return;
+  }
+
+  try {
+    // 3. Envoi via la fonction api() centralisée de ton projet
+    if (id) {
+      await api('/locataires/' + id + '/', { method: 'PUT', body: JSON.stringify(data) });
+    } else {
+      await api('/locataires/', { method: 'POST', body: JSON.stringify(data) });
+    }
+
+    // 4. Succès
+    closeModal('m-loca');
+    if (typeof loadLocas === 'function') {
+      loadLocas();
+    }
+
+  } catch (e) {
+    // 5. Affichage des erreurs du serveur
+    alertBox.innerHTML = err(e.message);
+  }
+}
+
 
 async function delLoc(){
   if(!confirm('Supprimer ce local ?'))return;
@@ -1968,7 +2042,7 @@ async function openModalCS(id){
 
   await selProp('cs-prop');
 
-  // ⚡ RENDRE LES CHECKBOXES DES SERVICES INCLUS
+  // RENDRE LES CHECKBOXES DES SERVICES INCLUS
   renderCSServices();
 
   var today = new Date().toISOString().split('T')[0];
@@ -2005,7 +2079,7 @@ async function openModalCS(id){
       document.getElementById('cs-frais-travaux').value = c.frais_travaux_pct || 10;
       document.getElementById('cs-entree').value = c.frais_entree || 0;
 
-      // ⚡ Cocher les services enregistrés
+      //  Cocher les services enregistrés
       CS_SERVICES.forEach(function(s){
         var el = document.getElementById('cs-' + s.id);
         if(el) el.checked = !!c[s.id];
