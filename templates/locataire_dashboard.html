@@ -879,8 +879,28 @@
             }
         }
 
-        async function showQuit(id) {
-            alert('Téléchargement de la quittance pour le loyer #' + id);
+              async function showQuit(id) {
+            // Ouvrir la fenêtre tout de suite (évite le blocage des popups après un await)
+            var w = window.open('', '_blank');
+            if (!w) { alert('Veuillez autoriser les popups pour télécharger la quittance.'); return; }
+            w.document.write('<p style="font-family:sans-serif;padding:30px">Génération de la quittance...</p>');
+
+            try {
+                var res = await fetch(BASE + '/loyers/' + id + '/quittance/', {
+                    headers: { 'Authorization': 'Token ' + S.token }
+                });
+                if (res.status === 401) { w.close(); doLogout(); return; }
+                if (!res.ok) throw new Error('Erreur ' + res.status);
+
+                var html = await res.text();
+                w.document.open();
+                w.document.write(html);
+                w.document.close();
+                w.focus();
+            } catch (e) {
+                w.close();
+                alert('Impossible de générer la quittance : ' + e.message);
+            }
         }
 
         // ============================================================
